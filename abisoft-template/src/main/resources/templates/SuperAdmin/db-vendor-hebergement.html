@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liste des hébergements</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/SuperAdmin/css/sidebar.css">
+  <style>
+    /* Variables CSS pour la cohérence des couleurs */
+    :root {
+      --primary-color: #0066cc;
+      --secondary-color: #f8f9fa;
+      --success-color: #2ecc71;
+      --warning-color: #f39c12;
+      --error-color: #e74c3c;
+      --border-color: #e0e6ed;
+      --background-color: #f5f7fa;
+      --card-bg: #ffffff;
+      --shadow: 0 4px 12px rgba(0,0,0,0.08);
+      --transition: all 0.3s ease;
+      --sidebar-width: 296px;
+
+    }
+    
+    .user-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-color);
+    }
+    /* Styles pour la mise en page principale */
+    .dashboard__main {
+      flex-grow: 1;
+      margin-left: 280px;
+      min-height: 100vh;
+      background: var(--background-color);
+      position: relative;
+      width: calc(100% - 280px);
+    }
+    
+    /* Styles pour les badges de statut */
+    .status-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .status-en_attente {
+      background-color: var(--warning-color);
+      color: white;
+      border: 1px solid #e67e22;
+    }
+    
+    .status-accepte {
+      background-color: var(--success-color);
+      color: white;
+      border: 1px solid #27ae60;
+    }
+    
+    .status-refuse {
+      background-color: var(--error-color);
+      color: white;
+      border: 1px solid #c0392b;
+    }
+    
+    /* Styles pour la barre latérale en mode responsive */
+    @media (max-width: 992px) {
+      .dashboard__container {
+        flex-direction: column;
+      }
+      
+      .sidebar-container {
+        width: 100%;
+        height: auto;
+        position: relative;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      }
+      
+      .dashboard__main {
+        margin-left: 0 !important;
+        width: 100% !important;
+      }
+      
+      .form-container {
+        position: relative !important;
+        left: 0 !important;
+        width: 90% !important;
+        height: auto !important;
+        margin: 20px auto !important;
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+      .sidebar-container {
+        display: none;
+      }
+      .form-container {
+        position: relative !important;
+        left: 0 !important;
+        width: 90% !important;
+        height: auto !important;
+        margin: 20px auto !important;
+      }
+      /* Ajout pour corriger l'affichage sur petites fenêtres */
+      div[style*="margin-left: 280px"] {
+        margin-left: 0 !important;
+        width: 100% !important;
+      }
+    }
+    
+    /* Styles supplémentaires spécifiques à cette page */
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background-color: #e74c3c;
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    body {
+      background: #f6f8fb;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    
+    /* Supprimé car défini dans sidebar.css */
+    
+    .dashboard__content {
+      padding: 34px;
+    }
+    
+    .form-container {
+      background-color: white;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      max-width: 1100px;
+      margin: 0 auto;
+      position: relative;
+    }
+    
+    .form-title {
+      text-align: center;
+      color: var(--primary-color);
+      margin-bottom: 15px;
+      font-size: 24px;
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 8px;
+    }
+    
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    thead {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    th {
+      padding: 10px 8px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 15px;
+    }
+    
+    td {
+      padding: 8px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-color);
+    }
+    
+    tr:nth-child(even) {
+      background-color: rgba(0, 86, 179, 0.03);
+    }
+    
+    tr:hover {
+      background-color: rgba(0, 86, 179, 0.08);
+    }
+    
+    .btn {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 7px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .btn-edit {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      display: inline-block;
+      margin-right: 5px;
+      font-weight: 500;
+      transition: var(--transition);
+      font-size: 14px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .btn-edit:hover {
+      background-color: #0062cc;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .btn-edit:active {
+      transform: translateY(0);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    .btn-delete {
+      background-color: var(--error-color);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      transition: var(--transition);
+      font-size: 14px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: inline-block;
+    }
+    
+    .btn-delete:hover {
+      background-color: #c0392b;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .btn-delete:active {
+      transform: translateY(0);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    .toggle-sidebar-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: var(--primary-color);
+      cursor: pointer;
+      margin-left: auto;
+    }
+    
+    /* Style spécifique pour "Non connecté" avec fond bleu */
+    .non-connecte {
+      background-color: #4a7aff;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 11px;
+      display: inline-block;
+    }
+    
+    /* Styles pour les badges de statut */
+    .status-badge {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .status-en-attente {
+      background-color: var(--warning-color);
+      color: white;
+    }
+    
+    .status-accepte {
+      background-color: var(--success-color);
+      color: white;
+    }
+    
+    .status-refuse {
+      background-color: var(--error-color);
+      color: white;
+    }
+    
+    /* Styles pour les boutons d'action */
+    .btn-details {
+      background-color: var(--secondary-color);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-block;
+      margin-right: 5px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .btn-details:hover {
+      background-color: #3a7bd5;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .btn-details:active {
+      transform: translateY(0);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    .btn-validate {
+      background-color: var(--success-color);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-block;
+      margin-right: 5px;
+      text-decoration: none;
+    }
+    
+    .btn-validate:hover {
+      background-color: #27ae60;
+      transform: translateY(-2px);
+    }
+    
+    .btn-reject {
+      background-color: var(--error-color);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-block;
+      margin-right: 5px;
+    }
+    
+    .btn-reject:hover {
+      background-color: #c0392b;
+      transform: translateY(-2px);
+    }
+    
+    /* Style pour les boutons cliqués */
+    .btn-details.clicked,
+    .btn-edit.clicked,
+    .btn-delete.clicked {
+      opacity: 0.7;
+      transform: translateY(0);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    /* Animation pour le chargement */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .action-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      justify-content: center;
+    }
+    
+    /* Styles spécifiques pour la barre latérale */
+    .sidebar {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .sidebar-header {
+      padding: 1px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .sidebar-logo {
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+      object-fit: contain;
+    }
+    
+    .sidebar-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin: 0;
+    }
+  
+    
+    .sidebar-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 15px 15px 15px;
+    }
+    
+    .sidebar__button {
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin-bottom: 5px;
+      transition: var(--transition);
+    }
+    
+    .sidebar__button:hover, .sidebar__button.-is-active {
+      background-color: rgba(0, 102, 204, 0.08);
+    }
+    
+    .sidebar__button a {
+      text-decoration: none;
+      color: #333;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+    
+    .mr-15 {
+      margin-right: 15px;
+    }
+    
+    .ml-auto {
+      margin-left: auto;
+    }
+    
+    .sidebar-submenu-container {
+      padding-left: 15px;
+      margin-bottom: 10px;
+    }
+    
+    .sidebar-submenu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .submenu-item {
+      margin-bottom: 2px;
+    }
+    
+    .submenu-link {
+      display: flex;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 6px;
+      text-decoration: none;
+      color: #555;
+      transition: var(--transition);
+    }
+    
+    .submenu-link:hover {
+      background-color: rgba(0, 102, 204, 0.05);
+      color: var(--primary-color);
+    }
+    
+    .submenu-icon {
+      margin-right: 8px;
+      font-size: 14px;
+    }
+    
+    .logout-button {
+      margin-top: 20px;
+    }
+    
+    .logout-button a {
+      color: #e74c3c;
+    }
+    
+    .logout-button:hover {
+      background-color: rgba(231, 76, 60, 0.08);
+    }
+    
+    .d-flex {
+      display: flex;
+    }
+    
+    .items-center {
+      align-items: center;
+    }
+    
+    .text-14 {
+      font-size: 14px;
+    }
+    
+    .text-15 {
+      font-size: 15px;
+    }
+    
+    .lh-1 {
+      line-height: 1;
+    }
+    
+    .fw-400 {
+      font-weight: 400;
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 0;">
+<div class="dashboard__container">    
+    <!-- Barre latérale -->  
+    <div class="sidebar-container">
+      <div class="sidebar-header">
+        <div class="logo-container">
+          <div id="header_menu">
+            <img src="/assets/img/logo_sticky.png" width="160" height="34" alt="City tours">
+          </div>
+        </div>
+        <span class="sidebar-title">Administration</span>
+        <div class="user-profile">
+          <a th:href="@{/SuperAdmin/profile}" class="profile-link">
+            <img th:src="${userProfileImage}" alt="User Avatar" class="user-avatar" onerror="this.src='/assets/img/tourist_guide_pic.jpg';">
+            <div class="user-info">
+              <div class="user-name" th:text="${#authentication != null && #authentication.principal != null ? #authentication.principal.firstName + ' ' + #authentication.principal.lastName : 'Utilisateur'}">superAdmin</div>
+              <div class="user-role" th:text="${#authentication != null && #authentication.principal != null && not #lists.isEmpty(#authentication.principal.roles) ? #authentication.principal.roles[0].name : 'Non connecté'}">ROLE</div>
+            </div>
+          </a>
+          <div class="notification-bell" title="Notifications">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" id="notificationBadge">0</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="sidebar-menu">
+        <a th:href="@{/hebergement/wishlist}" class="menu-item">
+          <i class="fas fa-heart"></i>
+          <span>Liste de souhaits</span>
+        </a>
+        <a href="/admin/index" class="menu-item">
+          <i class="fas fa-th-large"></i>
+          <span>Tableau de bord</span>
+        </a>
+        
+        <div class="menu-item dropdown" th:if="${isHebergementAdmin != null && isHebergementAdmin} or ${isProprietaire != null && isProprietaire} or ${isSuperAdmin != null && isSuperAdmin}" sec:authorize="hasAnyAuthority('SUPERADMIN_PRIVILEGE', 'HEBERGEMENT_ADMIN_PRIVILEGE', 'PROPRIETAIRE_PRIVILEGE')">
+          <div class="menu-header" onclick="toggleSubmenu(this)">
+            <div class="menu-icon-title">
+              <i class="fas fa-building"></i>
+              <span>Gérer les hébergements</span>
+            </div>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="submenu">
+  <!-- SuperAdmin et HebergementAdmin : Tous les hébergements -->
+  <a href="/admin/hebergements" class="submenu-item" th:if="${isSuperAdmin != null && isSuperAdmin} or (${isHebergementAdmin != null && isHebergementAdmin})">
+    <i class="fas fa-list-ul"></i>
+    <span>Tous les hébergements</span>
+  </a>
+  <!-- Propriétaire : Mes hébergements -->
+  <a href="/admin/hebergements" class="submenu-item" th:if="${isProprietaire != null && isProprietaire && !isHebergementAdmin && !isSuperAdmin}">
+    <i class="fas fa-list-ul"></i>
+    <span>Mes hébergements</span>
+  </a>
+  <!-- Propriétaire et SuperAdmin : Ajouter un hébergement -->
+  <a href="/admin/hebergements/add" class="submenu-item active" th:if="${isProprietaire != null && isProprietaire && !isHebergementAdmin && !isSuperAdmin} or (${isSuperAdmin != null && isSuperAdmin})">
+    <i class="fas fa-plus-circle"></i>
+    <span>Ajouter un hébergement</span>
+  </a>
+</div>
+          </div>
+        </div>
+        
+        <div class="menu-item dropdown" th:if="${isEvenementAdmin != null && isEvenementAdmin} or ${isSuperAdmin != null && isSuperAdmin}" sec:authorize="hasAnyAuthority('SUPERADMIN_PRIVILEGE', 'EVENEMENT_ADMIN_PRIVILEGE')">
+          <div class="menu-header" onclick="toggleSubmenu(this)">
+            <div class="menu-icon-title">
+              <i class="fas fa-calendar-alt"></i>
+              <span>Gérer les événements</span>
+            </div>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="submenu">
+            <a href="/admin/evenements" class="submenu-item">
+              <i class="fas fa-list-ul"></i>
+              <span>Tous les événements</span>
+            </a>
+            <a href="/admin/add-evenement" class="submenu-item">
+              <i class="fas fa-plus-circle"></i>
+              <span>Ajouter un événement</span>
+            </a>
+          </div>
+        </div>
+        
+        <div class="menu-item dropdown" th:if="${isSuperAdmin != null && isSuperAdmin}" sec:authorize="hasAuthority('SUPERADMIN_PRIVILEGE')">
+          <div class="menu-header" onclick="toggleSubmenu(this)">
+            <div class="menu-icon-title">
+              <i class="fas fa-users"></i>
+              <span>Gérer les utilisateurs</span>
+            </div>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="submenu">
+            <a href="/SuperAdmin/db-vendor-user" class="submenu-item">
+              <i class="fas fa-list-ul"></i>
+              <span>Tous les utilisateurs</span>
+            </a>
+            <a href="/SuperAdmin/db-vendor-add-user" class="submenu-item">
+              <i class="fas fa-user-plus"></i>
+              <span>Ajouter un utilisateur</span>
+            </a>
+          </div>
+        </div>
+        
+        <a th:href="@{/logout}" class="menu-item logout">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Déconnexion</span>
+        </a>
+      </div>
+
+
+  </div>
+  <div class="dashboard__main">
+    <!-- Champs cachés pour les messages de session -->
+    <input type="hidden" id="sessionErrorMessage" th:value="${session.errorMessage != null ? session.errorMessage : ''}" />
+    <input type="hidden" id="sessionSuccessMessage" th:value="${session.successMessage != null ? session.successMessage : ''}" />
+    
+    <div style="max-width: 100%; margin: 0 auto; width: 100%;">
+      <div style="position: relative; width: 100%; height: auto; min-height: 80vh; padding: 25px; z-index: 10; background-color: white; border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.1); overflow-y: auto;">
+        <h2 class="form-title" style="text-align: center;" th:text="${pageTitle != null ? pageTitle : 'Liste des hébergements'}">Liste des hébergements</h2>
+        
+        <!-- Messages de succès/erreur -->
+        <div th:if="${successMessage != null}" class="alert alert-success" style="background-color: rgba(46, 204, 113, 0.1); border: 1px solid var(--success-color); color: var(--success-color); padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+          <i class="fas fa-check-circle"></i> <span th:text="${successMessage}">Opération réussie</span>
+        </div>
+        
+        <div th:if="${errorMessage != null}" class="alert alert-danger" style="background-color: rgba(231, 76, 60, 0.1); border: 1px solid var(--error-color); color: var(--error-color); padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+          <i class="fas fa-exclamation-circle"></i> <span th:text="${errorMessage}">Une erreur est survenue</span>
+        </div>
+        
+        <!-- Filtre avec menu déroulant style select box -->
+        <div style="display: flex; justify-content: center; margin-bottom: 25px;" th:if="${isPropView == null || !isPropView}">
+          <div style="width: 250px;">
+            <select id="statusFilter" style="width: 100%; padding: 10px 15px; border-radius: 4px; border: 1px solid #e0e6ed; background-color: white; color: #2c3e50; font-size: 14px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" onchange="window.location = this.value;">
+              <option value="" disabled selected>Choisir:</option>
+              <option value="/admin/hebergements" th:selected="${filterActive == null || !filterActive}">Tous</option>
+              <option value="/admin/hebergements?filter=en_attente" th:selected="${filterActive != null && filterActive && filterType == 'en_attente'}">En attente</option>
+              <option value="/admin/hebergements?filter=accepte" th:selected="${filterActive != null && filterActive && filterType == 'accepte'}">Validés</option>
+              <option value="/admin/hebergements?filter=refuse" th:selected="${filterActive != null && filterActive && filterType == 'refuse'}">Refusés</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Affichage des compteurs pour les propriétaires -->
+        <div class="proprietaire-stats" th:if="${isPropView}" style="margin-bottom: 20px; text-align: center;">
+          <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
+            <div style="flex: 1; min-width: 150px; background-color: #f8f9fa; border-radius: 8px; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+              <h4 style="margin: 0 0 10px 0; color: var(--warning-color);">En attente</h4>
+              <div style="display: flex; align-items: center;">
+                <i class="fas fa-clock" style="font-size: 24px; color: var(--warning-color); margin-right: 10px;"></i>
+                <span style="font-size: 24px; font-weight: bold;" th:text="${enAttente}">0</span>
+              </div>
+            </div>
+            <div style="flex: 1; min-width: 150px; background-color: #f8f9fa; border-radius: 8px; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+              <h4 style="margin: 0 0 10px 0; color: var(--success-color);">Acceptés</h4>
+              <div style="display: flex; align-items: center;">
+                <i class="fas fa-check" style="font-size: 24px; color: var(--success-color); margin-right: 10px;"></i>
+                <span style="font-size: 24px; font-weight: bold;" th:text="${acceptes}">0</span>
+              </div>
+            </div>
+            <div style="flex: 1; min-width: 150px; background-color: #f8f9fa; border-radius: 8px; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+              <h4 style="margin: 0 0 10px 0; color: var(--error-color);">Refusés</h4>
+              <div style="display: flex; align-items: center;">
+                <i class="fas fa-times" style="font-size: 24px; color: var(--error-color); margin-right: 10px;"></i>
+                <span style="font-size: 24px; font-weight: bold;" th:text="${refuses}">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="width: 100%; overflow-x: auto; margin: 0 auto; max-width: 100%; -webkit-overflow-scrolling: touch;">
+          <table style="min-width: 800px; width: 100%; border-collapse: collapse; margin: 0 auto; border-radius: 8px; overflow: hidden;">
+            <thead style="background-color: var(--primary-color); color: white;">
+              <tr style="text-align: center;">
+                <th style="padding: 12px 15px; text-align: center; width: 10%;">Image</th>
+                <th style="padding: 12px 15px; text-align: center; width: 15%;">Nom</th>
+                <th style="padding: 12px 15px; text-align: center; width: 15%;">Adresse</th>
+                <th style="padding: 12px 15px; text-align: center; width: 10%;">Type</th>
+                <th style="padding: 12px 15px; text-align: center; width: 10%;">Statut</th>
+                <th style="padding: 12px 15px; text-align: center; width: 10%;">Validation</th>
+                <th style="padding: 12px 15px; text-align: center; width: 20%;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:if="${#lists.isEmpty(hebergements)}">
+                <td colspan="8" style="padding: 30px; text-align: center; color: #777;">
+                  <i class="fas fa-info-circle" style="font-size: 24px; margin-bottom: 10px; display: block;"></i>
+                  <p>Aucun hébergement trouvé dans cette catégorie.</p>
+                </td>
+              </tr>
+        
+              <tr th:each="hebergement : ${hebergements}" style="border-bottom: 1px solid var(--border-color); transition: background-color 0.3s;" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor='transparent'">
+                <td style="padding: 12px 15px; text-align: center;">
+                  <img th:if="${hebergement.photoUrl != null && !hebergement.photoUrl.isEmpty()}" 
+                       th:src="${hebergement.photoUrl.startsWith('/') ? hebergement.photoUrl : '/uploads/hebergements/' + hebergement.id + '/' + hebergement.type}" 
+                       style="width: 80px; height: 60px; object-fit: cover; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" 
+                       onerror="this.src='/assets/img/hotel_img.jpg';" 
+                       alt="Image de l'hébergement">
+                  <img th:if="${hebergement.photoUrl == null || hebergement.photoUrl.isEmpty()}" 
+                       src="/assets/img/hotel_img.jpg" 
+                       style="width: 80px; height: 60px; object-fit: cover; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" 
+                       alt="Image par défaut">
+                </td>
+        
+                <td style="padding: 12px 15px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" th:text="${hebergement.nom}">Nom</td>
+                <td style="padding: 12px 15px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" th:text="${hebergement.adresse}">Adresse</td>
+                <td style="padding: 12px 15px; text-align: center;" th:text="${hebergement.type}">Type</td>
+                <td style="padding: 12px 15px; text-align: center;">
+                  <span th:if="${hebergement.validationStatus != null}" th:class="'status-badge status-' + ${hebergement.validationStatus.name().toLowerCase()}">
+                    <i th:if="${hebergement.validationStatus.name() == 'ACCEPTE'}" class="fas fa-check-circle" style="margin-right: 5px;"></i>
+                    <i th:if="${hebergement.validationStatus.name() == 'REFUSE'}" class="fas fa-times-circle" style="margin-right: 5px;"></i>
+                    <i th:if="${hebergement.validationStatus.name() == 'EN_ATTENTE'}" class="fas fa-clock" style="margin-right: 5px;"></i>
+                    <span th:text="${hebergement.validationStatus.name() == 'ACCEPTE' ? 'Validé' : (hebergement.validationStatus.name() == 'REFUSE' ? 'Refusé' : 'En attente')}"></span>
+                  </span>
+                </td>
+        
+                <!-- Colonne Validation -->
+                <td style="padding: 12px 15px; text-align: center;">
+                  <div class="validation-buttons" style="display: flex; flex-direction: row; gap: 5px; justify-content: center; flex-wrap: nowrap;">
+                    <th:block sec:authorize="hasAuthority('SUPERADMIN_PRIVILEGE')">
+                      <th:block th:if="${hebergement.validationStatus != null && hebergement.validationStatus.name() == 'EN_ATTENTE'}">
+                        <form th:action="@{'/admin/valider-hebergement/' + ${hebergement.id}}" method="post" style="display: inline;">
+                          <button type="submit" class="btn-validate" style="background-color: var(--success-color); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; transition: var(--transition);">
+                            <i class="fas fa-check"></i> 
+                          </button>
+                        </form>
+                        <button class="btn-reject" th:onclick="'openRejectModal(' + ${hebergement.id} + ')'" style="background-color: var(--error-color); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; transition: var(--transition);">
+                          <i class="fas fa-times"></i> 
+                        </button>
+                      </th:block>
+                      <th:block th:if="${hebergement.validationStatus != null && hebergement.validationStatus.name() != 'EN_ATTENTE'}">
+                        <span style="color: #999;">-</span>
+                      </th:block>
+                    </th:block>
+                    <th:block sec:authorize="!hasAuthority('SUPERADMIN_PRIVILEGE')">
+                      <span style="color: #999;">-</span>
+                    </th:block>
+                  </div>
+                </td>
+        
+                <!-- Colonne Actions -->
+                <td style="padding: 12px 15px; text-align: center;">
+                  <div class="action-buttons" style="display: flex; flex-direction: row; flex-wrap: nowrap; gap: 5px; justify-content: center; align-items: center;">
+                    <a th:href="@{'/admin/details-hebergement/' + ${hebergement.id}}" class="btn-details" style="background-color: var(--primary-color); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; transition: var(--transition); text-decoration: none; display: inline-block;">
+                      <i class="fas fa-eye"></i> 
+                    </a>
+        
+                    <form th:action="@{'/admin/hebergements/edit/' + ${hebergement.id}}" method="get" style="display: inline;" th:if="${(hebergement.proprietaire != null && hebergement.proprietaire.id == #authentication.principal.id) || (isSuperAdmin != null && isSuperAdmin)}">
+                      <button type="submit" class="btn-edit" style="background-color: #0088ff; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; transition: var(--transition);">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                    </form>
+        
+                    <form th:action="@{'/admin/hebergements/delete-with-notifications/' + ${hebergement.id}}" method="post" style="display: inline;" th:if="${(hebergement.proprietaire != null && hebergement.proprietaire.id == #authentication.principal.id) || (isSuperAdmin != null && isSuperAdmin)}">
+                      <button type="submit" class="btn-delete" style="background-color: var(--error-color); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; transition: var(--transition);" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet hébergement?');">
+                        <i class="fas fa-trash"></i> 
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal de refus -->
+  <div id="rejectModal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);">
+    <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 50%; border-radius: 8px; box-shadow: var(--shadow);">
+      <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h2 style="margin: 0; font-size: 20px; color: var(--text-color);">Motif de refus</h2>
+        <span class="close" onclick="closeRejectModal()" style="color: #aaa; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+      </div>
+      <form id="rejectForm" method="post">
+        <div class="modal-body" style="margin-bottom: 20px;">
+          <p>Veuillez indiquer le motif du refus de cet hébergement :</p>
+          <textarea name="commentaire" required placeholder="Expliquez pourquoi cet hébergement est refusé..." style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; resize: vertical; min-height: 100px;"></textarea>
+        </div>
+        <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" class="btn-details" onclick="closeRejectModal()">Annuler</button>
+          <button type="submit" class="btn-reject">Confirmer le refus</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <script>
+    function confirmDelete(id) {
+      if (confirm("Êtes-vous sûr de vouloir supprimer cet hébergement ?")) {
+        // Afficher un indicateur visuel que l'action est en cours
+        const deleteButtons = document.querySelectorAll('.btn-delete');
+        let targetButton = null;
+        
+        deleteButtons.forEach(btn => {
+          if (btn.getAttribute('onclick').includes(id)) {
+            targetButton = btn;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Suppression...';
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+            // Désactiver également les autres boutons d'action dans la même ligne
+            const actionButtonsContainer = btn.closest('.action-buttons');
+            if (actionButtonsContainer) {
+              const otherButtons = actionButtonsContainer.querySelectorAll('button:not(.btn-delete), a');
+              otherButtons.forEach(otherBtn => {
+                otherBtn.style.opacity = '0.5';
+                otherBtn.style.pointerEvents = 'none';
+              });
+            }
+          }
+        });
+        
+        // Créer un formulaire dynamique pour la suppression
+        var form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/admin/hebergements/delete-with-notifications/' + id;
+        
+        // Ajouter un gestionnaire d'erreur pour capturer les échecs de suppression
+        form.addEventListener('submit', function(event) {
+          // Le formulaire sera soumis normalement, mais nous ajoutons cette fonction
+          // pour pouvoir gérer les erreurs potentielles lors du retour
+        });
+        
+        // Ajouter un timeout pour restaurer le bouton si la requête prend trop de temps
+        setTimeout(() => {
+          // Vérifier si la page a été rechargée en vérifiant si le bouton existe encore dans le DOM
+          if (targetButton && document.body.contains(targetButton)) {
+            // Si le bouton existe toujours, c'est que la requête n'a pas abouti à un rechargement
+            // Restaurer le bouton à son état initial
+            targetButton.innerHTML = '<i class="fas fa-trash"></i> Supprimer';
+            targetButton.disabled = false;
+            targetButton.style.opacity = '1';
+            // Réactiver les autres boutons
+            const actionButtonsContainer = targetButton.closest('.action-buttons');
+            if (actionButtonsContainer) {
+              const otherButtons = actionButtonsContainer.querySelectorAll('button, a');
+              otherButtons.forEach(otherBtn => {
+                otherBtn.style.opacity = '1';
+                otherBtn.style.pointerEvents = 'auto';
+              });
+            }
+            // Afficher un message d'erreur générique
+            showErrorMessage("La suppression a pris trop de temps ou a échoué. Veuillez réessayer.");
+          }
+        }, 10000); // 10 secondes de timeout
+        
+        document.body.appendChild(form);
+        form.submit();
+      }
+    }
+    
+    // Fonction pour afficher un message d'erreur
+    function showErrorMessage(message) {
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'alert alert-danger';
+      errorDiv.style.backgroundColor = 'rgba(231, 76, 60, 0.1)';
+      errorDiv.style.border = '1px solid var(--error-color)';
+      errorDiv.style.color = 'var(--error-color)';
+      errorDiv.style.padding = '15px';
+      errorDiv.style.marginBottom = '20px';
+      errorDiv.style.borderRadius = '4px';
+      errorDiv.style.position = 'fixed';
+      errorDiv.style.top = '20px';
+      errorDiv.style.left = '50%';
+      errorDiv.style.transform = 'translateX(-50%)';
+      errorDiv.style.zIndex = '9999';
+      errorDiv.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+      errorDiv.style.maxWidth = '80%';
+      errorDiv.style.animation = 'fadeIn 0.3s';
+      
+      errorDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + message + 
+                         '<button style="position: absolute; right: 10px; top: 10px; background: none; border: none; color: var(--error-color); cursor: pointer;" onclick="this.parentElement.remove();"><i class="fas fa-times"></i></button>';
+      
+      document.body.appendChild(errorDiv);
+      
+      // Supprimer automatiquement après 5 secondes
+      setTimeout(() => {
+        if (errorDiv.parentNode) {
+          errorDiv.remove();
+        }
+      }, 5000);
+    }
+    
+    // Fonction pour afficher un message de succès
+    function showSuccessMessage(message) {
+      const successDiv = document.createElement('div');
+      successDiv.className = 'alert alert-success';
+      successDiv.style.backgroundColor = 'rgba(40, 167, 69, 0.1)';
+      successDiv.style.border = '1px solid var(--success-color)';
+      successDiv.style.color = 'var(--success-color)';
+      successDiv.style.padding = '15px';
+      successDiv.style.marginBottom = '20px';
+      successDiv.style.borderRadius = '4px';
+      successDiv.style.position = 'fixed';
+      successDiv.style.top = '20px';
+      successDiv.style.left = '50%';
+      successDiv.style.transform = 'translateX(-50%)';
+      successDiv.style.zIndex = '9999';
+      successDiv.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+      successDiv.style.maxWidth = '80%';
+      successDiv.style.animation = 'fadeIn 0.3s';
+      
+      successDiv.innerHTML = '<i class="fas fa-check-circle"></i> ' + message + 
+                         '<button style="position: absolute; right: 10px; top: 10px; background: none; border: none; color: var(--success-color); cursor: pointer;" onclick="this.parentElement.remove();"><i class="fas fa-times"></i></button>';
+      
+      document.body.appendChild(successDiv);
+      
+      // Supprimer automatiquement après 5 secondes
+      setTimeout(() => {
+        if (successDiv.parentNode) {
+          successDiv.remove();
+        }
+      }, 5000);
+    }
+    
+    // Vérifier si une erreur est présente dans l'URL (ajoutée par le contrôleur)
+    document.addEventListener('DOMContentLoaded', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const error = urlParams.get('error');
+      const errorType = urlParams.get('errorType');
+      
+      // Vérifier s'il y a un message d'erreur dans la session
+      const sessionErrorMessage = document.getElementById('sessionErrorMessage');
+      if (sessionErrorMessage && sessionErrorMessage.value) {
+        showErrorMessage(sessionErrorMessage.value);
+        // Effacer le message après l'avoir affiché
+        sessionErrorMessage.value = '';
+        
+        // Envoyer une requête pour effacer le message de session côté serveur
+        fetch('/admin/clear-session-message?type=error', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }).catch(error => console.error('Erreur lors de la suppression du message de session:', error));
+      }
+      
+      // Vérifier s'il y a un message de succès dans la session
+      const sessionSuccessMessage = document.getElementById('sessionSuccessMessage');
+      if (sessionSuccessMessage && sessionSuccessMessage.value) {
+        showSuccessMessage(sessionSuccessMessage.value);
+        // Effacer le message après l'avoir affiché
+        sessionSuccessMessage.value = '';
+        
+        // Envoyer une requête pour effacer le message de session côté serveur
+        fetch('/admin/clear-session-message?type=success', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }).catch(error => console.error('Erreur lors de la suppression du message de session:', error));
+      }
+      
+      // Vérifier si une erreur est présente dans l'URL
+      if (error === 'constraint') {
+        // Message d'erreur plus générique pour couvrir tous les types de contraintes
+        let message = "Impossible de supprimer cet hébergement car il est référencé par d'autres éléments";
+        
+        // Personnaliser le message en fonction du type d'erreur
+        if (errorType === 'notification') {
+          message = "Impossible de supprimer cet hébergement car il est référencé par des notifications. ";
+          message += "<br><br><strong>Solution :</strong> Veuillez d'abord supprimer les notifications associées à cet hébergement.";
+        } else if (errorType === 'reservation') {
+          message = "Impossible de supprimer cet hébergement car il est référencé par des réservations. ";
+          message += "<br><br><strong>Solution :</strong> Veuillez d'abord supprimer les réservations associées à cet hébergement.";
+        } else if (errorType === 'evaluation') {
+          message = "Impossible de supprimer cet hébergement car il est référencé par des évaluations. ";
+          message += "<br><br><strong>Solution :</strong> Veuillez d'abord supprimer les évaluations associées à cet hébergement.";
+        } else {
+          message += ". Veuillez d'abord supprimer les éléments associés.";
+        }
+        
+        showErrorMessage(message);
+      } else if (error) {
+        showErrorMessage("Une erreur s'est produite lors de la suppression de l'hébergement: " + error);
+      }
+      
+      // Vérifier s'il y a un message de succès
+      const successMessage = urlParams.get('success');
+      if (successMessage) {
+        showSuccessMessage("L'hébergement a été supprimé avec succès.");
+      }
+    });
+    
+    // Fonction pour ouvrir la modal de refus
+    function openRejectModal(hebergementId) {
+      const modal = document.getElementById('rejectModal');
+      const form = document.getElementById('rejectForm');
+      
+      // Définir l'action du formulaire
+      form.action = '/admin/refuser-hebergement/' + hebergementId;
+      
+      // Afficher la modal
+      modal.style.display = 'block';
+    }
+    
+    // Fonction pour fermer la modal de refus
+    function closeRejectModal() {
+      const modal = document.getElementById('rejectModal');
+      modal.style.display = 'none';
+    }
+    
+    // Fermer la modal si l'utilisateur clique en dehors
+    window.onclick = function(event) {
+      const modal = document.getElementById('rejectModal');
+      if (event.target == modal) {
+        closeRejectModal();
+      }
+    }
+    
+    // Fonctions de gestion des menus déplacées vers le fichier externe sidebar.js
+    
+    // Au chargement de la page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Ouvrir automatiquement le menu actif
+      const currentPath = window.location.pathname;
+      const sidebarLinks = document.querySelectorAll('.sidebar-submenu a');
+      
+      sidebarLinks.forEach(link => {
+        if (link.getAttribute('href') === currentPath) {
+          // Trouver le conteneur parent du sous-menu
+          const submenuContainer = link.closest('.sidebar-submenu-container');
+          if (submenuContainer) {
+            submenuContainer.style.display = 'block';
+            // Activer le bouton dropdown parent
+            const button = submenuContainer.previousElementSibling.querySelector('a');
+            if (button) {
+              button.classList.add('active');
+              // Faire pivoter l'icône
+              const icon = button.querySelector('.fa-chevron-down');
+              if (icon) {
+                icon.style.transform = 'rotate(180deg)';
+              }
+            }
+          }
+        }
+      });
+    });
+  </script>
+  <script src="/SuperAdmin/js/sidebar.js"></script>
+</div><!-- Fin de dashboard__container -->
+</body>
+</html>

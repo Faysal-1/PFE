@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
+<!-- Mirrored from www.ansonika.com/citytours/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Mar 2025 15:39:30 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Citytours - Premium site template for city tours agencies, transfers and tickets.">
+    <meta name="author" content="Ansonika">
+    <title>CITY TOURS - Voyage au Cœur du Maroc</title>
+
+    <!-- Favicons-->
+    <link rel="shortcut icon" href="/assets/img/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" type="image/x-icon" href="/assets/img/apple-touch-icon-57x57-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="/assets/img/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="/assets/img/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="/assets/img/apple-touch-icon-144x144-precomposed.png">
+
+    <!-- GOOGLE WEB FONT -->
+    <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&amp;family=Montserrat:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+    
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- COMMON CSS -->
+	<link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
+	<link href="/assets/css/vendors.css" rel="stylesheet">
+
+	<!-- ALTERNATIVE COLORS CSS -->
+    <link href="#" id="colors" rel="stylesheet">
+
+</head>
+<style>
+        /* Styles pour le lien de liste de souhaits list ; */
+        
+        header, header * {
+        color: #111 !important;
+        }
+        .my-wishlist-link {
+            color: white;
+            text-decoration: none;
+            position: relative;
+        }
+        .my-wishlist-link:hover {
+            color: #f9c56a;
+        }
+        .my-wishlist-link i {
+            margin-right: 5px;
+        }
+        /* Styles pour le lien de liste de souhaits list faysal; */
+/* ===== SUPPRESSION DES LIGNES DANS LE HEADER (menu du haut) ===== */
+header,
+.top_line,
+.main_menu,
+nav,
+.menu,
+#top_line,
+
+/* Style pour la barre de navigation */
+#position {
+    border-bottom: 1px solid #e6e6e6;
+    background-color: #f9f9f9;
+    padding: 8px 0;
+}
+
+#position ul {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#position ul li {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 20px;
+    font-size: 13px;
+    color: #555;
+}
+
+#position ul li a {
+    color: #555;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+#position ul li i {
+    display: none; /* Masquer toutes les icônes */
+}
+
+#top_line,
+#header {
+    border-top: none !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+}
+
+/* Supprimer lignes décoratives éventuelles */
+header::before,
+header::after,
+.top_line::before,
+.top_line::after,
+nav::before,
+nav::after {
+    display: none !important;
+}
+
+/* ===== SUPPRESSION DES LIGNES DANS LE FOOTER (liens en bas) ===== */
+footer,
+.footer,
+#footer,
+.footer_links {
+    border-top: none !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+}
+
+/* Supprimer lignes décoratives du footer */
+footer::before,
+footer::after,
+.footer::before,
+.footer::after {
+    display: none !important;
+}
+
+/* ===== STYLE DES LIENS POUR RESTER PROPRES ===== */
+a {
+    text-decoration: none;
+    border: none;
+    color: #fff; /* ou la couleur de ton thème */
+}
+
+/* Ajustement si lignes étaient créées par hr */
+hr {
+    display: none !important;
+}
+
+
+</style>
+
+
+<body>
+
+    <div id="preloader">
+        <div class="sk-spinner sk-spinner-wave">
+            <div class="sk-rect1"></div>
+            <div class="sk-rect2"></div>
+            <div class="sk-rect3"></div>
+            <div class="sk-rect4"></div>
+            <div class="sk-rect5"></div>
+        </div>
+    </div>
+    <!-- End Preload -->
+
+    <div class="layer"></div>
+    <!-- Mobile menu overlay mask -->
+    <!-- Header================================================== -->
+    <header  style="position: fixed; top: 0; width: 100%; z-index: 1100; background: #fff;" id="main-header">
+        <div id="top_line">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6">
+                        <i class="icon-phone"></i><strong>‪+212 618311344‬</strong>
+                    </div>
+                    <div class="col-6">
+                        <ul id="top_links">
+                            <!-- Avant connexion -->
+                            <li sec:authorize="!isAuthenticated()">
+                                <a id="login-form" href="/login">Se connecter</a>
+                            </li>
+                        
+                            <!-- Après connexion -->
+                            <li sec:authorize="isAuthenticated()">
+                                <span>
+                                    <i class="icon-user"></i>
+                                    <span th:if="${connectedUser != null}" th:text="${connectedUser.fullName}">Nom</span>
+                                </span>
+                            </li>
+                            <li sec:authorize="isAuthenticated()">
+                                <a href="/logout"><i class="icon-logout"></i> Se déconnecter</a>
+                            </li>
+                        
+                            <!-- Bouton pour la liste de souhaits -->
+                            <li>
+                                <a th:href="@{/hebergement/wishlist}" sec:authorize="isAuthenticated()" class="my-wishlist-link"><i class="icon-heart"></i> Liste de souhaits</a>
+                                <a th:href="@{/login}" sec:authorize="!isAuthenticated()" class="my-wishlist-link"><i class="icon-heart"></i> Liste de souhaits</a>
+                            </li>
+                        </ul>
+                        
+                    </div>
+                </div><!-- End row -->
+            </div><!-- End container-->
+        </div><!-- End top line -->  
+        <div class="container">
+     <div class="row" style="align-items: center;">
+    <div class="col-3">
+        <div id="logo_home">
+            <h1><a href="/index" title="City tours travel template">City Tours travel</a></h1>
+        </div>
+    </div>
+    <nav class="col-9">
+                    <a class="cmn-toggle-switch cmn-toggle-switch__htx open_close" href="javascript:void(0);"><span>Menu mobile</span></a>
+                    <div class="main-menu">
+                        <div id="header_menu">
+                            <img src="/assets/img/logo_sticky.png" width="160" height="34" alt="City tours">
+                        </div>
+                        <a href="#" class="open_close" id="close_in"><i class="icon_set_1_icon-77"></i></a>
+                        <ul>
+                            <li class="submenu">
+                                <a href="/index" class="show-submenu">Accueil </a>
+                            </li>
+                            <li class="submenu">
+                                <a href="javascript:void(0);" class="show-submenu">Hébergements <i class="icon-down-open-mini"></i></a>
+                                <ul class="hebergement-list">
+                                    <li>
+                                        <a th:href="@{/hebergement}" class="second-level">Tous les types</a>
+                                    </li>
+                                    <li th:each="type : ${hebergementType}">
+                                        <a th:href="@{'/hebergement/' + ${type.name()} + '/list'}"
+                                        th:text="${#strings.capitalize(type.name().toLowerCase().replace('_',' '))}"
+                                        class="second-level"></a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="submenu">
+                                <a href="javascript:void(0);" class="show-submenu">Gastronomie <i class="icon-down-open-mini"></i></a><ul>
+                                    <li><a href="all_hotels_list.html">All hotels list</a></li>
+                                    <li><a href="all_hotels_grid.html">All hotels grid</a></li>
+                                    <li><a href="all_hotels_grid_masonry.html">All hotels Sort Masonry</a></li>
+                                    <li><a href="all_hotels_map_listing.html">All hotels map listing</a></li>
+                                </ul>
+                            </li>
+                            <li class="submenu">
+                                <a href="javascript:void(0);" class="show-submenu">Transports  <i class="icon-down-open-mini"></i></a>
+                                <ul>
+                                    <li><a href="/public/Transports/infosTransports.html">Informations</a></li>
+                                    <li><a href="/Client/Transports/reservationTransports.html">Réservations</a></li>
+                                 
+                                </ul>
+                            </li>
+                            
+                             <li class="submenu">
+                                    <a href="javascript:void(0);" class="show-submenu">Événements <i class="icon-down-open-mini"></i></a>
+                                    <ul class="evenement-list">
+                                        <li>
+                                            <a th:href="@{/evenements}" class="second-level">Tous les types</a>
+                                        </li>
+                                        <li th:each="type : ${evenementType}">
+                                            <a th:href="@{'/evenements/' + ${type.name()} + '/list'}"
+                                            th:text="${#strings.capitalize(type.name().toLowerCase().replace('_',' '))}"
+                                            class="second-level"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+
+                             <li class="megamenu submenu">
+                                <a href="javascript:void(0);" class="show-submenu-mega">Bonus<i class="icon-down-open-mini"></i></a>
+                                <div class="menu-wrapper">
+                                	<div class="row">
+                            
+                            </li>
+                            <li class="megamenu submenu">
+                                <a href="javascript:void(0);" class="show-submenu-mega">Pages<i class="icon-down-open-mini"></i></a>
+                                <div class="menu-wrapper">
+                                </div><!-- End menu-wrapper -->
+                            </li>
+                        </ul>
+                    </div><!-- End main-menu -->
+                    <ul id="top_tools">
+                        <li>
+                            <a href="javascript:void(0);" class="search-overlay-menu-btn"><i class="icon_search"></i></a>
+                        </li>
+
+                    </ul>
+                </nav>
+            </div>
+        </div>
+  </header>
+	<!-- End Header -->
+
+	<!-- End Section hero_2 -->
+
+	<main>
+		<div id="position">
+			<div class="container">
+				<ul>
+					<li style="margin-left: 10px;"><a href="/index">Accueil</a></li>
+					<li><a href="/hebergement/all">Hébergements</a></li>
+					<li>Confirmation</li>
+				</ul>
+			</div>
+		</div>
+		<!-- End position -->
+
+		<div class="container margin_60">
+            <div class="bs-wizard row" style="margin-top: 45px !important; background-color: gainsboro;">
+
+				<div class="col-4 bs-wizard-step complete">
+					<div class="text-center bs-wizard-stepnum">Votre panier</div>
+					<div class="progress">
+						<div class="progress-bar"></div>
+					</div>
+					<a th:href="@{/hebergement/cart}" class="bs-wizard-dot"></a>
+				</div>
+
+				<div class="col-4 bs-wizard-step complete">
+					<div class="text-center bs-wizard-stepnum">Vos détails</div>
+					<div class="progress">
+						<div class="progress-bar"></div>
+					</div>
+					<a th:href="@{/hebergement/payment}" class="bs-wizard-dot"></a>
+				</div>
+
+				<div class="col-4 bs-wizard-step complete">
+					<div class="text-center bs-wizard-stepnum">Terminé !</div>
+					<div class="progress">
+						<div class="progress-bar"></div>
+					</div>
+					<a href="#" class="bs-wizard-dot"></a>
+				</div>
+
+			</div>
+			<div class="row">
+				<div class="col-lg-8 add_bottom_15">
+
+					<div class="form_title">
+						<h3><strong><i class="icon-ok"></i></strong>Merci pour votre réservation !</h3>
+						<p>
+							Votre réservation d'hébergement a été confirmée avec succès. Un email de confirmation a été envoyé à l'adresse <strong th:text="${paiement != null ? paiement.email : 'email@example.com'}">email@example.com</strong>.
+						</p>
+					</div>
+					<div class="step">
+						<p>
+							Votre numéro de réservation est : <strong th:text="${numeroReservation}">RES-12345</strong>. Veuillez conserver ce numéro pour toute communication future concernant votre réservation.
+						</p>
+					</div>
+					<!--End step -->
+
+					<div class="form_title">
+						<h3><strong><i class="icon-tag-1"></i></strong>Résumé de la réservation</h3>
+						<p>
+							Voici les détails de votre réservation d'hébergement.
+						</p>
+					</div>
+					<div class="step">
+						<table class="table table-striped confirm">
+							<tbody>
+								<!-- Informations personnelles -->
+								<tr>
+									<td><strong>Nom complet</strong></td>
+									<td><span th:text="${paiement != null ? paiement.prenom + ' ' + paiement.nom : 'Prénom Nom'}">Prénom Nom</span></td>
+								</tr>
+								<tr>
+									<td><strong>Email</strong></td>
+									<td><span th:text="${paiement != null ? paiement.email : 'email@example.com'}">email@example.com</span></td>
+								</tr>
+								<tr>
+									<td><strong>Téléphone</strong></td>
+									<td><span th:text="${paiement != null ? paiement.telephone : '+212 600000000'}">+212 600000000</span></td>
+								</tr>
+								
+								<!-- Adresse de facturation -->
+								<tr>
+									<td><strong>Adresse</strong></td>
+									<td>
+										<span th:text="${paiement != null ? paiement.adresse1 : 'Adresse ligne 1'}">Adresse ligne 1</span>
+										<br th:if="${paiement != null && paiement.adresse2 != null && !paiement.adresse2.isEmpty()}">
+										<span th:if="${paiement != null && paiement.adresse2 != null && !paiement.adresse2.isEmpty()}" th:text="${paiement.adresse2}">Adresse ligne 2</span>
+									</td>
+								</tr>
+								<tr>
+									<td><strong>Ville / État / Code postal</strong></td>
+									<td>
+										<span th:text="${paiement != null ? paiement.ville : 'Ville'}">Ville</span>,
+										<span th:text="${paiement != null ? paiement.etat : 'État'}">État</span>,
+										<span th:text="${paiement != null ? paiement.codePostal : '10000'}">10000</span>
+									</td>
+								</tr>
+								<tr>
+									<td><strong>Pays</strong></td>
+									<td><span th:text="${paiement != null ? paiement.pays : 'Maroc'}">Maroc</span></td>
+								</tr>
+								
+								<!-- Détails de la réservation -->
+								<tr>
+									<td><strong>Date d'arrivée</strong></td>
+									<td><span th:text="${#temporals.format(dateArrivee, 'dd MMMM yyyy')}">10 avril 2025</span></td>
+								</tr>
+								<tr>
+									<td><strong>Date de départ</strong></td>
+									<td><span th:text="${#temporals.format(dateDepart, 'dd MMMM yyyy')}">12 avril 2025</span></td>
+								</tr>
+								<tr>
+									<td><strong>Nombre de nuits</strong></td>
+									<td><span th:text="${nbNuits}">2</span></td>
+								</tr>
+								
+								<!-- Hébergements réservés -->
+								<tr>
+									<td><strong>Hébergements</strong></td>
+									<td>
+										<ul class="list-unstyled" th:if="${cartItems != null && !cartItems.isEmpty()}">
+											<li th:each="item : ${cartItems}">
+												<span th:text="${item.capacite > 1 ? item.capacite + ' x ' : ''} + ${item.nom}">1 x Nom de l'hébergement</span>
+											</li>
+										</ul>
+										<span th:if="${cartItems == null || cartItems.isEmpty()}">Aucun hébergement</span>
+									</td>
+								</tr>
+								
+								<!-- Services additionnels -->
+								<tr th:if="${selectedServices != null && !selectedServices.isEmpty()}">
+									<td><strong>Services additionnels</strong></td>
+									<td>
+										<ul class="list-unstyled">
+											<li th:each="service : ${selectedServices}">
+												<span th:text="${service.key} + ' (' + ${service.value} + ' MAD)'">Service (0 MAD)</span>
+											</li>
+										</ul>
+									</td>
+								</tr>
+								
+								<!-- Paiement -->
+								<tr>
+									<td><strong>Type de paiement</strong></td>
+									<td>Carte de crédit</td>
+								</tr>
+								<tr>
+									<td><strong>Prix des hébergements</strong></td>
+									<td><span th:text="${prixHebergements} + ' MAD'">0 MAD</span></td>
+								</tr>
+								<tr th:if="${serviceTotal != null && serviceTotal > 0}">
+									<td><strong>Prix des services</strong></td>
+									<td><span th:text="${serviceTotal} + ' MAD'">0 MAD</span></td>
+								</tr>
+								<tr>
+									<td><strong>Coût total</strong></td>
+									<td><strong th:text="${prixTotal} + ' MAD'">0 MAD</strong></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<!--End step -->
+				</div>
+				<!--End col -->
+
+				<aside class="col-lg-4">
+					<div class="box_style_1">
+						<h3 class="inner">Merci !</h3>
+						<p>
+							Nous vous remercions pour votre confiance. Un email de confirmation a été envoyé à l'adresse indiquée avec tous les détails de votre réservation.
+						</p>
+						<hr>
+                       <di
+                       v class="row mt-4 mb-5">
+                            <div class="col-md-12 text-center">
+                                <form th:action="@{/hebergement/invoice}" method="post" target="_blank" style="display: inline;" id="invoiceForm">
+                                    <input type="hidden" name="reservationId" th:value="${numeroReservation}" />
+                                    <a class="btn_full_outline" href="javascript:void(0)" onclick="document.getElementById('invoiceForm').submit(); return false;">
+                                        <i class="bi bi-receipt" style="margin-right: 8px;"></i> Voir votre facture
+                                    </a>
+                                </form>
+                            </div>
+                        </div>
+						<br>
+						<a class="btn_full" th:href="@{/index}">Retour à l'accueil</a>
+					</div>
+					<div class="box_style_4">
+						<i class="icon_set_1_icon-89"></i>
+						<h4>Vous avez <span>des questions ?</span></h4>
+						<a href="tel://+212618311344" class="phone">+212 618 311 344</a>
+						<small>Du lundi au vendredi de 9h00 à 19h30</small>
+					</div>
+				</aside>
+
+			</div>
+			<!--End row -->
+		</div>
+		<!--End container -->
+	</main>
+	<!-- End main -->
+
+	<footer class="revealed" style="background-color: #1c1c1c;">
+        <div class="container">                                     
+            <div class="row">
+                <div class="col-md-4">
+                    <h3 style="color: white; margin-bottom: 15px; font-weight: 600; font-size: 14px;">BESOIN D'AIDE ?</h3>
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <div style="margin-right: 15px;">
+                            <i class="bi bi-telephone-fill" style="color: #e8cc00; font-size: 16px;"></i>
+                        </div>
+                        <span style="color: #e8cc00; font-size: 14px; font-weight: 600;">+212 618 311 344</span>
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <div style="margin-right: 15px;">
+                            <i class="bi bi-envelope-fill" style="color: #e8cc00; font-size: 16px;"></i>
+                        </div>
+                        <span style="color: #e8cc00; font-size: 14px; font-weight: 600;">aide@citytours.com</span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <h3 style="font-size: 14px;">À propos</h3>
+                    <ul>
+                        <li><a href="#">À propos de nous</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="/login.html">Connexion</a></li>
+                        <li><a href="/register.html">Inscription</a></li>
+                        <li><a href="#">Conditions générales</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h3 style="font-size: 14px;">Découvrir</h3>
+                    <ul>
+                        <li><a href="#">Blog communautaire</a></li>
+                        <li><a href="#">Guide touristique</a></li>
+                        <li><a href="#">Liste de souhaits</a></li>
+                        <li><a href="#">Galerie</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h3 style="font-size: 14px;">Paramètres</h3>
+                    <div class="styled-select">
+                        <select name="lang" id="lang">
+                            <option value="Français" selected>Français</option>
+                            <option value="Anglais">Anglais</option>
+                            <option value="Espagnol">Espagnol</option>
+                            <option value="Russe">Russe</option>
+                        </select>
+                    </div>
+                    <div class="styled-select">
+                        <select name="currency" id="currency">
+                            <option value="MAD" selected>MAD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="USD">USD</option>
+                            <option value="GBP">GBP</option>
+                        </select>
+                    </div>
+                </div>
+            </div><!-- End row -->
+            <!-- Fin bouton facture -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="social_footer">
+                        <ul>
+                            <li><a href="#0"><i class="bi bi-instagram"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-whatsapp"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-facebook"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-youtube"></i></a></li>
+                        </ul>
+                        <p style="font-size: 12px;">© Citytours 2025</p>
+                    </div>
+                </div>
+            </div><!-- End row -->
+        </div><!-- End container -->
+    </footer><!-- End footer -->
+
+	<div id="toTop"><i class="bi bi-arrow-up-circle-fill"></i></div><!-- Back to top button -->
+	
+	<!-- Search Menu -->
+	<div class="search-overlay-menu">
+		<span class="search-overlay-close"><i class="icon_set_1_icon-77"></i></span>
+		<form role="search" id="searchform" method="get">
+			<input value="" name="q" type="text" placeholder="Rechercher..." />
+			<button type="submit"><i class="icon_set_1_icon-78"></i>
+			</button>
+		</form>
+	</div><!-- End Search Menu -->
+	
+	<!-- Jquery -->
+	<script src="/assets/js/jquery-3.7.1.min.js"></script>
+	<script src="/assets/js/common_scripts_min.js"></script>
+	<script src="/assets/js/functions.js"></script>
+
+
+<!-- SWITCHER  -->
+    <script src="/assets/js/switcher.js"></script>
+</body>
+
+
+<!-- Mirrored from www.ansonika.com/citytours/confirmation_hotel.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Mar 2025 15:41:10 GMT -->
+</html>

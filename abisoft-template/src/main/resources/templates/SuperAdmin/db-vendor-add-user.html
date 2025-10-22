@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ajouter un hébergement</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/SuperAdmin/css/sidebar.css">
+  <style>
+    /* Variables CSS pour la cohérence des couleurs */
+    :root {
+      --sidebar-width: 250px;
+      --primary-color: #0056b3;
+      --secondary-color: #4f8cff;
+      --accent-color: #ffb347;
+      --text-color: #2c3e50;
+      --light-text: #6c7a89;
+      --border-color: #e0e6ed;
+      --background-color: #f5f7fa;
+      --card-bg: #ffffff;
+      --success-color: #2ecc71;
+      --error-color: #e74c3c;
+      --shadow: 0 4px 12px rgba(0,0,0,0.08);
+      --transition: all 0.3s ease;
+    }
+    
+    /* Styles pour la barre latérale */
+    .dashboard__sidebar {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      height: 100vh;
+      z-index: 5;
+      box-shadow: 0 0 15px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+    }
+    
+    /* Styles pour la barre latérale en mode responsive */
+    @media (max-width: 992px) {
+      .dashboard__sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      }
+      
+      .sidebar-content {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .sidebar__item {
+        margin: 5px 10px;
+      }
+      .dashboard__main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;      /* Centre horizontalement */
+  justify-content: flex-start; /* Optionnel : commence en haut */
+  min-height: 100vh;
+  padding: 40px 0;          /* Espace vertical */
+  background: var(--background-color, #f5f7fa);
+}
+      .form-container {
+        width: 100% !important;
+        height: auto !important;
+        margin-top: 20px !important;
+      }
+    }
+    
+    .sidebar-header {
+      padding: 20px 15px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .sidebar-logo {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      margin-right: 10px;
+    }
+    
+    .sidebar-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin: 0;
+    }
+    
+    .user-profile {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+    }
+    
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 10px;
+      border: 2px solid var(--border-color);
+    }
+    
+    .user-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-color);
+    }
+    
+    .sidebar-divider {
+      height: 1px;
+      background-color: var(--border-color);
+      margin: 10px 0;
+    }
+    
+    .sidebar__item {
+      margin-bottom: 5px;
+    }
+    
+    .sidebar__button {
+      padding: 12px 20px;
+      border-radius: 8px;
+      transition: var(--transition);
+      margin: 0 8px;
+    }
+    
+    .sidebar__button:hover, 
+    .sidebar__button.-is-active {
+      background-color: rgba(0, 86, 179, 0.08);
+    }
+    
+    .sidebar__button.-is-active a {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+    
+    .sidebar__button a {
+      color: var(--text-color);
+      text-decoration: none;
+      width: 100%;
+      display: flex;
+      align-items: center;
+    }
+    
+    .sidebar__button i {
+      font-size: 18px;
+      width: 24px;
+      color: var(--primary-color);
+    }
+    
+    /* Styles pour les éléments de la barre latérale */
+    .mr-15 {
+      margin-right: 15px;
+    }
+    
+    .ml-auto {
+      margin-left: auto;
+    }
+    
+    .d-flex {
+      display: flex;
+    }
+    
+    .items-center {
+      align-items: center;
+    }
+    
+    .text-14 {
+      font-size: 14px;
+    }
+    
+    .text-15 {
+      font-size: 15px;
+    }
+    
+    .lh-1 {
+      line-height: 1;
+    }
+    
+    .fw-400 {
+      font-weight: 400;
+    }
+    
+    .fw-500 {
+      font-weight: 500;
+    }
+    
+    .sidebar-submenu-container {
+      padding-left: 15px;
+      margin-bottom: 10px;
+    }
+    
+    .sidebar-submenu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .submenu-item {
+      margin-bottom: 2px;
+    }
+    
+    .submenu-item.active .submenu-link {
+      color: var(--primary-color);
+      font-weight: 500;
+    }
+    
+    .submenu-link {
+      display: flex;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 6px;
+      text-decoration: none;
+      color: #555;
+      transition: var(--transition);
+    }
+    
+    .submenu-link:hover {
+      background-color: rgba(0, 102, 204, 0.05);
+      color: var(--primary-color);
+    }
+    
+    .submenu-icon {
+      margin-right: 8px;
+      font-size: 14px;
+    }
+    
+    .submenu-link:hover {
+      background-color: rgba(0, 86, 179, 0.05);
+      color: var(--primary-color);
+    }
+    
+    .submenu-icon {
+      font-size: 14px;
+      margin-right: 10px;
+      width: 16px;
+      color: var(--light-text);
+    }
+    
+    .logout-button {
+      margin-top: 20px;
+    }
+    
+    .logout-button a {
+      color: #e74c3c;
+    }
+    
+    .logout-button i {
+      color: #e74c3c;
+    }
+    
+    .logout-button:hover {
+      background-color: rgba(231, 76, 60, 0.08);
+    }
+    :root {
+      --primary-color: #0056b3;
+      --secondary-color: #4f8cff;
+      --accent-color: #ffb347;
+      --text-color: #2c3e50;
+      --light-text: #6c7a89;
+      --border-color: #e0e6ed;
+      --background-color: #f5f7fa;
+      --card-bg: #ffffff;
+      --success-color: #2ecc71;
+      --error-color: #e74c3c;
+      --shadow: 0 4px 12px rgba(0,0,0,0.08);
+      --transition: all 0.3s ease;
+    }
+    
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      background: var(--background-color);
+      margin: 0;
+      padding: 0;
+      color: var(--text-color);
+    }
+    .form-container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 32px 40px 24px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .form-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    }
+    .step {
+      display: none;
+      animation: fadeIn .4s;
+    }
+    .step.active {
+      display: block;
+    }
+    .step-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 18px;
+      letter-spacing: 1px;
+    }
+    .form-group {
+      margin-bottom: 22px;
+      position: relative;
+    }
+    label {
+      font-weight: 500;
+      color: var(--text-color);
+      margin-bottom: 8px;
+      display: block;
+      font-size: 0.95rem;
+      transition: var(--transition);
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 1rem;
+      background: #fafbfc;
+      margin-top: 2px;
+      transition: var(--transition);
+      color: var(--text-color);
+      box-sizing: border-box;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary-color);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.15);
+      background: #fff;
+    }
+    .pagination {
+      margin-top: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .pagination .btn {
+      background: var(--primary-color);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 28px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 86, 179, 0.15);
+      transition: var(--transition);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .pagination .btn:hover {
+      background: #0062cc;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 86, 179, 0.25);
+    }
+    .dropzone {
+      border: 2px dashed var(--primary-color);
+      border-radius: 10px;
+      background: rgba(0, 86, 179, 0.05);
+      text-align: center;
+      padding: 34px 0;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      color: var(--primary-color);
+      transition: var(--transition);
+      cursor: pointer;
+      position: relative;
+    }
+    .dropzone.dragover {
+      border-color: var(--secondary-color);
+      background: rgba(79, 140, 255, 0.1);
+    }
+    .dropzone input[type="file"] {
+      display: none;
+    }
+    .dropzone .icon {
+      font-size: 2.3rem;
+      margin-bottom: 7px;
+      display: block;
+    }
+    .preview-img {
+      max-width: 100px;
+      max-height: 100px;
+      border-radius: 8px;
+      margin-top: 10px;
+      box-shadow: 0 2px 8px rgba(60,60,120,0.10);
+    }
+    @media (max-width: 600px) {
+      .form-container {
+        padding: 16px 6px;
+      }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    body {
+      background: #f6f8fb;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .form-container {
+      background-color: white;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      max-width: 100%;
+      margin: 0 auto;
+      position: relative;
+    }
+    
+    .form-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 15px;
+      text-align: center;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 10px;
+    }
+    
+    .section-title {
+      color: var(--primary-color);
+      margin-bottom: 12px;
+      font-size: 20px;
+      border-left: 4px solid var(--primary-color);
+      padding-left: 10px;
+    }
+    
+    .form-section {
+      display: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+      margin-bottom: 0;
+    }
+    
+    .form-section.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .form-navigation {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-color);
+      padding: 10px 0;
+    }
+    
+    .form-navigation-center {
+      display: flex;
+      justify-content: center;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-color);
+      padding: 20px 0;
+    }
+    
+    .btn-next, .btn-prev, .btn-save {
+      min-width: 140px;
+      font-weight: 600;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .btn-next {
+      background-color: var(--primary-color);
+    }
+    
+    .btn-next:hover {
+      background-color: #0062cc;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+    }
+    
+    .btn-prev {
+      background-color: #6c757d;
+    }
+    
+    .btn-prev:hover {
+      background-color: #5a6268;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+    }
+    
+    .btn-save {
+      background-color: var(--success-color);
+    }
+    
+    .btn-save:hover {
+      background-color: #27ae60;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+    }
+    
+    .form-group {
+      margin-bottom: 12px;
+    }
+    
+    label {
+      font-weight: 500;
+      color: var(--text-color);
+      margin-bottom: 8px;
+      display: block;
+    }
+    
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 7px;
+      border: 1px solid var(--border-color);
+      background: #f9fafc;
+      font-size: 1rem;
+      color: var(--text-color);
+      transition: var(--transition);
+    }
+    
+    .custom-file-input {
+      position: relative;
+      cursor: pointer;
+      border: 2px dashed var(--border-color);
+      padding: 20px;
+      text-align: center;
+      border-radius: 8px;
+      background-color: rgba(0, 86, 179, 0.05);
+      color: var(--text-color);
+      transition: var(--transition);
+    }
+    
+    .custom-file-input input[type="file"] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+    
+    .preview-img {
+      max-width: 200px;
+      border-radius: 8px;
+      margin-top: 15px;
+      border: 1px solid var(--border-color);
+    }
+    
+    .btn {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 7px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    </style>
+</head>
+<body sec:authorize="hasAuthority('SUPERADMIN_PRIVILEGE')" style="margin: 0; padding: 0;">
+  <!-- Message d'accès refusé pour les non-admin -->
+  <div sec:authorize="!hasAuthority('SUPERADMIN_PRIVILEGE')" style="text-align: center; margin-top: 100px;">
+    <h2 style="color: var(--error-color);">Accès refusé</h2>
+    <p>Seuls les utilisateurs avec le rôle SUPER_ADMIN peuvent ajouter des utilisateurs.</p>
+    <a href="/admin/users" style="color: var(--primary-color); text-decoration: none;"><i class="fas fa-arrow-left"></i> Retour à la liste des utilisateurs</a>
+  </div>
+  <div class="sidebar-container">
+    <div class="sidebar-header">
+      <div class="logo-container">
+        <div id="header_menu">
+          <img src="/assets/img/logo_sticky.png" width="160" height="34" alt="City tours">
+        </div>
+      </div>
+      <span class="sidebar-title">Administration</span>
+      <div class="user-profile">
+        <a th:href="@{/SuperAdmin/profile}" class="profile-link">
+          <img th:src="${userProfileImage}" alt="User Avatar" class="user-avatar" onerror="this.src='/assets/img/tourist_guide_pic.jpg';">
+          <div class="user-info">
+            <div class="user-name" th:text="${#authentication != null && #authentication.principal != null ? #authentication.principal.firstName + ' ' + #authentication.principal.lastName : 'Utilisateur'}">superAdmin</div>
+            <div class="user-role" th:text="${#authentication != null && #authentication.principal != null && not #lists.isEmpty(#authentication.principal.roles) ? #authentication.principal.roles[0].name : 'Non connecté'}">ROLE</div>
+          </div>
+        </a>
+        <div class="notification-bell" title="Notifications">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge" id="notificationBadge">0</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="sidebar-menu">
+      <a th:href="@{/hebergement/wishlist}" class="menu-item">
+        <i class="fas fa-heart"></i>
+        <span>Liste de souhaits</span>
+      </a>
+      <a href="/admin/index" class="menu-item">
+        <i class="fas fa-th-large"></i>
+        <span>Tableau de bord</span>
+      </a>
+      
+      <div class="menu-item dropdown" th:if="${isHebergementAdmin != null && isHebergementAdmin} or ${isProprietaire != null && isProprietaire} or ${isSuperAdmin != null && isSuperAdmin}" sec:authorize="hasAnyAuthority('SUPERADMIN_PRIVILEGE', 'HEBERGEMENT_ADMIN_PRIVILEGE', 'PROPRIETAIRE_PRIVILEGE')">
+        <div class="menu-header" onclick="toggleSubmenu(this)">
+          <div class="menu-icon-title">
+            <i class="fas fa-building"></i>
+            <span>Gérer les hébergements</span>
+          </div>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="submenu">
+<!-- SuperAdmin et HebergementAdmin : Tous les hébergements -->
+<a href="/admin/hebergements" class="submenu-item" th:if="${isSuperAdmin != null && isSuperAdmin} or (${isHebergementAdmin != null && isHebergementAdmin})">
+  <i class="fas fa-list-ul"></i>
+  <span>Tous les hébergements</span>
+</a>
+<!-- Propriétaire : Mes hébergements -->
+<a href="/admin/hebergements" class="submenu-item" th:if="${isProprietaire != null && isProprietaire && !isHebergementAdmin && !isSuperAdmin}">
+  <i class="fas fa-list-ul"></i>
+  <span>Mes hébergements</span>
+</a>
+<!-- Propriétaire et SuperAdmin : Ajouter un hébergement -->
+<a href="/admin/hebergements/add" class="submenu-item active" th:if="${isProprietaire != null && isProprietaire && !isHebergementAdmin && !isSuperAdmin} or (${isSuperAdmin != null && isSuperAdmin})">
+  <i class="fas fa-plus-circle"></i>
+  <span>Ajouter un hébergement</span>
+</a>
+</div>
+        </div>
+      </div>
+      
+      <div class="menu-item dropdown" th:if="${isEvenementAdmin != null && isEvenementAdmin} or ${isSuperAdmin != null && isSuperAdmin}" sec:authorize="hasAnyAuthority('SUPERADMIN_PRIVILEGE', 'EVENEMENT_ADMIN_PRIVILEGE')">
+        <div class="menu-header" onclick="toggleSubmenu(this)">
+          <div class="menu-icon-title">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Gérer les événements</span>
+          </div>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="submenu">
+          <a href="/admin/evenements" class="submenu-item">
+            <i class="fas fa-list-ul"></i>
+            <span>Tous les événements</span>
+          </a>
+          <a href="/admin/add-evenement" class="submenu-item">
+            <i class="fas fa-plus-circle"></i>
+            <span>Ajouter un événement</span>
+          </a>
+        </div>
+      </div>
+      
+      <div class="menu-item dropdown" th:if="${isSuperAdmin != null && isSuperAdmin}" sec:authorize="hasAuthority('SUPERADMIN_PRIVILEGE')">
+        <div class="menu-header" onclick="toggleSubmenu(this)">
+          <div class="menu-icon-title">
+            <i class="fas fa-users"></i>
+            <span>Gérer les utilisateurs</span>
+          </div>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="submenu">
+          <a href="/SuperAdmin/db-vendor-user" class="submenu-item">
+            <i class="fas fa-list-ul"></i>
+            <span>Tous les utilisateurs</span>
+          </a>
+          <a href="/SuperAdmin/db-vendor-add-user" class="submenu-item">
+            <i class="fas fa-user-plus"></i>
+            <span>Ajouter un utilisateur</span>
+          </a>
+        </div>
+      </div>
+      
+      <a th:href="@{/logout}" class="menu-item logout">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Déconnexion</span>
+      </a>
+    </div>
+
+  <div class="dashboard__main" style="margin-left: 280px; width: calc(100% - 280px);">
+    <div class="dashboard__content">
+      <div class="form-container" style="position: relative; width: 100%; height: 100vh; padding: 15px; z-index: 10; background-color: white; box-shadow: 0 0 20px rgba(0,0,0,0.1); overflow-y: auto; transition: all 0.3s ease; margin: 0,auto; max-width: 100%;">
+        <h2 class="form-title">Gestion des utilisateurs</h2>
+        
+        <!-- Message de succès -->
+        <div class="alert alert-success" th:if="${successMessage}" role="alert">
+          <span th:text="${successMessage}"></span>
+        </div>
+        
+        <!-- Message d'erreur -->
+        <div class="alert alert-error" th:if="${errorMessage}" role="alert">
+          <span th:text="${errorMessage}"></span>
+        </div>
+        
+        <form th:action="@{/SuperAdmin/db-vendor-add-user}" th:object="${user}" method="post" enctype="multipart/form-data" id="userForm">
+                    <!-- Section 1 - Informations personnelles -->
+                    <div id="section1" class="form-section active">
+                        <h3 class="section-title">Informations personnelles</h3>
+                        <input type="hidden" th:field="*{id}" />
+                        <div class="form-group">
+                            <label>Prénom</label>
+                            <input type="text" th:field="*{firstName}" required placeholder="Prénom">
+                        </div>
+                        <div class="form-group">
+                            <label>Nom</label>
+                            <input type="text" th:field="*{lastName}" required placeholder="Nom">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" th:field="*{email}" required placeholder="Email">
+                        </div>
+                        <div class="form-group">
+                            <label>Téléphone</label>
+                            <input type="tel" th:field="*{phone}" placeholder="Numéro de téléphone">
+                        </div>
+                        <div class="form-group">
+                            <label>Date de naissance</label>
+                            <input type="date" th:field="*{dateNaissance}" placeholder="Date de naissance">
+                        </div>
+                        
+                        <div class="form-navigation">
+                            <div></div> <!-- Espace vide pour l'alignement -->
+                            <button type="button" class="btn btn-next" onclick="showSection(2)"><i class="fas fa-arrow-right" style="margin-right: 8px;"></i>Suivant</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Section 2 - Adresse -->
+                    <div id="section2" class="form-section">
+                        <h3 class="section-title">Adresse</h3>
+                        <div class="form-group">
+                            <label>Adresse</label>
+                            <input type="text" th:field="*{adresse}" placeholder="Adresse complète">
+                        </div>
+                        <div class="form-group">
+                        <label>Ville</label>
+                        <select th:field="*{ville}">
+                            <option value="">Sélectionner une ville</option>
+                            <option th:each="ville : ${villes}" th:value="${ville.nom}" th:text="${ville.nom}"></option>
+                        </select>
+                    </div>
+                        <div class="form-group">
+                            <label>Code postal</label>
+                            <input type="text" th:field="*{codePostal}" placeholder="Code postal">
+                        </div>
+                        <div class="form-group">
+                            <label>Pays</label>
+                            <select th:field="*{pays}">
+                                <option value="">Sélectionner un pays</option>
+                                <option th:each="pays : ${pays}" th:value="${pays.id}" th:text="${pays.nom}"></option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-navigation">
+                            <button type="button" class="btn btn-prev" onclick="showSection(1)"><i class="fas fa-arrow-left" style="margin-right: 8px;"></i>Précédent</button>
+                            <button type="button" class="btn btn-next" onclick="showSection(3)"><i class="fas fa-arrow-right" style="margin-right: 8px;"></i>Suivant</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Section 3 - Sécurité et rôles -->
+                    <div id="section3" class="form-section">
+                      <h3 class="section-title">Sécurité et rôles</h3>
+                      <div class="form-row">
+                        <div class="form-group half-width">
+                          <label for="password">Mot de passe</label>
+                          <input type="password" th:field="*{password}" id="password" required placeholder="Mot de passe">
+                        </div>
+                        <div class="form-group half-width">
+                          <div class="form-switch">
+                            <input type="checkbox" th:field="*{using2FA}" id="using2FA" class="form-check-input">
+                            <label class="form-check-label" for="using2FA">Activer l'authentification à deux facteurs</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label>Rôles</label>
+                        <div class="checkbox-group">
+                          <div class="role-checkbox" th:each="role : ${roles}">
+                            <input type="checkbox" name="roleIds" th:value="${role.id}" th:id="'role-' + ${role.id}">
+                            <label th:for="'role-' + ${role.id}" th:text="${role.name}"></label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label>Photo de profil</label>
+                        <div class="custom-file-input">
+                          <input type="file" name="profileImage" id="profileImageInput" accept="image/*" onchange="previewImage(event)">
+                          <span><i class="fas fa-upload"></i> Choisissez une image</span>
+                        </div>
+                        <img id="imagePreview" class="preview-img" src="#" alt="Aperçu" style="display: none;" />
+                      </div>
+                      <div class="form-navigation">
+                        <button type="button" class="btn btn-prev" onclick="showSection(2)">
+                          <i class="fas fa-arrow-left"></i> Précédent
+                        </button>
+                        <button type="submit" class="btn btn-save">
+                          <i class="fas fa-save"></i> Enregistrer
+                        </button>
+                      </div>
+                    </div>
+                    <style>
+                      .form-section {
+                        background: #fff;
+                        border-radius: 12px;
+                        padding: 32px 24px;
+                        box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+                        margin-bottom: 32px;
+                      }
+                      .section-title {
+                        font-size: 1.5rem;
+                        color: #0056b3;
+                        margin-bottom: 24px;
+                        text-align: center;
+                        font-weight: 600;
+                      }
+                      .form-row {
+                        display: flex;
+                        gap: 24px;
+                        margin-bottom: 24px;
+                      }
+                      .form-group {
+                        margin-bottom: 20px;
+                        display: flex;
+                        flex-direction: column;
+                      }
+                      .half-width {
+                        flex: 1;
+                      }
+                      .form-switch {
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                        height: 100%;
+                      }
+                      .form-switch .form-check-label {
+                        margin: 0;
+                        white-space: nowrap;
+                      }
+                      .checkbox-group {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 16px;
+                      }
+                      .role-checkbox {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        background: #f5f7fa;
+                        padding: 6px 16px;
+                        border-radius: 6px;
+                      }
+                      .custom-file-input {
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                        cursor: pointer;
+                        background: #f5f7fa;
+                        padding: 8px 16px;
+                        border-radius: 6px;
+                        border: 1px solid #e0e6ed;
+                        transition: border-color 0.2s;
+                      }
+                      .custom-file-input:hover {
+                        border-color: #0056b3;
+                      }
+                      .preview-img {
+                        margin-top: 12px;
+                        max-width: 120px;
+                        border-radius: 8px;
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                        display: block;
+                      }
+                      .form-navigation {
+                        display: flex;
+                        justify-content: space-between;
+                        margin-top: 32px;
+                      }
+                      .btn {
+                        padding: 10px 24px;
+                        border-radius: 6px;
+                        border: none;
+                        font-weight: 500;
+                        font-size: 1rem;
+                        cursor: pointer;
+                        transition: background 0.2s;
+                      }
+                      .btn-prev {
+                        background: #e0e6ed;
+                        color: #0056b3;
+                      }
+                      .btn-save {
+                        background: #0056b3;
+                        color: #fff;
+                      }
+                      .btn-save:hover {
+                        background: #003f7f;
+                      }
+                    </style>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    <script>
+        function previewImage(event) {
+            const input = event.target;
+            const preview = document.getElementById('imagePreview');
+            const fileInputText = input.parentElement.querySelector('span');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    fileInputText.innerHTML = `<i class="fas fa-check" style="margin-right: 8px; color: #2ecc71;"></i>${input.files[0].name}`;
+                };
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.style.display = 'none';
+                fileInputText.innerHTML = `<i class="fas fa-upload" style="margin-right: 8px;"></i>Choisissez une image`;
+            }
+        }
+        
+        function showSection(sectionNumber) {
+            // Cacher toutes les sections
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Afficher la section demandée
+            document.getElementById('section' + sectionNumber).classList.add('active');
+            
+            // Faire défiler vers le haut du formulaire
+            document.querySelector('.form-container').scrollTop = 0;
+        }
+        
+        // Fonction pour adapter l'interface en fonction de la taille de l'écran
+        function adjustLayout() {
+            const sidebar = document.querySelector('.dashboard__sidebar');
+            const formContainer = document.querySelector('.form-container');
+            const toggleBtn = document.getElementById('toggleSidebar');
+            
+            if (window.innerWidth <= 992) {
+                toggleBtn.style.display = 'block';
+            } else {
+                toggleBtn.style.display = 'none';
+            }
+        }
+        
+        // Exécuter la fonction au chargement et au redimensionnement de la fenêtre
+        window.addEventListener('load', adjustLayout);
+        window.addEventListener('resize', adjustLayout);
+        
+        // Ajouter un écouteur d'événement pour le bouton de bascule de la barre latérale
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
+            const sidebarContent = document.querySelector('.sidebar-content');
+            if (sidebarContent.style.display === 'none') {
+                sidebarContent.style.display = 'block';
+            } else {
+                sidebarContent.style.display = 'none';
+            }
+        });
+        
+        // Fonction pour basculer l'affichage des sous-menus
+        function toggleMenu(menuId) {
+          // Récupérer le menu à afficher/masquer
+          const menu = document.getElementById(menuId);
+          
+          // Fermer tous les autres menus
+          const allMenus = document.querySelectorAll('[id$="-menu"]');
+          allMenus.forEach(m => {
+            if (m.id !== menuId) {
+              m.style.display = 'none';
+            }
+          });
+          
+          // Basculer l'affichage du menu actuel
+          if (menu.style.display === 'none' || menu.style.display === '') {
+            menu.style.display = 'block';
+          } else {
+            menu.style.display = 'none';
+          }
+        }
+        
+        // Fonction pour basculer l'affichage des sous-menus avec la nouvelle structure
+        function toggleSubmenu(element) {
+          const submenu = element.nextElementSibling;
+          const chevron = element.querySelector('.fa-chevron-down');
+          
+          // Vérifier si le sous-menu est actuellement affiché
+          const isOpen = submenu.classList.contains('active');
+          
+          // Fermer tous les sous-menus ouverts
+          document.querySelectorAll('.submenu').forEach(menu => {
+            menu.classList.remove('active');
+          });
+          
+          document.querySelectorAll('.menu-header').forEach(header => {
+            header.classList.remove('active');
+            const icon = header.querySelector('.fa-chevron-down');
+            if (icon) {
+              icon.style.transform = 'rotate(0deg)';
+            }
+          });
+          
+          // Si le sous-menu n'était pas ouvert, l'ouvrir
+          if (!isOpen) {
+            submenu.classList.add('active');
+            element.classList.add('active');
+            if (chevron) {
+              chevron.style.transform = 'rotate(180deg)';
+            }
+          }
+        }
+        
+        // Ouvrir automatiquement le menu actif
+        document.addEventListener('DOMContentLoaded', function() {
+          const currentPath = window.location.pathname;
+          
+          // Trouver les liens actifs
+          document.querySelectorAll('.submenu-item').forEach(item => {
+            const href = item.getAttribute('href');
+            if (href === currentPath) {
+              item.classList.add('active');
+              const parentMenu = item.closest('.submenu');
+              if (parentMenu) {
+                parentMenu.classList.add('active');
+                const menuHeader = parentMenu.previousElementSibling;
+                if (menuHeader) {
+                  menuHeader.classList.add('active');
+                  const chevron = menuHeader.querySelector('.fa-chevron-down');
+                  if (chevron) {
+                    chevron.style.transform = 'rotate(180deg)';
+                  }
+                }
+              }
+            }
+          });
+          
+          // Activer automatiquement le menu des utilisateurs sur les pages utilisateur
+          if (currentPath.includes('/SuperAdmin/db-vendor-user') || currentPath.includes('/SuperAdmin/db-vendor-add-user')) {
+            const userMenuHeader = document.querySelector('.menu-item.dropdown:nth-child(3) .menu-header');
+            if (userMenuHeader) {
+              toggleSubmenu(userMenuHeader);
+            }
+          }
+        });
+    </script>
+</body>
+</html>

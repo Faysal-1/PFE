@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
+<!-- Mirrored from www.ansonika.com/citytours/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Mar 2025 15:39:30 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Citytours - Premium site template for city tours agencies, transfers and tickets.">
+    <meta name="author" content="Ansonika">
+    <title>CITY TOURS - Voyage au Cœur du Maroc</title>
+
+    <!-- Favicons-->
+    <link rel="shortcut icon" href="/assets/img/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" type="image/x-icon" href="/assets/img/apple-touch-icon-57x57-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="/assets/img/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="/assets/img/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="/assets/img/apple-touch-icon-144x144-precomposed.png">
+
+    <!-- GOOGLE WEB FONT -->
+    <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&amp;family=Montserrat:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+    
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- COMMON CSS -->
+	<link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
+	<link href="/assets/css/vendors.css" rel="stylesheet">
+
+	<!-- ALTERNATIVE COLORS CSS -->
+    <link href="#" id="colors" rel="stylesheet">
+
+</head>
+<style>
+        /* Styles pour le lien de liste de souhaits list faysal; */
+        .my-wishlist-link {
+            color: white;
+            text-decoration: none;
+            position: relative;
+        }
+        .my-wishlist-link:hover {
+            color: #f9c56a;
+        }
+        .my-wishlist-link i {
+            margin-right: 5px;
+        }
+        /* Styles pour le lien de liste de souhaits list faysal; */
+/* ===== SUPPRESSION DES LIGNES DANS LE HEADER (menu du haut) ===== */
+header,
+.top_line,
+.main_menu,
+nav,
+.menu,
+#top_line,
+#header {
+    border-top: none !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+}
+
+/* Supprimer lignes décoratives éventuelles */
+header::before,
+header::after,
+.top_line::before,
+
+/* Style pour la barre de navigation */
+#position {
+    border-bottom: 1px solid #e6e6e6;
+    background-color: #f9f9f9;
+    padding: 8px 0;
+}
+
+#position ul {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#position ul li {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 20px;
+    font-size: 13px;
+    color: #555;
+}
+
+#position ul li a {
+    color: #555;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+#position ul li i {
+    display: none; /* Masquer toutes les icônes */
+}
+.top_line::after,
+nav::before,
+nav::after {
+    display: none !important;
+}
+
+/* ===== SUPPRESSION DES LIGNES DANS LE FOOTER (liens en bas) ===== */
+footer,
+.footer,
+#footer,
+.footer_links {
+    border-top: none !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+}
+
+/* Supprimer lignes décoratives du footer */
+footer::before,
+footer::after,
+.footer::before,
+.footer::after {
+    display: none !important;
+}
+
+/* ===== STYLE DES LIENS POUR RESTER PROPRES ===== */
+a {
+    text-decoration: none;
+    border: none;
+    color: #fff; /* ou la couleur de ton thème */
+}
+
+/* Ajustement si lignes étaient créées par hr */
+hr {
+    display: none !important;
+}
+
+header, header * {
+    color: #111 !important;
+}
+</style>
+
+
+<body>
+
+    <div id="preloader">
+        <div class="sk-spinner sk-spinner-wave">
+            <div class="sk-rect1"></div>
+            <div class="sk-rect2"></div>
+            <div class="sk-rect3"></div>
+            <div class="sk-rect4"></div>
+            <div class="sk-rect5"></div>
+        </div>
+    </div>
+    <!-- End Preload -->
+
+    <div class="layer"></div>
+    <!-- Mobile menu overlay mask -->
+
+    <!-- Header================================================== -->
+	<header  style="position: fixed; top: 0; width: 100%; z-index: 1100; background: #fff;" id="main-header">
+        <div id="top_line">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6">
+                        <i class="icon-phone"></i><strong>‪+212 618311344‬</strong>
+                    </div>
+                    <div class="col-6">
+                        <ul id="top_links">
+                            <!-- Avant connexion -->
+                            <li sec:authorize="!isAuthenticated()">
+                                <a id="login-form" href="/login">Se connecter</a>
+                            </li>
+                        
+                            <!-- Après connexion -->
+                            <li sec:authorize="isAuthenticated()">
+                                <span>
+                                    <i class="icon-user"></i>
+                                    <span th:if="${connectedUser != null}" th:text="${connectedUser.fullName}">Nom</span>
+                                </span>
+                            </li>
+                            <li sec:authorize="isAuthenticated()">
+                                <a href="/logout"><i class="icon-logout"></i> Se déconnecter</a>
+                            </li>
+                        
+                            <!-- Bouton pour la liste de souhaits -->
+                            <li>
+                                <a th:href="@{/hebergement/wishlist}" sec:authorize="isAuthenticated()" class="my-wishlist-link"><i class="icon-heart"></i> Liste de souhaits</a>
+                                <a th:href="@{/login}" sec:authorize="!isAuthenticated()" class="my-wishlist-link"><i class="icon-heart"></i> Liste de souhaits</a>
+                            </li>
+                        </ul>
+                        
+                    </div>
+                </div><!-- End row -->
+            </div><!-- End container-->
+        </div><!-- End top line -->
+    
+        
+        <div class="container">
+            <div class="row" style="align-items: center;">
+    <div class="col-3">
+        <div id="logo_home">
+            <h1><a href="/index" title="City tours travel template">City Tours travel</a></h1>
+        </div>
+    </div>
+    <nav class="col-9">
+                    <a class="cmn-toggle-switch cmn-toggle-switch__htx open_close" href="javascript:void(0);"><span>Menu mobile</span></a>
+                    <div class="main-menu">
+                        <div id="header_menu">
+                            <img src="/assets/img/logo_sticky.png" width="160" height="34" alt="City tours">
+                        </div>
+                        <a href="#" class="open_close" id="close_in"><i class="icon_set_1_icon-77"></i></a>
+                        <ul>
+                            <li class="submenu">
+                                <a href="/index" class="show-submenu">Accueil </a>
+                            </li>
+                            <li class="submenu">
+                                <a href="javascript:void(0);" class="show-submenu">Hébergements <i class="icon-down-open-mini"></i></a>
+                                <ul class="hebergement-list">
+                                    <li>
+                                        <a th:href="@{/hebergement}" class="second-level">Tous les types</a>
+                                    </li>
+                                    <li th:each="type : ${hebergementType}">
+                                        <a th:href="@{'/hebergement/' + ${type.name()} + '/list'}"
+                                        th:text="${#strings.capitalize(type.name().toLowerCase().replace('_',' '))}"
+                                        class="second-level"></a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="submenu">
+                                <a href="javascript:void(0);" class="show-submenu">Gastronomie <i class="icon-down-open-mini"></i></a><ul>
+                                    <li><a href="all_hotels_list.html">All hotels list</a></li>
+                                    <li><a href="all_hotels_grid.html">All hotels grid</a></li>
+                                    <li><a href="all_hotels_grid_masonry.html">All hotels Sort Masonry</a></li>
+                                    <li><a href="all_hotels_map_listing.html">All hotels map listing</a></li>
+                                </ul>
+                            </li>
+                            <li class="submenu">
+                                <a href="javascript:void(0);" class="show-submenu">Transports  <i class="icon-down-open-mini"></i></a>
+                                <ul>
+                                    <li><a href="/public/Transports/infosTransports.html">Informations</a></li>
+                                    <li><a href="/Client/Transports/reservationTransports.html">Réservations</a></li>
+                                 
+                                </ul>
+                            </li>
+                            
+                             <li class="submenu">
+                                    <a href="javascript:void(0);" class="show-submenu">Événements <i class="icon-down-open-mini"></i></a>
+                                    <ul class="evenement-list">
+                                        <li>
+                                            <a th:href="@{/evenements}" class="second-level">Tous les types</a>
+                                        </li>
+                                        <li th:each="type : ${evenementType}">
+                                            <a th:href="@{'/evenements/' + ${type.name()} + '/list'}"
+                                            th:text="${#strings.capitalize(type.name().toLowerCase().replace('_',' '))}"
+                                            class="second-level"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+
+                             <li class="megamenu submenu">
+                                <a href="javascript:void(0);" class="show-submenu-mega">Bonus<i class="icon-down-open-mini"></i></a>
+                                <div class="menu-wrapper">
+                                	<div class="row">
+                            
+                            </li>
+                            <li class="megamenu submenu">
+                                <a href="javascript:void(0);" class="show-submenu-mega">Pages<i class="icon-down-open-mini"></i></a>
+                                <div class="menu-wrapper">
+                                </div><!-- End menu-wrapper -->
+                            </li>
+                        </ul>
+                    </div><!-- End main-menu -->
+                    <ul id="top_tools">
+                        <li>
+                            <a href="javascript:void(0);" class="search-overlay-menu-btn"><i class="icon_search"></i></a>
+                        </li>
+
+                    </ul>
+                </nav>
+            </div>
+        </div>
+  </header>
+	<!-- End Header -->
+	<main>
+	   	<div id="position">
+			<div class="container">
+				<ul>
+					<li style="margin-left: 10px;"><a href="/index">Accueil</a></li>
+					<li><a href="/hebergement/all">Hébergements</a></li>
+					<li>Paiement des Appartements</li>
+				</ul>
+			</div>
+    	</div>
+		<div class="container margin_60"> 
+            <div class="bs-wizard row" style="background-color: gainsboro; border-radius: 10px; margin: 20px;">
+                <div class="col-4 bs-wizard-step complete">
+                    <div class="text-center bs-wizard-stepnum">Votre panier</div>
+                    <div class="progress">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <a href="cart_appartements.html" class="bs-wizard-dot"></a>
+                    <a th:href="@{/hebergement/cart}" class="bs-wizard-dot"></a>
+                </div>
+
+                <div class="col-4 bs-wizard-step active">
+                    <div class="text-center bs-wizard-stepnum">Vos détails</div>
+                    <div class="progress">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <a href="#" class="bs-wizard-dot"></a>
+                </div>
+
+                <div class="col-4 bs-wizard-step disabled">
+                    <div class="text-center bs-wizard-stepnum">Terminé !</div>
+                    <div class="progress">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <a th:href="@{/hebergement/confirmation}" class="bs-wizard-dot"></a>
+                </div>
+
+            </div>
+			<div class="row">
+				<div class="col-lg-8 add_bottom_15">
+					<form th:action="@{/hebergement/process-payment}" method="post" id="payment_form">
+					<div class="form_title">
+						<h3><strong>1</strong>Vos Détails</h3>
+						<p>Veuillez remplir vos informations personnelles.</p>
+					</div>
+					<div class="step">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Prénom <span class="text-danger">*</span></label>
+									<input type="text" class="form-control" id="firstname_booking" name="firstname_booking" required>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Nom de famille <span class="text-danger">*</span></label>
+									<input type="text" class="form-control" id="lastname_booking" name="lastname_booking" required>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Email <span class="text-danger">*</span></label>
+									<input type="email" id="email_booking" name="email_booking" class="form-control" required>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Confirmer l'email <span class="text-danger">*</span></label>
+									<input type="email" id="email_booking_2" name="email_booking_2" class="form-control" required>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Téléphone <span class="text-danger">*</span></label>
+									<input type="text" id="telephone_booking" name="telephone_booking" class="form-control" required>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--End step -->
+
+					<div class="form_title">
+						<h3><strong>2</strong>Informations de Paiement</h3>
+						<p>Entrez vos informations de paiement pour finaliser la réservation.</p>
+					</div>
+					<div class="step">
+						<div class="form-group">
+							<label>Nom sur la carte <span class="text-danger">*</span></label>
+							<input type="text" class="form-control" id="name_card_bookign" name="name_card_bookign" required>
+						</div>
+						<div class="row">
+							<div class="col-md-6 col-sm-12">
+								<div class="form-group">
+									<label>Numéro de carte <span class="text-danger">*</span></label>
+									<input type="text" id="card_number" name="card_number" class="form-control" required>
+								</div>
+							</div>
+							<div class="col-md-6 col-sm-12">
+								<img src="/assets/img/cards.png" width="207" height="43" alt="Cards" class="cards">
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<label>Date d'expiration <span class="text-danger">*</span></label>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<input type="text" id="expire_month" name="expire_month" class="form-control" placeholder="MM" required>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<input type="text" id="expire_year" name="expire_year" class="form-control" placeholder="Année" required>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>Code de sécurité <span class="text-danger">*</span></label>
+									<div class="row">
+										<div class="col-4">
+											<div class="form-group">
+												<input type="text" id="ccv" name="ccv" class="form-control" placeholder="CCV" required>
+											</div>
+										</div>
+										<div class="col-8">
+											<img src="/assets/img/icon_ccv.gif" width="50" height="29" alt="ccv"><small>Derniers 3 chiffres</small>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--End row -->
+
+						<hr>
+
+						<h4>Ou payez avec PayPal</h4>
+						<p>
+							PayPal est un moyen de paiement sécurisé qui vous permet de payer sans partager vos informations financières. Rapide et pratique pour vos réservations d'hébergement.
+						</p>
+						<p>
+							<img src="/assets/img/paypal_bt.png" alt="Image">
+						</p>
+					</div>
+					<!--End step -->
+
+					<div class="form_title">
+						<h3><strong>3</strong>Adresse de Facturation</h3>
+						<p>Entrez votre adresse de facturation.</p>
+					</div>
+					<div class="step">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Pays <span class="text-danger">*</span></label>
+									 <div class="styled-select-common">
+                                        <select name="country" id="country" required>
+                                            <option value="" selected>Sélectionnez votre pays</option>
+                                            <option value="Maroc">Maroc</option>
+                                            <option value="États-Unis">États-Unis</option>
+                                            <option value="Canada">Canada</option>
+                                        </select>
+                                    </div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Ligne de rue 1 <span class="text-danger">*</span></label>
+									<input type="text" id="street_1" name="street_1" class="form-control" required>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label>Ligne de rue 2</label>
+									<input type="text" id="street_2" name="street_2" class="form-control">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6 col-sm-12">
+								<div class="form-group">
+									<label>Ville <span class="text-danger">*</span></label>
+									<input type="text" id="city_booking" name="city_booking" class="form-control" required>
+								</div>
+							</div>
+							<div class="col-md-3 col-sm-6">
+								<div class="form-group">
+									<label>État <span class="text-danger">*</span></label>
+									<input type="text" id="state_booking" name="state_booking" class="form-control" required>
+								</div>
+							</div>
+							<div class="col-md-3 col-sm-6">
+								<div class="form-group">
+									<label>Code postal <span class="text-danger">*</span></label>
+									<input type="text" id="postal_code" name="postal_code" class="form-control" required>
+								</div>
+							</div>
+						</div>
+						<!--End row -->
+					</div>
+					<!--End step -->
+
+					<div id="policy">
+						<h4>Politique d'annulation</h4>
+						<div class="form-group">
+							<label class="container_check">
+								J'accepte les termes et conditions ainsi que la politique générale.
+								<input type="checkbox" name="terms" required>
+								<span class="checkmark"></span>
+							</label>
+						</div>
+						<button type="submit" class="btn_1 green medium">Réserver maintenant</button>
+					</div>
+					</form>
+				</div>
+
+				<aside class="col-lg-4">
+					<div class="box_style_1">
+						<h3 class="inner">- Résumé de votre réservation -</h3>
+						
+						<!-- Message si le panier est vide -->
+						<div th:if="${#lists.isEmpty(cartItems)}" class="text-center p-3">
+							<p>Aucun hébergement sélectionné.</p>
+						</div>
+						
+						<!-- Affichage du résumé si le panier n'est pas vide -->
+						<div th:if="${!#lists.isEmpty(cartItems)}">
+							<!-- Détails de la réservation -->
+							<table class="table table_summary">
+								<tbody>
+									<!-- Dates de séjour -->
+									<tr>
+										<td>
+											<i class="fas fa-calendar-check me-2"></i> Arrivée
+										</td>
+										<td class="text-end">
+															<span id="summary-date-arrivee" th:text="${dateDebut != null ? #temporals.format(dateDebut, 'dd MMMM yyyy') : '—'}">Date d'arrivée</span>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<i class="fas fa-calendar-times me-2"></i> Départ
+										</td>
+										<td class="text-end">
+															<span id="summary-date-depart" th:text="${dateFin != null ? #temporals.format(dateFin, 'dd MMMM yyyy') : '—'}">Date de départ</span>
+										</td>
+									</tr>
+									
+									<!-- Nombre de nuits -->
+									<tr>
+										<td>
+											<i class="fas fa-moon me-2"></i> Nuits
+										</td>
+										<td class="text-end">
+											<span id="nights-count" th:if="${nbNuits > 0}" th:text="${nbNuits} + (${nbNuits > 1 ? ' nuits' : ' nuit'})">1 nuit</span>
+											<span id="nights-count" th:unless="${nbNuits > 0}">—</span>
+										</td>
+									</tr>
+									
+									<!-- Liste des hébergements -->
+									<tr th:each="hebergement, itemStat : ${cartItems}" th:if="${hebergement != null}">
+										<td>
+											<div class="d-flex align-items-center">
+												<img th:src="${hebergement.photoUrl != null ? hebergement.photoUrl : '/assets/img/hotel_1.jpg'}" 
+													style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; margin-right: 10px;"
+													onerror="this.src='/assets/img/hotel_1.jpg'"
+													alt="Image de l'hébergement">
+												<div>
+													<div class="fw-bold" th:text="${hebergement.nom}">Nom de l'hébergement</div>
+													<small class="text-muted" th:text="${hebergement.type != null ? hebergement.type : 'Hébergement'}">Type</small>
+												</div>
+											</div>
+										</td>
+										<td class="text-end">
+											<span th:with="displayPrice=${hebergement.prix != null && hebergement.prix > 0 ? hebergement.prix : (hebergement.chambres != null && !hebergement.chambres.isEmpty() && hebergement.chambres[0].prix != null && hebergement.chambres[0].prix > 0 ? hebergement.chambres[0].prix : 0)}">
+                                            <span th:if="${displayPrice > 0}" th:text="'MAD ' + ${displayPrice} + ' x ' + ${nbNuits} + ' nuits'">Prix</span>
+                                            <span th:unless="${displayPrice > 0}">N/A</span>
+                                        </span>
+										</td>
+									</tr>
+									
+									<!-- Services sélectionnés -->
+									<tr th:if="${selectedServices != null and !selectedServices.isEmpty()}" th:each="service : ${selectedServices}">
+										<td>
+											<div class="d-flex justify-content-between">
+												<span class="text-muted" th:text="${service.key}">Nom du service</span>
+											</div>
+										</td>
+										<td class="text-end">
+											<strong>+<span th:text="'MAD ' + ${#numbers.formatDecimal(service.value, 1, 'POINT', 2, 'COMMA')}">Prix du service</span></strong>
+										</td>
+									</tr>
+									
+									<!-- Coût total -->
+									<tr class="total">
+										<td>
+											<i class="fas fa-money-bill-wave me-2"></i> Coût total
+										</td>
+										<td class="text-end">
+											<strong id="summary-total-price">MAD <span th:text="${#numbers.formatDecimal(prixTotal, 1, 'POINT', 2, 'COMMA')}">0.00</span></strong>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							
+							<!-- Numéro de réservation -->
+							<div class="alert alert-info" th:if="${numeroReservation != null}">
+								<p><strong>Numéro de réservation:</strong> <span th:text="${numeroReservation}">RES-123456</span></p>
+							</div>
+						</div>
+						
+						<a class="btn_full_outline" th:href="@{/hebergement/cart}"><i class="icon-left"></i> Retour au panier</a>
+					</div>
+					<div class="box_style_4">
+						<i class="icon_set_1_icon-57"></i>
+						<h4>Besoin d'<span>aide ?</span></h4>
+						<a href="tel://004542344599" class="phone">+212 618 311 344</a>
+						<small>Lundi à Vendredi 9h00 - 19h30</small>
+					</div>
+				</aside>
+
+			</div>
+			<!--End row -->
+		</div>
+		<!--End container -->
+	</main>
+	<!--   End main -->
+
+	<footer class="revealed" style="background-color: #1c1c1c;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h3 style="color: white; margin-bottom: 15px; font-weight: 600; font-size: 14px;">BESOIN D'AIDE ?</h3>
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <div style="margin-right: 15px;">
+                            <i class="bi bi-telephone-fill" style="color: #e8cc00; font-size: 16px;"></i>
+                        </div>
+                        <span style="color: #e8cc00; font-size: 14px; font-weight: 600;">+212 618 311 344</span>
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <div style="margin-right: 15px;">
+                            <i class="bi bi-envelope-fill" style="color: #e8cc00; font-size: 16px;"></i>
+                        </div>
+                        <span style="color: #e8cc00; font-size: 14px; font-weight: 600;">aide@citytours.com</span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <h3 style="font-size: 14px;">À propos</h3>
+                    <ul>
+                        <li><a href="#">À propos de nous</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="/login.html">Connexion</a></li>
+                        <li><a href="/register.html">Inscription</a></li>
+                        <li><a href="#">Conditions générales</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h3 style="font-size: 14px;">Découvrir</h3>
+                    <ul>
+                        <li><a href="#">Blog communautaire</a></li>
+                        <li><a href="#">Guide touristique</a></li>
+                        <li><a href="#">Liste de souhaits</a></li>
+                        <li><a href="#">Galerie</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h3 style="font-size: 14px;">Paramètres</h3>
+                    <div class="styled-select">
+                        <select name="lang" id="lang">
+                            <option value="English" selected>Français</option>
+                            <option value="French">Anglais</option>
+                            <option value="Spanish">Espagnol</option>
+                            <option value="Russian">Russe</option>
+                        </select>
+                    </div>
+                    <div class="styled-select">
+                        <select name="currency" id="currency">
+                            <option value="USD" selected>USD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="GBP">GBP</option>
+                            <option value="RUB">RUB</option>
+                        </select>
+                    </div>
+                </div>
+            </div><!-- End row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="social_footer">
+                        <ul>
+                            <li><a href="#0"><i class="bi bi-instagram"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-whatsapp"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-facebook"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-youtube"></i></a></li>
+                        </ul>
+                        <p style="font-size: 12px;">© Citytours 2025</p>
+                    </div>
+                </div>
+            </div><!-- End row -->
+        </div><!-- End container -->
+    </footer><!-- End footer -->
+	
+	<!-- Search Menu -->
+	<div class="search-overlay-menu">
+		<span class="search-overlay-close"><i class="icon_set_1_icon-77"></i></span>
+		<form role="search" id="searchform" method="get">
+			<input value="" name="q" type="text" placeholder="Search..." />
+			<button type="submit"><i class="icon_set_1_icon-78"></i>
+			</button>
+		</form>
+	</div><!-- End Search Menu -->
+
+	<!-- Common scripts -->
+	<script src="/assets/js/jquery-3.7.1.min.js"></script>
+	<script src="/assets/js/common_scripts_min.js"></script>
+	<script src="/assets/js/functions.js"></script>
+
+<!-- SWITCHER  -->
+    <script src="/assets/js/switcher.js"></script>
+    
+    <!-- Script pour récupérer les quantités depuis localStorage -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Récupérer les quantités stockées dans localStorage
+        const quantities = JSON.parse(localStorage.getItem('hebergementQuantities') || '{}');
+        const totalNights = parseInt(localStorage.getItem('totalNights') || '2');
+        
+        // Mettre à jour le nombre de nuits
+        // Trouver la cellule qui contient le nombre de nuits
+        const nightRows = document.querySelectorAll('tr');
+        let nightsElement = null;
+        
+        for (let i = 0; i < nightRows.length; i++) {
+            const cells = nightRows[i].querySelectorAll('td');
+            if (cells.length >= 2 && cells[0].textContent.includes('Nuits')) {
+                nightsElement = cells[1];
+                break;
+            }
+        }
+        
+        if (nightsElement) {
+            nightsElement.textContent = totalNights > 0 ? totalNights.toString() : '2';
+        }
+        
+        // Mettre à jour les quantités et les prix pour chaque hébergement
+        for (const hebergementId in quantities) {
+            const quantity = quantities[hebergementId];
+            const displayPriceElement = document.getElementById('display_price_' + hebergementId);
+            
+            if (displayPriceElement) {
+                // Extraire le prix unitaire du texte actuel
+                const priceText = displayPriceElement.textContent;
+                const priceMatch = priceText.match(/MAD\s+(\d+(\.\d+)?)/);
+                
+                if (priceMatch && priceMatch[1]) {
+                    const unitPrice = parseFloat(priceMatch[1]);
+                    // Mettre à jour l'affichage avec la nouvelle quantité
+                    displayPriceElement.textContent = `MAD ${unitPrice} x ${quantity}`;
+                }
+            }
+        }
+        
+        // Recalculer le prix total
+        let totalPrice = 0;
+        const priceElements = document.querySelectorAll('[id^="display_price_"]');
+        
+        priceElements.forEach(element => {
+            const priceText = element.textContent;
+            const matches = priceText.match(/MAD\s+(\d+(\.\d+)?)\s+x\s+(\d+)/);
+            
+            if (matches && matches[1] && matches[3]) {
+                const unitPrice = parseFloat(matches[1]);
+                const quantity = parseInt(matches[3]);
+                totalPrice += unitPrice * quantity;
+            }
+        });
+        
+        // Ajouter le prix des services si présents
+        // Trouver les lignes qui contiennent des services
+        const tableRows = document.querySelectorAll('table.table_summary tr');
+        
+        tableRows.forEach(row => {
+            const firstCell = row.querySelector('td:first-child');
+            const lastCell = row.querySelector('td:last-child');
+            
+            if (firstCell && lastCell) {
+                // Vérifier si la première cellule contient une icône de service
+                const hasServiceIcon = firstCell.querySelector('i.fas.fa-shuttle-van, i.fas.fa-concierge-bell, i.fas.fa-utensils, i.fas.fa-wifi, i.fas.fa-broom');
+                
+                if (hasServiceIcon) {
+                    const priceText = lastCell.textContent.trim();
+                    const servicePrice = parseFloat(priceText.replace('MAD ', ''));
+                    
+                    if (!isNaN(servicePrice)) {
+                        totalPrice += servicePrice;
+                    }
+                }
+            }
+        });
+        
+        // Mettre à jour le prix total
+        const totalRows = document.querySelectorAll('tr.total');
+        totalRows.forEach(row => {
+            const strongElement = row.querySelector('td.text-end strong');
+            if (strongElement) {
+                strongElement.textContent = `MAD ${totalPrice.toFixed(2)}`;
+            }
+        });
+    });
+    </script>
+</body>
+
+
+<!-- Mirrored from www.ansonika.com/citytours/payment_hotel.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Mar 2025 15:41:10 GMT -->
+</html>
+                <li><a href="#" class="green_switcher" title="Green"></a></li>
+                <li><a href="#" class="orange" title="Orange"></a></li>
+                <li><a href="#" class="blue" title="Blue"></a></li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+
+<!-- Mirrored from www.ansonika.com/citytours/payment_hotel.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Mar 2025 15:41:10 GMT -->
+</html>

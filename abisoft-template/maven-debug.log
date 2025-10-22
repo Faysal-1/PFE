@@ -1,0 +1,44 @@
+Apache Maven 3.8.6 (84538c9988a25aec085021c365c560670ad80f63)
+Maven home: D:\Pro\abisoft-template\abisoft-template\maven-portable\apache-maven-3.8.6
+Java version: 17.0.15, vendor: Eclipse Adoptium, runtime: C:\Program Files\Eclipse Adoptium\jdk-17.0.15.6-hotspot
+Default locale: en_US, platform encoding: Cp1252
+OS name: "windows 11", version: "10.0", arch: "amd64", family: "windows"
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------------< ma.abisoft:ABIsoft >-------------------------
+[INFO] Building ABIsoft 1.0.1-SNAPSHOT
+[INFO] --------------------------------[ war ]---------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:3.2.0:clean (default-clean) @ ABIsoft ---
+[INFO] Deleting D:\Pro\abisoft-template\abisoft-template\target
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.724 s
+[INFO] Finished at: 2025-05-27T01:50:04+01:00
+[INFO] ------------------------------------------------------------------------
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------------< ma.abisoft:ABIsoft >-------------------------
+[INFO] Building ABIsoft 1.0.1-SNAPSHOT
+[INFO] --------------------------------[ war ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot-maven-plugin:2.7.8:run (default-cli) > test-compile @ ABIsoft >>>
+[INFO] 
+[INFO] --- maven-resources-plugin:3.2.0:resources (default-resources) @ ABIsoft ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] Copying 2545 resources
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  15.107 s
+[INFO] Finished at: 2025-05-27T01:50:25+01:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-resources-plugin:3.2.0:resources (default-resources) on project ABIsoft: Failed to copy full contents from D:\Pro\abisoft-template\abisoft-template\src\main\resources\static\assets\js\jquery-3.7.1.min.js to D:\Pro\abisoft-template\abisoft-template\target\classes\static\assets\js\jquery-3.7.1.min.js -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Citytours - Facture de réservation d'hébergement">
+    <meta name="author" content="Ansonika">
+    <title>CITY TOURS - Facture de réservation</title>
+
+    <!-- Favicons-->
+    <link rel="shortcut icon" href="/assets/img/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" type="image/x-icon" href="/assets/img/apple-touch-icon-57x57-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="/assets/img/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="/assets/img/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="/assets/img/apple-touch-icon-144x144-precomposed.png">
+
+    <!-- GOOGLE WEB FONT -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- COMMON CSS -->
+	<link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/vendors.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
+
+	<!-- ALTERNATIVE COLORS CSS -->
+    <link href="#" id="colors" rel="stylesheet">
+    
+	<style>
+    header, header * {
+    color: #111 !important;
+    }
+    .invoice-title h2, .invoice-title h3 {
+        display: inline-block;
+    }
+    
+    .table > tbody > tr > .no-line {
+        border-top: none;
+    }
+    
+    .table > thead > tr > .no-line {
+        border-bottom: none;
+    }
+    
+    .table > tbody > tr > .thick-line {
+        border-top: 2px solid;
+    }
+    
+    /* Styles pour les services dans la facture */
+    .services-list {
+        background-color: #f8f9fa;
+        border-radius: 5px;
+        padding: 15px;
+        margin: 5px 0;
+    }
+    
+    .services-list h5 {
+        color: #0056b3;
+        font-weight: 600;
+        border-bottom: 1px solid #dee2e6;
+        padding-bottom: 8px;
+        margin-bottom: 12px;
+    }
+    
+    .service-item {
+        border-bottom: 1px dotted #e0e0e0;
+        padding: 8px 0;
+    }
+    
+    .service-item:last-child {
+        border-bottom: none;
+    }
+    
+    .service-item strong {
+        color: #333;
+        font-weight: 500;
+    }
+    
+    .service-price {
+        font-weight: 600;
+        color: #0056b3;
+    }
+    
+    .service-item:hover {
+        background-color: #f1f3f5;
+        border-radius: 3px;
+    }
+    
+    @media print {
+        .no-print {
+            display: none !important;
+        }
+        
+        body {
+            padding: 0;
+            margin: 0;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 100%;
+        }
+    }
+    </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+        <div class="col-12">
+    		<div class="invoice-title">
+    			<h2>Facture</h2><h3 class="float-end">Réservation # <span th:text="${reservation != null ? reservation.id : 'RES-20250523'}">12345</span></h3>
+    		</div>
+    		<hr>
+    		<div class="row">
+    			<div class="col-6">
+    				<address>
+    				<strong>Facturé à:</strong><br>
+    					<span th:text="${user != null ? user.firstName + ' ' + user.lastName : 'Client'}">John Smith</span><br>
+    					<span th:text="${reservation != null && reservation.adresse != null ? reservation.adresse : 'Adresse non spécifiée'}">1234 Main</span><br>
+    					<span th:text="${reservation != null && reservation.ville != null ? reservation.ville : 'Ville non spécifiée'}">Springfield</span><br>
+    					Maroc
+    				</address>
+    			</div>
+    			<div class="col-6 text-end">
+    				<address>
+        			<strong>Hébergement:</strong><br>
+    					<span th:text="${hebergement != null ? hebergement.nom : 'Hébergement'}">Nom de l'hébergement</span><br>
+    					<span th:text="${hebergement != null ? hebergement.type : 'Type non spécifié'}">Type d'hébergement</span><br>
+    					<span th:text="${hebergement != null && hebergement.adresse != null ? hebergement.adresse : 'Adresse non spécifiée'}">Adresse</span><br>
+    					<span th:text="${hebergement != null && hebergement.ville != null ? hebergement.ville : 'Ville non spécifiée'}">Ville</span>
+    				</address>
+    			</div>
+    		</div>
+    		<div class="row">
+    			<div class="col-6">
+    				<address>
+    					<strong>Méthode de paiement:</strong><br>
+    					<span th:text="${reservation != null && reservation.methodePaiement != null ? reservation.methodePaiement : 'Carte bancaire'}">Carte bancaire</span><br>
+    					<span th:text="${user != null ? user.email : 'Email non spécifié'}">client@email.com</span>
+    				</address>
+    			</div>
+    			<div class="col-6 text-end">
+    				<address>
+    					<strong>Date de réservation:</strong><br>
+    					23 Mai 2025<br><br>
+    				</address>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+    
+    <div class="row">
+    	<div class="col-lg-12">
+    		<div class="panel panel-default">
+    			<div class="panel-heading">
+    				<h3 class="panel-title"><strong>Résumé de la réservation</strong></h3>
+    			</div>
+    			<div class="panel-body">
+    				<div class="table-responsive">
+    					<table class="table table-condensed">
+    						<thead>
+                                <tr>
+        							<td><strong>Description</strong></td>
+        							<td class="text-center"><strong>Prix</strong></td>
+        							<td class="text-center"><strong>Nuits</strong></td>
+        							<td class="text-end"><strong>Total</strong></td>
+                                </tr>
+    						</thead>
+    						<tbody>
+    							<!-- Hébergement principal -->
+    							<tr>
+    								<td>
+                                        <span th:text="${hebergement != null ? hebergement.nom + ' (' + hebergement.type + ')' : 'Hébergement'}">Hébergement</span>
+                                        <br>
+                                        <small>Du 24/05/2025 au 27/05/2025</small>
+                                    </td>
+    								<td class="text-center" th:text="${hebergement != null ? hebergement.prix + ' MAD' : '---'}">1200 MAD</td>
+    								<td class="text-center" th:text="${reservation != null ? reservation.nbNuits : '1'}">3</td>
+    								<td class="text-end" th:text="${hebergement != null && reservation != null ? (hebergement.prix * reservation.nbNuits) + ' MAD' : '---'}">3600 MAD</td>
+    							</tr>
+                                
+                                <!-- Services additionnels - format similaire à l'image 2 -->
+                                <tr th:if="${selectedServices != null && !selectedServices.isEmpty()}">
+                                    <td colspan="4">
+                                        <table class="table table-borderless mb-0">
+                                            <tr>
+                                                <td colspan="2" class="pb-2 border-bottom">
+                                                    <h5 class="mb-0">Services additionnels</h5>
+                                                </td>
+                                            </tr>
+                                            <tr th:each="service : ${selectedServices}" class="service-item">
+                                                <td class="text-start">
+                                                    <span th:text="${service.key}">Service de transfert</span>
+                                                </td>
+                                                <td class="text-end">
+                                                    <span class="service-price" th:text="${service.value + ' MAD'}">300 MAD</span>
+                                                </td>
+                                            </tr>
+                                            <tr class="border-top" th:if="${serviceTotal != null && serviceTotal > 0}">
+                                                <td class="text-start pt-2"><strong>Total des services</strong></td>
+                                                <td class="text-end pt-2"><strong class="service-total" th:text="${serviceTotal + ' MAD'}">114.0 MAD</strong></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Si aucun service n'est sélectionné, afficher un message -->
+                                <tr th:if="${selectedServices == null || selectedServices.isEmpty()}">
+                                    <td colspan="4" class="text-center">Aucun service additionnel sélectionné</td>
+                                </tr>                                
+    							<tr>
+    								<td class="thick-line"></td>
+    								<td class="thick-line"></td>
+    								<td class="thick-line text-center"><strong>Sous-total</strong></td>
+    								<td class="thick-line text-end" th:text="${reservation != null ? reservation.sousTotal + ' MAD' : '---'}">3900 MAD</td>
+    							</tr>
+    							<tr>
+    								<td class="no-line"></td>
+    								<td class="no-line"></td>
+    								<td class="no-line text-center"><strong>Taxe de séjour</strong></td>
+    								<td class="no-line text-end" th:text="${reservation != null ? reservation.taxeSejour + ' MAD' : '---'}">100 MAD</td>
+    							</tr>
+    							<tr>
+    								<td class="no-line"></td>
+    								<td class="no-line"></td>
+    								<td class="no-line text-center"><strong>Total</strong></td>
+    								<td class="no-line text-end" th:text="${reservation != null ? reservation.montantTotal + ' MAD' : '---'}" style="font-weight: bold; font-size: 1.1em; color: #0056b3;">4000 MAD</td>
+    							</tr>
+    						</tbody>
+    					</table>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+</div>
+
+  <!-- Bouton d'impression et de retour -->
+  <div class="container mt-4 mb-5">
+    <div class="row">
+      <div class="col-md-6 text-end">
+        <button onclick="window.print()" class="btn btn-primary">
+          <i class="bi bi-printer" style="margin-right: 8px;"></i> Imprimer la facture
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts JavaScript -->
+  <script src="/assets/js/jquery-3.7.1.min.js"></script>
+  <script src="/assets/js/bootstrap.min.js"></script>
+  <script>
+    // Script pour formater les dates si nécessaire
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Facture chargée avec succès');
+    });
+  </script>
+  </body>
+
+<!-- Mirrored from www.ansonika.com/citytours/invoice.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Mar 2025 15:41:29 GMT -->
+</html>

@@ -1,0 +1,1093 @@
+donner une forme professionnel poour proffil 
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profil Utilisateur</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Variables CSS pour la cohérence des couleurs */
+    :root {
+      --sidebar-width: 250px;
+      --primary-color: #0056b3;
+      --secondary-color: #4f8cff;
+      --accent-color: #ffb347;
+      --text-color: #2c3e50;
+      --light-text: #6c7a89;
+      --border-color: #e0e6ed;
+      --background-color: #f5f7fa;
+      --card-bg: #ffffff;
+      --success-color: #2ecc71;
+      --error-color: #e74c3c;
+      --shadow: 0 4px 12px rgba(0,0,0,0.08);
+      --transition: all 0.3s ease;
+    }
+    
+    /* Style pour le texte "Non connecté" */
+    .non-connecte {
+      background-color: #4a7aff;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 11px;
+      display: inline-block;
+    }
+    
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background-color);
+      color: var(--text-color);
+    }
+    
+    /* Styles pour la barre latérale */
+    .dashboard__sidebar {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      height: 100vh;
+      z-index: 5;
+      box-shadow: 0 0 15px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      background-color: white;
+    }
+    
+    .dashboard__main {
+      flex-grow: 1;
+      padding-left: var(--sidebar-width);
+      min-height: 100vh;
+      background: var(--background-color);
+      position: relative;
+      width: calc(100% - var(--sidebar-width));
+    }
+    
+    /* Styles pour le profil utilisateur et les notifications */
+    .user-profile {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 15px;
+      margin-bottom: 5px;
+    }
+    
+    .user-profile a {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    
+    .user-name {
+      display: block;
+      font-weight: 600;
+      font-size: 14px;
+      color: #333;
+    }
+    
+    .user-role {
+      display: block;
+      font-size: 12px;
+      color: #666;
+    }
+    
+    .notification-icon {
+      position: relative;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background-color: #e74c3c;
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Styles pour la page de profil */
+    .profile-container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: white;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    
+    .profile-header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .profile-header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    
+    .profile-content {
+        padding: 20px;
+    }
+    
+    .notifications {
+        margin-top: 20px;
+    }
+    
+    .notification-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .notification-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid var(--border-color);
+        transition: background-color 0.3s;
+    }
+    
+    .notification-item:last-child {
+        border-bottom: none;
+    }
+    
+    .notification-item:hover {
+        background-color: var(--background-color);
+    }
+    
+    .notification-content {
+        flex: 1;
+    }
+    
+    .notification-status {
+        margin-left: 15px;
+    }
+    
+    .status-badge {
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 12px;
+    }
+    
+    .status-badge.read {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+    }
+    
+    .status-badge.unread {
+        background-color: #ffebee;
+        color: #c62828;
+        font-weight: bold;
+    }
+    
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      display: block;
+      border: 4px solid white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .profile-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: var(--text-color);
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .form-control:focus {
+      border-color: var(--primary-color);
+      outline: none;
+    }
+    
+    .form-group-full {
+      grid-column: span 2;
+    }
+    
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.3s;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #004494;
+    }
+    
+    .alert {
+      padding: 10px 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+    
+    .alert-success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .alert-danger {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    /* Styles pour les menus de la barre latérale */
+    .sidebar-header {
+      padding: 15px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .sidebar-logo {
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+    }
+    
+    .sidebar-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0;
+      color: var(--primary-color);
+    }
+    
+    .sidebar-divider {
+      height: 1px;
+      background-color: var(--border-color);
+      margin: 0;
+    }
+    
+    .sidebar-content {
+      padding: 15px 0;
+    }
+    
+    .sidebar__item {
+      margin-bottom: 5px;
+    }
+    
+    .sidebar__button {
+      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: var(--text-color);
+      transition: background-color 0.3s;
+    }
+    
+    .sidebar__button:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+    
+    .sidebar__button.-is-active {
+      background-color: rgba(0, 86, 179, 0.1);
+      color: var(--primary-color);
+      font-weight: 500;
+    }
+  .badge-role {
+    padding: 4px 10px;
+    border-radius: 12px;
+    color: #fff;
+    font-weight: 600;
+    margin-left: 8px;
+    font-size: 13px;
+    display: inline-block;
+  }
+  .badge-superadmin {
+    background: #0056b3;
+  }
+  .badge-client {
+    background: #ffb347;
+    color: #2c3e50;
+  }
+  </style>
+</head>
+<body style="margin: 0; padding: 0;">
+  <div class="dashboard__sidebar">
+    <div class="user-profile">
+      <a href="#" class="profile-link">
+        <img th:src="${user.photoProfil != null ? user.photoProfil : '/SuperAdmin/img/avatars/user.png'}" alt="User Avatar" class="user-avatar">
+      </a>
+      <div class="user-info">
+        <a href="#" class="profile-link">
+          <div class="user-name" th:text="${user.firstName + ' ' + user.lastName}">Nom Utilisateur</div>
+          <div class="user-role">
+            <th:block th:each="role : ${#strings.arraySplit(userRole, ', ')}">
+              <span th:text="${role}"
+                    class="badge-role"
+                    th:classappend="${role == 'ROLE_SUPERADMIN'} ? 'badge-superadmin' : (${role == 'ROLE_CLIENT'} ? 'badge-client' : '')">
+                Rôle
+              </span>
+            </th:block>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard__main">
+    <div class="profile-container">
+      <div class="profile-header">
+        <h1>Mon Profil</h1>
+      </div>
+      <div class="profile-content">
+        <!-- Affichage d'un message d'erreur si présent -->
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+        <!-- Affichage d'un message de succès si présent -->
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+        <form th:action="@{/profile/update}" th:object="${user}" method="post" class="profile-form">
+          <div class="form-group">
+            <label>Nom</label>
+            <input type="text" class="form-control" th:field="*{lastName}" required>
+          </div>
+          <div class="form-group">
+            <label>Prénom</label>
+            <input type="text" class="form-control" th:field="*{firstName}" required>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" class="form-control" th:field="*{email}" required>
+          </div>
+          <div class="form-group">
+            <label>Rôles</label>
+            <th:block th:each="role : ${#strings.arraySplit(userRole, ', ')}">
+              <span th:text="${role}"
+                    class="badge-role"
+                    th:classappend="${role == 'ROLE_SUPERADMIN'} ? 'badge-superadmin' : (${role == 'ROLE_CLIENT'} ? 'badge-client' : '')">
+                Rôle
+              </span>
+            </th:block>
+          </div>
+          <div class="form-group-full">
+            <label>Photo de profil</label>
+            <img th:src="${user?.photoProfil != null ? user?.photoProfil : '/SuperAdmin/img/avatars/user.png'}" alt="Photo de profil" class="profile-avatar">
+          </div>
+
+          <button type="submit" class="btn btn-primary">Mettre à jour</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="dashboard__container" style="display: flex; margin: 0; padding: 0;">
+    <div class="dashboard__sidebar bg-white scroll-bar-1" style="z-index: 5; width: 280px; margin: 0; padding: 0; left: 0;">
+      <div class="sidebar -dashboard">
+        <div class="sidebar-header">
+          <div class="logo-container">
+            <img src="/SuperAdmin/img/general/logo.png" alt="Logo" class="sidebar-logo">
+            <span class="sidebar-title">Administration</span>
+          </div>
+          <div class="user-profile">
+            <a th:href="@{/profile}" class="profile-link">
+              <img th:src="${#authentication != null && #authentication.principal != null && #authentication.principal.photoProfil != null ? #authentication.principal.photoProfil : '/SuperAdmin/img/avatars/user.png'}" alt="User Avatar" class="user-avatar">
+              <div class="user-info">
+                <div class="user-name" th:text="${#authentication != null && #authentication.principal != null ? #authentication.principal.firstName + ' ' + #authentication.principal.lastName : 'Utilisateur'}">superAdmin</div>
+                <div class="user-role" th:text="${#authentication != null && #authentication.principal != null && not #lists.isEmpty(#authentication.principal.roles) ? #authentication.principal.roles[0].name : 'Non connecté'}">ROLE</div>
+              </div>
+            </a>
+            <div class="notification-bell" title="Notifications">
+              <i class="fas fa-bell"></i>
+              <span class="notification-badge" id="notificationBadge" th:if="${notificationCount > 0}" th:text="${notificationCount}">0</span>
+            </div>
+          </div>
+        </div>
+        <div class="sidebar-divider"></div>
+        
+        <div class="sidebar-content">
+          <!-- Tableau de bord - visible pour tous -->
+          <!-- Tableau de bord - visible UNIQUEMENT pour SuperAdmin, Admin Hébergement, Propriétaire, Admin Evenement -->
+          <div class="sidebar__item" sec:authorize="hasAnyAuthority('SUPERADMIN_PRIVILEGE', 'HEBERGEMENT_ADMIN_PRIVILEGE', 'PROPRIETAIRE_PRIVILEGE', 'ADMIN_EVENT_PRIVILEGE')">
+            <div class="sidebar__button">
+              <a th:href="@{/admin/index}" class="d-flex items-center text-15 lh-1 fw-500">
+                <i class="fas fa-border-all mr-15"></i>
+                <span>Tableau de bord</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Gérer les hébergements - visible UNIQUEMENT pour SuperAdmin, Admin Hébergement, Propriétaire -->
+          <div class="sidebar__item" sec:authorize="hasAnyAuthority('SUPERADMIN_PRIVILEGE', 'HEBERGEMENT_ADMIN_PRIVILEGE', 'PROPRIETAIRE_PRIVILEGE')">
+            <div class="sidebar__button">
+              <a th:href="@{/admin/hebergements}" class="d-flex items-center text-15 lh-1 fw-500">
+                <i class="fas fa-building mr-15"></i>
+                <span>Gérer les hébergements</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Gérer les événements - visible UNIQUEMENT pour SuperAdmin, Admin Evenement -->
+          <div class="sidebar__item" sec:authorize="hasAnyAuthority('SUPERADMIN_PRIVILEGE', 'ADMIN_EVENT_PRIVILEGE')">
+            <div class="sidebar__button">
+              <a th:href="@{/admin/evenements}" class="d-flex items-center text-15 lh-1 fw-500">
+                <i class="fas fa-calendar-alt mr-15"></i>
+                <span>Gérer les événements</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Les clients ne voient PAS ces menus (pas de sec:authorize pour ROLE_CLIENT) -->
+          
+          <!-- Déconnexion -->
+          <div class="sidebar__item">
+            <div class="sidebar__button logout-button">
+              <a th:href="@{/logout}" class="d-flex items-center text-15 lh-1 fw-500">
+                <i class="fas fa-sign-out-alt mr-15"></i>
+                <span>Déconnexion</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="dashboard__main">
+      <div class="profile-container">
+        <div class="profile-header">
+          <h1>Mon Profil</h1>
+        </div>
+        
+        <div class="profile-content">
+          <!-- Affichage des messages d'alerte -->
+         <div th:if="${#lists.size(notifications) > 0}" class="notifications">
+            <h2>Notifications</h2>
+            <div class="notification-list">
+                <div th:each="notification : ${notifications}" class="notification-item">
+                    <div class="notification-content">
+                        <p th:text="${notification.message}">Message de notification</p>
+                        <small th:text="${#temporals.format(notification.date, 'dd/MM/yyyy HH:mm')}">Date</small>
+                    </div>
+                    <div class="notification-status">
+            </div>
+            
+            <div class="form-group-full" style="text-align: right;">
+              <button type="submit" class="btn btn-primary">Mettre à jour le profil</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Script pour afficher l'aperçu de l'image sélectionnée
+    document.getElementById('profileImage').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          document.querySelector('.profile-avatar').src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  </script>
+</body>
+</html>
+          </li>
+          <li>
+            <a th:href="@{/SuperAdmin/db-vendor-add-evenment}" class="text-15">Ajouter un hôtel</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Fin Sidebar Gestion Hôtel -->
+
+    <div id="preloader">
+        <div class="sk-spinner sk-spinner-wave">
+            <div class="sk-rect1"></div>
+            <div class="sk-rect2"></div>
+            <div class="sk-rect3"></div>
+            <div class="sk-rect4"></div>
+            <div class="sk-rect5"></div>
+        </div>
+    </div>
+    <!-- End Preload -->
+
+    <div class="layer"></div>
+    <!-- Mobile menu overlay mask -->
+
+    <!-- Header================================================== -->
+    <header>
+        <div id="top_line">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6">
+                        <i class="icon-phone"></i><strong>‪+212 618311344‬</strong>
+                    </div>
+                    <div class="col-6">
+                        <ul id="top_links">
+                            <!-- Avant connexion -->
+                            <li sec:authorize="!isAuthenticated()">
+                                <a id="login-form" href="/login" >Se connecter</a>
+                            </li>
+    
+                            <!-- Après connexion -->
+                            <li sec:authorize="isAuthenticated()">
+                                <i class="icon-user"></i>
+                                <span th:if="${connectedUser != null}" th:text="${connectedUser.fullName}">Nom</span>
+                            </li>
+                            <li sec:authorize="isAuthenticated()">
+                                <a href="/logout">Se déconnecter</a>
+                            </li>
+    
+                            <li>
+                                <a href="/wishlist.html" id="wishlist_link">Liste de souhaits</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div><!-- End row -->
+            </div><!-- End container-->
+        </div><!-- End top line -->
+    
+        
+        <div class="container">
+            <div class="row">
+                <div class="col-3">
+                    <div id="logo_home">
+                    	<h1><a href="/index" title="City tours travel template">City Tours travel</a></h1>
+                    </div>
+                </div>
+                <nav class="col-9">
+                    <a class="cmn-toggle-switch cmn-toggle-switch__htx open_close" href="javascript:void(0);"><span>Menu mobile</span></a>
+                    <div class="main-menu">
+                        <div id="header_menu">
+                            <img src="/assets/img/logo_sticky.png" width="160" height="34" alt="City tours">
+                        </div>
+                        <a href="#" class="open_close" id="close_in"><i class="icon_set_1_icon-77"></i></a>
+                        <ul>
+                            <li class="submenu">
+                                <a href="/index" class="show-submenu">Accueil </a>
+                            </li>
+                        <li class="submenu">
+                                <a href="javascript:void(0);" class="show-submenu">Hébergements <i class="icon-down-open-mini"></i>
+                            </a>
+                        <ul class="hebergement-list">
+                            <!-- Lien pour tous les types -->
+                            <li>
+                                <a th:href="@{/Hebergement/APPARTEMENT/list}" class="second-level">Tous les types
+                                </a>
+                            </li>
+                            <!-- Liens dynamiques pour chaque type -->
+                            <li th:each="type : ${typesHebergement}">
+                                <a th:href="@{'/Hebergement/' + ${type.name()} + '/list'}" th:text="${#strings.capitalize(type.name().toLowerCase().replace('_',' '))}" class="second-level">
+                            <!-- Dynamically rendered type names -->
+                                <span th:text="${#strings.capitalize(type.name().toLowerCase().replace('_',' '))}"></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="submenu">
+                                <a href="javascript:void(0);" class="show-submenu">Gastronomie <i class="icon-down-open-mini"></i></a><ul>
+                                    <li><a href="all_hotels_list.html">All hotels list</a></li>
+                                    <li><a href="all_hotels_grid.html">All hotels grid</a></li>
+                                    <li><a href="all_hotels_grid_masonry.html">All hotels Sort Masonry</a></li>
+                                    <li><a href="all_hotels_map_listing.html">All hotels map listing</a></li>
+                                    <li><a href="single_hotel.html">Single hotel page</a></li>
+                                    <li><a href="single_hotel_working_booking.html">Single hotel working booking</a></li>
+                                    <li><a href="single_hotel_contact.html">Single hotel contact working</a></li>
+                                    <li><a href="cart_hotel.html">Cart hotel</a></li>
+                                    <li><a href="payment_hotel.html">Booking hotel</a></li>
+                                    <li><a href="confirmation_hotel.html">Confirmation hotel</a></li>
+                                </ul>
+                            </li>
+                            <li class="submenu">
+                                <a href="javascript:void(0);" class="show-submenu">Transports  <i class="icon-down-open-mini"></i></a>
+                                <ul>
+                                    <li><a href="/public/Transports/infosTransports.html">Informations</a></li>
+                                    <li><a href="/Client/Transports/reservationTransports.html">Réservations</a></li>
+                                 
+                                </ul>
+                            </li>
+
+                                <li class="submenu">
+                                    <a href="javascript:void(0);" class="show-submenu">Événements <i class="icon-down-open-mini"></i></a>
+                                    <ul class="evenement-list">
+                                        <li>
+                                            <a th:href="@{/evenements}" class="second-level">Tous les types</a>
+                                        </li>
+                                        <li th:each="type : ${evenementTypes}">
+                                            <a th:href="@{'/evenements/' + ${type.name()} + '/list'}"
+                                            th:text="${#strings.capitalize(type.name().toLowerCase().replace('_',' '))}"
+                                            class="second-level"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+
+                             <li class="megamenu submenu">
+                                <a href="javascript:void(0);" class="show-submenu-mega">Bonus<i class="icon-down-open-mini"></i></a>
+                                <div class="menu-wrapper">
+                                	<div class="row">
+                                        <div class="col-lg-4">
+                                            <h3>Header styles</h3>
+                                    
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <h3>Footer styles</h3>
+                                            <ul>
+                                                <li><a href="index.html">Footer default</a></li>
+                                                <li><a href="footer_2.html">Footer style 2</a></li>
+                                                <li><a href="footer_3.html">Footer style 3</a></li>
+                                                <li><a href="footer_4.html">Footer style 4</a></li>
+                                                <li><a href="footer_6.html">Footer style 6</a></li>
+                                                <li><a href="footer_7.html">Footer style 7</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <h3>Shop section</h3>
+                                            <ul>
+                                                <li><a href="shop.html">Shop</a></li>
+                                                <li><a href="shop-single.html">Shop single</a></li>
+                                                <li><a href="shopping-cart.html">Shop cart</a></li>
+                                                <li><a href="checkout.html">Shop Checkout</a></li>
+                                            </ul>
+                                        </div>
+                                    </div><!-- End row -->
+                                </div><!-- End menu-wrapper -->
+                            </li>
+                            <li class="megamenu submenu">
+                                <a href="javascript:void(0);" class="show-submenu-mega">Pages<i class="icon-down-open-mini"></i></a>
+                                <div class="menu-wrapper">
+                                	<div class="row">
+										<div class="col-lg-4">
+											<h3>Pages</h3>
+											<ul>
+												<li><a href="about.html">About us</a></li>
+											   <li><a href="general_page.html">General page</a></li>
+												<li><a href="tourist_guide.html">Tourist guide</a></li>
+												 <li><a href="wishlist.html">Wishlist page</a></li>
+												 <li><a href="faq.html">Faq</a></li>
+												 <li><a href="faq_2.html">Faq smooth scroll</a></li>
+												 <li><a href="pricing_tables.html">Pricing tables</a></li>
+												 <li><a href="gallery_3_columns.html">Gallery 3 columns</a></li>
+												<li><a href="gallery_4_columns.html">Gallery 4 columns</a></li>
+												<li><a href="grid_gallery_1.html">Grid gallery</a></li>
+												<li><a href="grid_gallery_2.html">Grid gallery with filters</a></li>
+											</ul>
+										</div>
+										<div class="col-lg-4">
+											<h3>Pages</h3>
+											<ul>
+												<li><a href="contact_us_1.html">Contact us 1</a></li>
+												<li><a href="contact_us_2.html">Contact us 2</a></li>
+												 <li><a href="blog_right_sidebar.html">Blog</a></li>
+												<li><a href="blog.html">Blog left sidebar</a></li>
+												<li><a href="login.html">Login</a></li>
+												<li><a href="#">Register</a></li>
+												<li><a href="invoice.html" target="_blank">Invoice</a></li>
+												<li><a href="404.html">404 Error page</a></li>
+												<li><a href="site_launch/index.html">Site launch / Coming soon</a></li>
+												<li><a href="timeline.html">Tour timeline</a></li>
+												<li><a href="page_with_map.html"><i class="icon-map"></i>  Full screen map</a></li>
+											</ul>
+										</div>
+										<div class="col-lg-4">
+											<h3>Elements</h3>
+											<ul>
+												<li><a href="footer_2.html"><i class="icon-columns"></i> Footer with working newsletter</a></li>
+												<li><a href="icon_pack_1.html"><i class="icon-inbox-alt"></i> Icon pack 1 (1900)</a></li>
+												<li><a href="icon_pack_2.html"><i class="icon-inbox-alt"></i> Icon pack 2 (100)</a></li>
+												<li><a href="icon_pack_3.html"><i class="icon-inbox-alt"></i> Icon pack 3 (30)</a></li>
+												<li><a href="icon_pack_4.html"><i class="icon-inbox-alt"></i> Icon pack 4 (200)</a></li>
+												<li><a href="icon_pack_5.html"><i class="icon-inbox-alt"></i> Icon pack 5 (360)</a></li>
+												<li><a href="shortcodes.html"><i class="icon-tools"></i> Shortcodes</a></li>
+												<li><a href="newsletter_template/newsletter.html" target="blank"><i class=" icon-mail"></i> Responsive email template</a></li>
+												<li><a href="assets.html"><i class="icon-cog-1"></i> assets area</a></li>
+                                                <li><a href="html_rtl/index.html"><i class="icon-align-right"></i>  RTL Version</a></li>
+											</ul>
+										</div>
+                                    </div><!-- End row -->
+                                </div><!-- End menu-wrapper -->
+                            </li>
+                        </ul>
+                    </div><!-- End main-menu -->
+                    <ul id="top_tools">
+                        <li>
+                            <a href="javascript:void(0);" class="search-overlay-menu-btn"><i class="icon_search"></i></a>
+                        </li>
+                        <li>
+                            <div class="dropdown dropdown-cart">
+                                <a href="#0" data-bs-hover="dropdown" class="cart_bt"><i class="icon_bag_alt"></i><strong>3</strong></a>
+                                <ul class="dropdown-menu" id="cart_items">
+                                    <li>
+                                        <div class="image"><img src="/assets/img/thumb_cart_1.jpg" alt="image"></div>
+                                        <strong><a href="#">Louvre museum</a>1x $36.00 </strong>
+                                        <a href="#" class="action"><i class="icon-trash"></i></a>
+                                    </li>
+                                    <li>
+                                        <div class="image"><img src="/assets/img/thumb_cart_2.jpg" alt="image"></div>
+                                        <strong><a href="#">Versailles tour</a>2x $36.00 </strong>
+                                        <a href="#" class="action"><i class="icon-trash"></i></a>
+                                    </li>
+                                    <li>
+                                        <div class="image"><img src="/assets/img/thumb_cart_3.jpg" alt="image"></div>
+                                        <strong><a href="#">Versailles tour</a>1x $36.00 </strong>
+                                        <a href="#" class="action"><i class="icon-trash"></i></a>
+                                    </li>
+                                    <li>
+                                        <div>Total: <span>$120.00</span></div>
+                                        <a href="cart.html" class="button_drop">Go to cart</a>
+                                        <a href="payment.html" class="button_drop outline">Check out</a>
+                                    </li>
+                                </ul>
+                            </div><!-- End dropdown-cart-->
+                        </li>
+                    </ul>
+                </nav>
+			</div>
+		</div>
+		<!-- container -->
+	</header>
+	<!-- End Header -->
+
+	<section class="parallax-window" data-parallax="scroll" data-image-src="/assets/img/assets_top.jpg" data-natural-width="1400" data-natural-height="470">
+		<div class="parallax-content-1 opacity-mask" data-opacity-mask="rgba(0, 0, 0, 0.4)">
+			<div class="animated fadeInDown">
+				<h1>Hello Clara!</h1>
+				<p>Cursus neque cursus curae ante scelerisque vehicula.</p>
+			</div>
+		</div>
+	</section>
+	<!-- End section -->
+
+	<main>
+		<div id="position">
+			<div class="container">
+				<ul>
+					<li><a href="#">Home</a>
+					</li>
+					<li><a href="#">Category</a>
+					</li>
+					<li>Page active</li>
+				</ul>
+			</div>
+		</div>
+		<!-- End Position -->
+
+                <section id="section-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Votre profil</h4>
+                            <ul id="profile_summary">
+                                <li>Nom d'utilisateur <span th:text="${user.email}">info@clara.com</span></li>
+                                <li>Prénom <span th:text="${user.firstName}">Clara</span></li>
+                                <li>Nom <span th:text="${user.lastName}">Tomson</span></li>
+                                <li>Téléphone <span th:text="${user.phone}">+00 032 42366</span></li>
+                                <li>Date de naissance <span th:text="${#dates.format(user.dateNaissance, 'dd/MM/yyyy')}">13/04/1975</span></li>
+                                <li>Adresse <span th:text="${user.adresse}">24 Rue de Rivoli</span></li>
+                                <li>Ville <span th:text="${user.ville}">Paris</span></li>
+                                <li>Code postal <span th:text="${user.codePostal}">002843</span></li>
+                                <li>Pays <span th:text="${user.pays}">France</span></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <img th:src="@{${user.photoProfil != null ? user.photoProfil : '/assets/img/tourist_guide_pic.jpg'}}" alt="Image" class="img-fluid styled profile_pic mb-3">
+                        </div>
+                    </div>
+                    <!-- End row -->
+
+                    <div class="divider"></div>
+
+                    <form th:action="@{/admin/profile/update}" method="post" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>Modifier le profil</h4>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Prénom</label>
+                                    <input class="form-control" name="firstName" id="first_name" type="text" th:value="${user.firstName}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Nom</label>
+                                    <input class="form-control" name="lastName" id="last_name" type="text" th:value="${user.lastName}">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End row -->
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Téléphone</label>
+                                    <input class="form-control" name="phone" id="phone" type="text" th:value="${user.phone}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Date de naissance <small>(jj/mm/aaaa)</small></label>
+                                    <input class="form-control" name="dateNaissance" id="dob" type="date" th:value="${#dates.format(user.dateNaissance, 'yyyy-MM-dd')}">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End row -->
+
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>Modifier l'adresse</h4>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Adresse</label>
+                                    <input class="form-control" name="adresse" id="address" type="text" th:value="${user.adresse}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Ville</label>
+                                    <input class="form-control" name="ville" id="city" type="text" th:value="${user.ville}">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End row -->
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Code postal</label>
+                                    <input class="form-control" name="codePostal" id="zip" type="text" th:value="${user.codePostal}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Pays</label>
+                                    <select id="country" class="form-select" name="pays" th:value="${user.pays}">
+                                        <option value="">Sélectionner...</option>
+                                        <option th:each="country : ${countries}" th:value="${country}" th:text="${country}" th:selected="${user.pays == country}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End row -->
+
+                        <hr>
+                        <h4>Photo de profil</h4>
+                        <div class="form-inline upload_1 mb-3">
+                            <div class="form-group">
+                                <input type="file" name="profilePhoto" id="js-upload-files" accept="image/*">
+                            </div>
+                            <button type="submit" class="btn_1 green" name="action" value="uploadPhoto">Télécharger</button>
+                        </div>
+
+                        <hr>
+                        <button type="submit" class="btn_1 green">Mettre à jour le profil</button>
+                    </form>
+                </section>
+					<!-- End section 4 -->
+
+					</div>
+					<!-- End content -->
+				</div>
+				<!-- End tabs -->
+			</div>
+			<!-- end container -->
+	</main>
+	<!-- End main -->
+
+	<footer class="revealed">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h3>Need help</h3>
+                    <a href="tel://004542344599" id="phone">+212 618 311 344</a>
+                    <a href="mailto:help@citytours.com" id="email_footer">help@citytours.com</a>
+                </div>
+                <div class="col-md-3">
+                    <h3>About</h3>
+                    <ul>
+                        <li><a href="#">About us</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Login</a></li>
+                        <li><a href="#">Register</a></li>
+                         <li><a href="#">Terms and condition</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h3>Discover</h3>
+                    <ul>
+                        <li><a href="#">Community blog</a></li>
+                        <li><a href="#">Tour guide</a></li>
+                        <li><a href="#">Wishlist</a></li>
+                         <li><a href="#">Gallery</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h3>Settings</h3>
+                    <div class="styled-select">
+                        <select name="lang" id="lang">
+                            <option value="English" selected>English</option>
+                            <option value="French">French</option>
+                            <option value="Spanish">Spanish</option>
+                            <option value="Russian">Russian</option>
+                        </select>
+                    </div>
+                    <div class="styled-select">
+                        <select name="currency" id="currency">
+                            <option value="USD" selected>USD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="GBP">GBP</option>
+                            <option value="RUB">RUB</option>
+                        </select>
+                    </div>
+                </div>
+            </div><!-- End row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="social_footer">
+                        <ul>
+                            <li><a href="#0"><i class="bi bi-instagram"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-whatsapp"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-facebook"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-twitter-x"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-youtube"></i></a></li>
+                        </ul>
+                        <p>© Citytours 2024</p>
+                    </div>
+                </div>
+            </div><!-- End row -->
+        </div><!-- End container -->
+    </footer><!-- End footer -->
+
+	<div id="toTop"></div><!-- Back to top button -->
+	
+	<!-- Search Menu -->
+	<div class="search-overlay-menu">
+		<span class="search-overlay-close"><i class="icon_set_1_icon-77"></i></span>
+		<form role="search" id="searchform" method="get">
+			<input value="" name="q" type="text" placeholder="Search..." />
+			<button type="submit"><i class="icon_set_1_icon-78"></i>
+			</button>
+		</form>
+	</div><!-- End Search Menu -->
+	
+	<!-- Sign In Popup -->
+	<div id="sign-in-dialog" class="zoom-anim-dialog mfp-hide">
+		<div class="small-dialog-header">
+			<h3>Sign In</h3>
+		</div>
+		<form>
+			<div class="sign-in-wrapper">
+				<a href="#0" class="social_bt facebook">Login with Facebook</a>
+				<a href="#0" class="social_bt google">Login with Google</a>
+				<div class="divider"><span>Or</span></div>
+				<div class="form-group">
+					<label>Email</label>
+					<input type="email" class="form-control" name="email" id="email">
+					<i class="icon_mail_alt"></i>
+				</div>
+				<div class="form-group">
+					<label>Password</label>
+					<input type="password" class="form-control" name="password" id="password" value="">
+					<i class="icon_lock_alt"></i>
+				</div>
+				<div class="clearfix add_bottom_15">
+					<div class="checkboxes float-start">
+						<label class="container_check">Remember me
+                          <input type="checkbox">
+                          <span class="checkmark"></span>
+                        </label>
+					</div>
+					<div class="float-end"><a id="forgot" href="javascript:void(0);">Forgot Password?</a></div>
+				</div>
+				<div class="text-center"><input type="submit" value="Log In" class="btn_login"></div>
+				<div class="text-center">
+					Don’t have an account? <a href="javascript:void(0);">Sign up</a>
+				</div>
+				<div id="forgot_pw">
+					<div class="form-group">
+						<label>Please confirm login email below</label>
+						<input type="email" class="form-control" name="email_forgot" id="email_forgot">
+						<i class="icon_mail_alt"></i>
+					</div>
+					<p>You will receive an email containing a link allowing you to reset your password to a new preferred one.</p>
+					<div class="text-center"><input type="submit" value="Reset Password" class="btn_1"></div>
+				</div>
+			</div>
+		</form>
+		<!--form -->
+	</div>
+	<!-- /Sign In Popup -->
+
+	<!-- Common scripts -->
+	<script src="/assets/js/jquery-3.7.1.min.js"></script>
+	<script src="/assets/js/common_scripts_min.js"></script>
+	<script src="/assets/js/functions.js"></script>
+
+	<!-- Specific scripts -->
+	<script src="/assets/js/tabs.js"></script>
+	<script>
+		new CBPFWTabs(document.getElementById('tabs'));
+	</script>
+	<script>
+		$('.wishlist_close_assets').on('click', function (c) {
+			$(this).parent().parent().parent().fadeOut('slow', function (c) {});
+		});
+	</script>
+
+<!-- SWITCHER  -->
+    <script src="/assets/js/switcher.js"></script>
+</body>
+
+
+<!-- Mirrored from www.ansonika.com/citytours/assets.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Mar 2025 15:41:46 GMT -->
+</html>

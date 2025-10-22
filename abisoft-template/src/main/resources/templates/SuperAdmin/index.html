@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tableau de bord</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/SuperAdmin/css/vendors.css">
+  <link rel="stylesheet" href="/SuperAdmin/css/main.css">
+  <link rel="stylesheet" href="/SuperAdmin/css/sidebar.css">
+  <style>
+        /* Style pour le texte "Non connecté" */
+        .non-connecte {
+      background-color: #4a7aff;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 11px;
+      display: inline-block;
+    }
+    
+    /* Style personnalisé pour l'affichage du rôle utilisateur */
+    .user-info {
+      margin-left: 10px;
+      flex-grow: 1;
+      max-width: 160px;
+    }
+    
+    .user-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    body {
+    padding: 0;
+    font-family: var(--font-primary);
+    width: 100%;
+    background-color: #fff;
+    color: var(--color-dark-1);
+    font-size: 13px;
+    line-height: 1.875;
+    }
+    .user-role {
+      font-size: 12px;
+      color: #6c757d;
+      text-transform: none;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    /* Variables CSS pour la cohérence des couleurs */
+    :root {
+      --sidebar-width: 296px;
+      --primary-color: #0056b3;
+      --secondary-color: #4f8cff;
+      --accent-color: #ffb347;
+      --text-color: #2c3e50;
+      --light-text: #6c7a89;
+      --border-color: #e0e6ed;
+      --background-color: #f5f7fa;
+      --card-bg: #ffffff;
+      --success-color: #2ecc71;
+      --error-color: #e74c3c;
+      --shadow: 0 4px 12px rgba(0,0,0,0.08);
+      --transition: all 0.3s ease;
+    }
+    
+    /* Styles pour la barre latérale */
+    .dashboard__sidebar {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      height: 100vh;
+      z-index: 5;
+      box-shadow: 0 0 15px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      background-color: white;
+    }
+    
+    /* Styles pour les textes de la barre latérale */
+    .user-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-color);
+    }
+    
+    .user-role {
+      font-size: 12px;
+      color: var(--light-text);
+      display: block;
+    }
+    
+    .sidebar__button a {
+      color: var(--text-color);
+      text-decoration: none;
+      width: 100%;
+      display: flex;
+      align-items: center;
+    }
+    
+    .sidebar__button span {
+      font-size: 15px;
+    }
+    
+    .submenu-link {
+      display: flex;
+      align-items: center;
+      padding: 8px 15px;
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 14px;
+      border-radius: 6px;
+      transition: var(--transition);
+    }
+    
+    /* Styles pour la barre latérale en mode responsive */
+    @media (max-width: 992px) {
+      .dashboard__sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      }
+      
+      .sidebar-content {
+        display: block;
+      }
+      
+      .sidebar__item {
+        margin: 5px 0;
+      }
+      
+      .dashboard__main {
+        padding-left: 0 !important;
+      }
+    }
+    
+    .sidebar-header {
+      padding: 15px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .sidebar-logo {
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+    }
+    
+    .sidebar-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin: 0;
+    }
+    
+    .user-profile {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      margin-right: 10px;
+      object-fit: cover;
+    }
+    
+    .user-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-color);
+    }
+    
+    .sidebar-divider {
+      height: 1px;
+      background-color: var(--border-color);
+      margin: 5px 0;
+    }
+    
+    .sidebar__item {
+      padding: 2px 10px;
+      margin-bottom: 5px;
+    }
+    
+    .sidebar__button {
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    
+    .sidebar__button:hover, .sidebar__button.-is-active {
+      background-color: rgba(0, 86, 179, 0.1);
+    }
+    
+    .sidebar__button a {
+      text-decoration: none;
+      color: var(--text-color);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+    
+    .sidebar__button i {
+      margin-right: 10px;
+      font-size: 16px;
+      color: var(--primary-color);
+    }
+    
+    .sidebar-submenu-container {
+      display: none;
+      padding-left: 10px;
+    }
+    
+    .sidebar-submenu {
+      list-style: none;
+      padding-left: 15px;
+      margin: 5px 0;
+    }
+    
+    .submenu-item {
+      margin-bottom: 5px;
+    }
+    
+    .submenu-link {
+      text-decoration: none;
+      color: var(--light-text);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      padding: 6px 8px;
+      border-radius: 4px;
+      transition: var(--transition);
+    }
+    
+    .submenu-link:hover, .submenu-item.active .submenu-link {
+      background-color: rgba(0, 86, 179, 0.05);
+    }
+    
+    .dropdown-toggle.active + .sidebar-submenu-container {
+      display: block;
+    }
+    
+    .ml-auto {
+      margin-left: auto;
+    }
+    
+    .submenu-icon {
+      margin-right: 8px;
+      font-size: 14px;
+    }
+    
+    .dashboard__main {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    
+    /* Styles pour les cartes statistiques */
+    .custom_border_left_blue {
+      border-left: 4px solid var(--primary-color);
+    }
+    
+    .custom_rounded {
+      border-radius: 8px;
+    }
+    
+    .custom_shadow {
+      box-shadow: var(--shadow);
+    }
+    
+    .text_blue {
+      color: var(--primary-color);
+    }
+    
+    .text_green {
+      color: var(--success-color);
+    }
+    
+    .user-role {
+      display: block;
+      font-size: 12px;
+      color: var(--secondary-color);
+      margin-top: -5px;
+      font-style: italic;
+    }
+    
+    /* Styles pour les notifications */
+    .notification-icon {
+      position: relative;
+      cursor: pointer;
+      margin-left: 15px;
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: var(--error-color);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    
+    .notification-dropdown {
+      position: absolute;
+      top: 45px;
+      right: 0;
+      width: 320px;
+      background-color: var(--card-bg);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      z-index: 1000;
+      display: none;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .notification-header {
+      padding: 15px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .notification-title {
+      font-weight: 600;
+      color: var(--text-color);
+      font-size: 16px;
+      margin: 0;
+    }
+    
+    .notification-list {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    
+    .notification-item {
+      padding: 12px 15px;
+      border-bottom: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+    
+    .notification-item:hover {
+      background-color: var(--background-color);
+    }
+    
+    .notification-item:last-child {
+      border-bottom: none;
+    }
+    
+    .notification-content {
+      font-size: 14px;
+      color: var(--text-color);
+      margin-bottom: 5px;
+    }
+    
+    .notification-time {
+      font-size: 12px;
+      color: var(--light-text);
+    }
+    
+    .notification-footer {
+      padding: 12px 15px;
+      text-align: center;
+      border-top: 1px solid var(--border-color);
+    }
+    
+    .notification-footer a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    .notification-item.unread {
+      background-color: rgba(0, 86, 179, 0.05);
+    }
+    
+    .notification-item.unread:before {
+      content: '';
+      display: block;
+      width: 8px;
+      height: 8px;
+      background-color: var(--primary-color);
+      border-radius: 50%;
+      position: absolute;
+      left: 5px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  </style>
+
+<body style="margin: 0; padding: 0;">
+  <div class="dashboard__container">
+    <!-- Barre latérale -->  
+    <div class="sidebar-container">
+      <div class="sidebar-header">
+        <div class="logo-container">
+          <div id="header_menu">
+            <img src="/assets/img/logo_sticky.png" width="160" height="34" alt="City tours">
+          </div>
+        </div>
+        <span class="sidebar-title">Administration</span>
+        <div class="user-profile">
+          <a th:href="@{/SuperAdmin/profile}" class="profile-link">
+            <img th:src="${userProfileImage}" alt="User Avatar" class="user-avatar" onerror="this.src='/assets/img/tourist_guide_pic.jpg';">
+            <div class="user-info">
+              <div class="user-name" th:text="${#authentication != null && #authentication.principal != null ? #authentication.principal.firstName + ' ' + #authentication.principal.lastName : 'Utilisateur'}">superAdmin</div>
+              <div class="user-role" th:text="${#authentication != null && #authentication.principal != null && not #lists.isEmpty(#authentication.principal.roles) ? #authentication.principal.roles[0].name : 'Non connecté'}">ROLE</div>
+            </div>
+          </a>
+          <div class="notification-bell" title="Notifications">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" id="notificationBadge">0</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="sidebar-menu">
+        <a th:href="@{/hebergement/wishlist}" class="menu-item">
+          <i class="fas fa-heart"></i>
+          <span>Liste de souhaits</span>
+        </a>
+        <a href="/admin/index" class="menu-item">
+          <i class="fas fa-th-large"></i>
+          <span>Tableau de bord</span>
+        </a>
+        
+        <div class="menu-item dropdown" th:if="${isHebergementAdmin != null && isHebergementAdmin} or ${isProprietaire != null && isProprietaire} or ${isSuperAdmin != null && isSuperAdmin}" sec:authorize="hasAnyAuthority('SUPERADMIN_PRIVILEGE', 'HEBERGEMENT_ADMIN_PRIVILEGE', 'PROPRIETAIRE_PRIVILEGE')">
+          <div class="menu-header" onclick="toggleSubmenu(this)">
+            <div class="menu-icon-title">
+              <i class="fas fa-building"></i>
+              <span>Gérer les hébergements</span>
+            </div>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="submenu">
+  <!-- SuperAdmin et HebergementAdmin : Tous les hébergements -->
+  <a href="/admin/hebergements" class="submenu-item" th:if="${isSuperAdmin != null && isSuperAdmin} or (${isHebergementAdmin != null && isHebergementAdmin})">
+    <i class="fas fa-list-ul"></i>
+    <span>Tous les hébergements</span>
+  </a>
+  <!-- Propriétaire : Mes hébergements -->
+  <a href="/admin/hebergements" class="submenu-item" th:if="${isProprietaire != null && isProprietaire && !isHebergementAdmin && !isSuperAdmin}">
+    <i class="fas fa-list-ul"></i>
+    <span>Mes hébergements</span>
+  </a>
+  <!-- Propriétaire et SuperAdmin : Ajouter un hébergement -->
+  <a href="/admin/hebergements/add" class="submenu-item active" th:if="${isProprietaire != null && isProprietaire && !isHebergementAdmin && !isSuperAdmin} or (${isSuperAdmin != null && isSuperAdmin})">
+    <i class="fas fa-plus-circle"></i>
+    <span>Ajouter un hébergement</span>
+  </a>
+</div>
+          </div>
+        </div>
+        
+        <div class="menu-item dropdown" th:if="${isEvenementAdmin != null && isEvenementAdmin} or ${isSuperAdmin != null && isSuperAdmin}" sec:authorize="hasAnyAuthority('SUPERADMIN_PRIVILEGE', 'EVENEMENT_ADMIN_PRIVILEGE')">
+          <div class="menu-header" onclick="toggleSubmenu(this)">
+            <div class="menu-icon-title">
+              <i class="fas fa-calendar-alt"></i>
+              <span>Gérer les événements</span>
+            </div>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="submenu">
+            <a href="/admin/evenements" class="submenu-item">
+              <i class="fas fa-list-ul"></i>
+              <span>Tous les événements</span>
+            </a>
+            <a href="/admin/add-evenement" class="submenu-item">
+              <i class="fas fa-plus-circle"></i>
+              <span>Ajouter un événement</span>
+            </a>
+          </div>
+        </div>
+        
+        <div class="menu-item dropdown" th:if="${isSuperAdmin != null && isSuperAdmin}" sec:authorize="hasAuthority('SUPERADMIN_PRIVILEGE')">
+          <div class="menu-header" onclick="toggleSubmenu(this)">
+            <div class="menu-icon-title">
+              <i class="fas fa-users"></i>
+              <span>Gérer les utilisateurs</span>
+            </div>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="submenu">
+            <a href="/SuperAdmin/db-vendor-user" class="submenu-item">
+              <i class="fas fa-list-ul"></i>
+              <span>Tous les utilisateurs</span>
+            </a>
+            <a href="/SuperAdmin/db-vendor-add-user" class="submenu-item">
+              <i class="fas fa-user-plus"></i>
+              <span>Ajouter un utilisateur</span>
+            </a>
+          </div>
+        </div>
+        
+        <a th:href="@{/logout}" class="menu-item logout">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Déconnexion</span>
+        </a>
+      </div>
+    </div>
+
+     <div class="dashboard__main">
+       <div class="dashboard__content" style="max-width: 100%; padding: 0;">
+        <div class="row y-gap-20 justify-between items-end pb-20 lg:pb-40 md:pb-32" style="margin-left: 0; margin-right: 0; width: 100%;">
+          <div class="col-auto">
+            <h1 class="text-30 lh-14 fw-500">Tableau de bord</h1>
+            <div class="text-15 text-light-1" sec:authorize="hasAuthority('SUPERADMIN_PRIVILEGE')">Administration générale du système</div>
+            <div class="text-15 text-light-1" sec:authorize="hasAuthority('PROPRIETAIRE_PRIVILEGE')">Gestion de vos hébergements</div>
+            <div class="text-15 text-light-1" sec:authorize="hasAuthority('HEBERGEMENT_ADMIN_PRIVILEGE')">Administration des hébergements</div>
+            <div class="text-15 text-light-1" sec:authorize="hasAuthority('EVENEMENT_ADMIN_PRIVILEGE')">Administration des événements</div>
+          </div>
+          <div class="col-auto">
+          </div>
+        </div>
+        <div class="row y-gap-30" style="margin-left: 0; margin-right: 0; width: 100%;">
+          <div class="col-xl-3 col-md-6 col-sm-6 col-12">
+            <div class="py-15 px-15 custom_border_left_blue custom_rounded bg-white custom_shadow">
+              <div class="row y-gap-20 justify-between items-center">
+                <div class="col-md-6">
+                  <div class="fw-500 lh-14">Revenus totaux</div>
+                  <div class="text-30 lh-16 fw-600 mt-5 text_blue">12 800 MAD</div>
+                  <div class="text-15 lh-14 text-light-1 mt-5 text_green">(+2.35%) <span><i class="fas fa-arrow-up"></i></span></div>
+                </div>
+                <div class="col-md-6">
+                  <img src="/SuperAdmin/img/dashboard/icons/arrow-1.png" alt="icon">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-6 col-sm-6 col-12">
+            <div class="py-15 px-30 custom_border_left_orange custom_rounded bg-white custom_shadow">
+              <div class="row y-gap-20 justify-between items-center">
+                <div class="col-md-6">
+                  <div class="fw-500 lh-14">Dépenses totales</div>
+                  <div class="text-30 lh-16 fw-600 mt-5 text_orange">14 200 MAD</div>
+                  <div class="text-15 lh-14 text-light-1 mt-5 text_green">(+2.35%) <span><i class="fas fa-arrow-up"></i></span></div>
+                </div>
+
+                <div class="col-md-6">
+                  <img src="/SuperAdmin/img/dashboard/icons/arrow-2.png" alt="icon">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-md-6 col-sm-6 col-12">
+            <div class="py-15 px-30 custom_border_left_green custom_rounded bg-white custom_shadow">
+              <div class="row y-gap-20 justify-between items-center">
+                <div class="col-md-6">
+                  <div class="fw-500 lh-14">Services totaux</div>
+                  <div class="text-30 lh-16 fw-600 mt-5 text_green">22,786</div>
+                  <div class="text-15 lh-14 text-light-1 mt-5 text_green">(+2.35%) <span><i class="fas fa-arrow-up"></i></span></div>
+                </div>
+
+                <div class="col-md-6">
+                  <img src="/SuperAdmin/img/dashboard/icons/arrow-4.png" alt="icon">
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="row y-gap-30 pt-20" style="margin-left: 0; margin-right: 0; width: 100%;">
+          <div class="col-xl-6 col-md-6">
+            <div class="py-30 px-30 custom_rounded bg-white custom_shadow">
+              <div class="d-flex justify-between items-center heading_border">
+                <h2 class="text-18 lh-1 fw-500">
+                  Aperçu des dépenses
+                </h2>
+              </div>
+
+              <div class="pt-30">
+                <canvas id="lineChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-6 col-md-6">
+            <div class="py-30 px-30 rounded-4 bg-white custom_shadow">
+              <div class="d-flex justify-between items-center heading_border">
+                <h2 class="text-18 lh-1 fw-500">
+                  Mes réservations
+                </h2>
+              </div>
+
+              <div class="overflow-scroll scroll-bar-1 pt-30">
+                <table class="table-2 col-12">
+                  <thead class="">
+                    <tr>
+                      <th>Numéro</th>
+                      <th>ID de réservation</th>
+                      <th>Type de réservation</th>
+                      <th>Montant de la réservation</th>
+                      <th>Statut</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>01.</td>
+                      <td>#JK589V80</td>
+                      <td>Hôtel</td>
+                      <td>754 MAD</td>
+                      <td>
+                        <div class="text-center col-12 text-14 fw-500 text-yellow-3">Terminé</div>
+                      </td>
+                      <td><i class="fas fa-eye"></i></td>
+                    </tr>
+                    <tr>
+                      <td>02.</td>
+                      <td>#JK589V80</td>
+                      <td> Vol</td>
+                      <td>754 MAD</td>
+                      <td>
+                       <div class="text-center col-12 text-14 fw-500 text-yellow-3">Terminé</div>
+                      </td>
+                      <td><i class="fas fa-eye"></i></td>
+                    </tr>
+                    <tr>
+                      <td>03.</td>
+                      <td>#JK589V80</td>
+                      <td>Visite</td>
+                      <td>754 MAD</td>
+                      <td>
+                       <div class="text-center col-12 text-14 fw-500 text-yellow-3">Terminé</div>
+                      </td>
+                      <td><i class="fas fa-eye"></i></td>
+                    </tr>
+                    <tr>
+                      <td>04.</td>
+                      <td>#JK589V80</td>
+                      <td>Vol</td>
+                      <td>754 MAD</td>
+                      <td>
+                        <div class="text-center col-12 text-14 fw-500 text-yellow-3">Terminé</div>
+                      </td>
+                      <td><i class="fas fa-eye"></i></td>
+                    </tr>
+                    <tr>
+                      <td>05.</td>
+                      <td>#JK589V80</td>
+                      <td>Hôtel</td>
+                      <td>754 MAD</td>
+                      <td>
+                        <div class="text-center col-12 text-14 fw-500 text-red-3">Annulé</div>
+                      </td>
+                      <td><i class="fas fa-eye"></i></td>
+                    </tr>
+                    <tr>
+                      <td>06.</td>
+                      <td>#JK589V80</td>
+                      <td>Visite</td>
+                      <td>754 MAD</td>
+                      <td>
+                        <div class="text-center col-12 text-14 fw-500 text-yellow-3">Terminé</div>
+                      </td>
+                      <td><i class="fas fa-eye"></i></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="footer -dashboard mt-60">
+          <div class="footer__row row y-gap-10 items-center justify-between">
+            <div class="col-auto">
+              <div class="row y-gap-20 items-center">
+                <div class="col-auto">
+                  <div class="text-14 lh-14 mr-30">Copyright 2025 Tous droits réservés</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-auto">
+              <div class="d-flex x-gap-5 y-gap-5 items-center">
+                <img src="/SuperAdmin/img/avatars/card.png" alt="img">
+             </div>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="/SuperAdmin/js/chart.min.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAAz77U5XQuEME6TpftaMdX0bBelQxXRlM"></script>
+  <script src="/SuperAdmin/js/vendors.js"></script>
+  <script src="/SuperAdmin/js/main.js"></script>
+  
+  <script>
+    // Fonction pour adapter l'interface en fonction de la taille de l'écran
+    function adjustLayout() {
+      const windowWidth = window.innerWidth;
+      const toggleButton = document.getElementById('toggleSidebar');
+      const sidebar = document.querySelector('.dashboard__sidebar');
+      
+      if (windowWidth <= 992) {
+        toggleButton.style.display = 'block';
+      } else {
+        toggleButton.style.display = 'none';
+        sidebar.style.display = 'block';
+      }
+    }
+    
+    // Exécuter la fonction au chargement et au redimensionnement de la fenêtre
+    window.addEventListener('load', adjustLayout);
+    window.addEventListener('resize', adjustLayout);
+    
+    // Gérer le clic sur le bouton de basculement de la barre latérale
+    document.getElementById('toggleSidebar').addEventListener('click', function() {
+      const sidebar = document.querySelector('.dashboard__sidebar');
+      if (sidebar.style.display === 'none' || sidebar.style.display === '') {
+        sidebar.style.display = 'block';
+      } else {
+        sidebar.style.display = 'none';
+      }
+    });
+    
+    // Fonction pour initialiser les accordéons
+    document.addEventListener('DOMContentLoaded', function() {
+      const accordionButtons = document.querySelectorAll('.accordion__button');
+      
+      accordionButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          // Trouver le contenu de l'accordéon associé
+          const content = this.parentElement.querySelector('.accordion__content');
+          
+          // Fermer tous les autres accordéons
+          const allContents = document.querySelectorAll('.accordion__content');
+          allContents.forEach(item => {
+            if (item !== content) {
+              item.style.display = 'none';
+            }
+          });
+          
+          // Basculer l'affichage du contenu actuel
+          if (content.style.display === 'block') {
+            content.style.display = 'none';
+          } else {
+            content.style.display = 'block';
+          }
+        });
+      });
+    });
+    
+    // Au chargement de la page
+    document.addEventListener('DOMContentLoaded', function() {
+      // S'assurer que tous les sous-menus sont cachés par défaut
+      const submenuContainers = document.querySelectorAll('.sidebar-submenu-container');
+      submenuContainers.forEach(container => {
+        container.style.display = 'none';
+      });
+    });
+    
+    // Gestion des notifications
+    document.addEventListener('DOMContentLoaded', function() {
+      const notificationIcon = document.getElementById('notificationIcon');
+      const notificationDropdown = document.getElementById('notificationDropdown');
+      
+      // Afficher/masquer le menu déroulant des notifications
+      notificationIcon.addEventListener('click', function(event) {
+        event.stopPropagation();
+        if (notificationDropdown.style.display === 'block') {
+          notificationDropdown.style.display = 'none';
+        } else {
+          notificationDropdown.style.display = 'block';
+          // Charger les notifications via AJAX
+          fetchNotifications();
+        }
+      });
+      
+      // Fermer le menu déroulant en cliquant ailleurs sur la page
+      document.addEventListener('click', function(event) {
+        if (!notificationIcon.contains(event.target)) {
+          notificationDropdown.style.display = 'none';
+        }
+      });
+      
+      // Fonction pour récupérer les notifications non lues via AJAX
+      function fetchNotifications() {
+        fetch('/notifications/non-lues')
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              updateNotificationList(data.notifications);
+            }
+          })
+          .catch(error => console.error('Erreur lors du chargement des notifications:', error));
+      }
+      
+      // Mettre à jour la liste des notifications dans le menu déroulant
+      function updateNotificationList(notifications) {
+        const notificationList = document.getElementById('notificationList');
+        notificationList.innerHTML = '';
+        
+        if (notifications && notifications.length > 0) {
+          notifications.forEach(notification => {
+            const li = document.createElement('li');
+            li.className = 'notification-item unread';
+            
+            const content = document.createElement('div');
+            content.className = 'notification-content';
+            content.textContent = notification.message;
+            
+            const time = document.createElement('div');
+            time.className = 'notification-time';
+            // Formater la date
+            const date = new Date(notification.dateCreation);
+            time.textContent = date.toLocaleDateString('fr-FR') + ' ' + date.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
+            
+            li.appendChild(content);
+            li.appendChild(time);
+            
+            // Ajouter un événement pour marquer comme lu
+            li.addEventListener('click', function() {
+              markAsRead(notification.id);
+              window.location.href = '/notifications';
+            });
+            
+            notificationList.appendChild(li);
+          });
+        } else {
+          const li = document.createElement('li');
+          li.className = 'notification-item';
+          
+          const content = document.createElement('div');
+          content.className = 'notification-content';
+          content.textContent = 'Aucune notification pour le moment.';
+          
+          li.appendChild(content);
+          notificationList.appendChild(li);
+        }
+      }
+      
+      // Fonction pour marquer une notification comme lue
+      function markAsRead(notificationId) {
+        fetch('/notifications/marquer-lu/' + notificationId, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').getAttribute('content')
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // Mettre à jour le compteur de notifications
+            updateNotificationCount();
+          }
+        })
+        .catch(error => console.error('Erreur lors du marquage de la notification:', error));
+      }
+      
+      // Fonction pour mettre à jour le compteur de notifications
+      function updateNotificationCount() {
+        fetch('/notifications/count-non-lues')
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              const badge = document.getElementById('notificationBadge');
+              if (data.count > 0) {
+                badge.textContent = data.count;
+                badge.style.display = 'flex';
+              } else {
+                badge.style.display = 'none';
+              }
+            }
+          })
+          .catch(error => console.error('Erreur lors de la mise à jour du compteur:', error));
+      }
+      
+      // Mettre à jour le compteur toutes les 60 secondes
+      setInterval(updateNotificationCount, 60000);
+    });
+  </script>
+  <script src="/SuperAdmin/js/sidebar.js"></script>
+</body>
+</html>

@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
+<!-- Mirrored from www.ansonika.com/citytours/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Mar 2025 15:39:30 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Citytours - Premium site template for city tours agencies, transfers and tickets.">
+    <meta name="author" content="Ansonika">
+    <title>CITY TOURS - Voyage au Cœur du Maroc</title>
+
+    <!-- Favicons-->
+    <link rel="shortcut icon" href="/assets/img/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" type="image/x-icon" href="/assets/img/apple-touch-icon-57x57-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="/assets/img/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="/assets/img/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="/assets/img/apple-touch-icon-144x144-precomposed.png">
+
+    <!-- Google Web Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- COMMON CSS -->
+	<link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/vendors.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <!-- ALTERNATIVE COLORS CSS -->
+    <link href="#" id="colors" rel="stylesheet">
+    <link href="/assets/css/owl.carousel.min.css" rel="stylesheet">
+    <link href="/assets/css/owl.theme.default.min.css" rel="stylesheet">
+    <style>
+        .hotel-card:hover { transform: translateY(-4px) scale(1.01); }
+        .hotel-card-left { position: relative; min-width: 260px; max-width: 320px; height: 220px; background: #f6f6f6; overflow: hidden; border-radius: 18px 0 0 18px; }
+        .hotel-image { width: 100%; height: 100%; object-fit: cover; border-radius: 18px 0 0 18px; transition: transform 0.5s; }
+        .hotel-card:hover .hotel-image { transform: scale(1.04); }
+        .hotel-badge { position: absolute; top: 18px; left: 18px; background: #e74c3c; color: #fff; padding: 7px 16px; border-radius: 8px; font-size: 13px; font-weight: 700; letter-spacing: 1px; box-shadow: 0 2px 8px rgba(0,0,0,0.10); z-index: 2; }
+        .wishlist-remove { position: absolute; top: 18px; right: 18px; background: rgba(255,255,255,0.85); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #e74c3c; font-size: 18px; border: none; transition: background 0.2s, transform 0.2s; z-index: 2; }
+        .wishlist-remove:hover { background: #fff; transform: scale(1.09); }
+        .hotel-card-right { flex: 1; padding: 24px 32px 20px 32px; display: flex; flex-direction: column; justify-content: space-between; }
+        .hotel-header { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 8px; }
+        .hotel-header h3 { font-size: 1.4rem; font-weight: 700; color: #222; margin: 0; }
+        .wishlist-stars { color: #FFD700; font-size: 1.1rem; display: flex; align-items: center; gap: 3px; } 
+        .wishlist-desc { color: #555; font-size: 1rem; margin-bottom: 16px; margin-top: 2px; } 
+        .wishlist-amenities { margin-bottom: 18px; display: flex; gap: 16px; } 
+        .wishlist-amenities i { color: #3a86ff; font-size: 1.3rem; background: #f1f3f4; border-radius: 50%; padding: 8px; } 
+        .wishlist-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; gap: 20px; } 
+        @media (max-width: 900px) { .hotel-card { flex-direction: column; max-width: 100%; min-height: unset; } .hotel-card-left { max-width: 100%; min-width: 100%; height: 180px; border-radius: 18px 18px 0 0; } .hotel-image { border-radius: 18px 18px 0 0; } .hotel-card-right { padding: 18px 14px 14px 14px; } }
+        .wishlist-pricing { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; } 
+        .wishlist-price { font-size: 1.3rem; font-weight: bold; color: #3a86ff; } 
+        .wishlist-oldprice { font-size: 1rem; color: #e74c3c; text-decoration: line-through; margin-left: 3px; } 
+        .wishlist-pernight { font-size: 0.95rem; color: #888; margin-left: 2px; } 
+        .wishlist-actions { display: flex; gap: 12px; } 
+        .wishlist-btn-details { background: #f1f3f4; color: #222; border-radius: 6px; padding: 9px 20px; font-size: 1rem; font-weight: 600; text-decoration: none; transition: background 0.2s, color 0.2s; display: flex; align-items: center; gap: 6px; } 
+        .wishlist-btn-details:hover { background: #3a86ff; color: #fff; } 
+        .wishlist-btn-reserve { background: #3a86ff; color: #fff; border-radius: 6px; padding: 9px 20px; font-size: 1rem; font-weight: 600; text-decoration: none; transition: background 0.2s, color 0.2s; display: flex; align-items: center; gap: 6px; } 
+        .wishlist-btn-reserve:hover { background: #265ea8; color: #fff; } 
+        @media (max-width: 900px) { .wishlist-card { flex-direction: column; max-width: 100%; min-height: unset; } .wishlist-img-section { max-width: 100%; min-width: 100%; height: 180px; border-radius: 18px 18px 0 0; } .wishlist-img { border-radius: 18px 18px 0 0; } .wishlist-content-section { padding: 18px 14px 14px 14px; } }
+    </style>
+</head>
+
+
+<style>
+    :root {
+        --primary-color: #0056b3;
+        --accent-color: #ffc107;
+        --text-color: #333;
+        --light-bg: #f8f9fa;
+        --dark-bg: #343a40;
+        --border-radius: 8px;
+        --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        --hover-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        --transition: all 0.3s ease;
+    }
+    
+    /* Styles pour le lien de liste de souhaits */
+    .my-wishlist-link {
+        color: white;
+        text-decoration: none;
+        position: relative;
+    }
+    .my-wishlist-link:hover {
+        color: var(--accent-color);
+    }
+    .my-wishlist-link i {
+        margin-right: 5px;
+    }
+    
+    /* Suppression des lignes dans le header */
+    header, .top_line, .main_menu, nav, .menu, #top_line, #header {
+        border-top: none !important;
+        border-bottom: none !important;
+        box-shadow: none !important;
+    }
+    
+    header::before, header::after, .top_line::before, .top_line::after, nav::before, nav::after {
+        display: none !important;
+    }
+    
+    /* Suppression des lignes dans le footer */
+    footer, .footer, #footer, .footer_links {
+        border-top: none !important;
+        border-bottom: none !important;
+        box-shadow: none !important;
+    }
+    
+    footer::before, footer::after, .footer::before, .footer::after {
+        display: none !important;
+    }
+    
+    /* Style des liens */
+    a {
+        text-decoration: none;
+        border: none;
+        color: #fff;
+    }
+    
+    hr {
+        display: none !important;
+    }
+    
+    /* Styles pour les filtres */
+    .filter-container {
+        background-color: white;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        box-shadow: var(--box-shadow);
+        margin-bottom: 30px;
+    }
+    
+    .filter-header {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 15px 20px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        font-size: 16px;
+    }
+    
+    .filter-content {
+        padding: 20px;
+    }
+    
+    .filter_type {
+        border-radius: var(--border-radius);
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: var(--box-shadow);
+        border-top: 3px solid var(--primary-color);
+        background-color: white;
+    }
+    
+    .filter_type h5 {
+        border-bottom: 1px solid #ddd;
+        font-size: 18px;
+        position: relative;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+        color: var(--text-color);
+    }
+    
+    .filter_type h5:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 40px;
+        height: 2px;
+        background-color: var(--primary-color);
+    }
+    
+    .filter_type label:hover {
+        color: var(--primary-color);
+        cursor: pointer;
+    }
+    
+    .form-check-input:checked {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+    
+    .filter-footer {
+        padding: 20px;
+        background-color: var(--light-bg);
+        text-align: center;
+        border-top: 1px solid #eee;
+    }
+    
+    .filter-footer .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+        padding: 10px 20px;
+        transition: var(--transition);
+    }
+    
+    .filter-footer .btn-primary:hover {
+        background-color: #004494;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 86, 179, 0.3);
+    }
+    
+    .city-list-container {
+        max-height: 200px;
+        overflow-y: auto;
+        padding-right: 10px;
+        margin-top: 10px;
+    }
+    
+    /* Styles pour les cartes d'hébergement */
+    .hotel-cards-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+        margin-bottom: 30px;
+    }
+    
+    .hotel-card {
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        position: relative;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .hotel-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .hotel-badge {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: #e74c3c;
+        color: white;
+        padding: 8px 15px;
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        z-index: 10;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        border-bottom-right-radius: 5px;
+    }
+    
+    .hotel-card-left {
+        width: 300px;
+        height: 280px;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .hotel-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    
+    .hotel-card:hover .hotel-image {
+        transform: scale(1.05);
+    }
+    
+    .hotel-card-right {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .hotel-header {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .hotel-stars {
+        display: flex;
+        gap: 5px;
+        margin-bottom: 5px;
+    }
+    
+    .hotel-stars i {
+        color: var(--accent-color);
+        font-size: 16px;
+    }
+    
+    .hotel-name {
+        font-size: 22px;
+        font-weight: 700;
+        margin: 0;
+        color: var(--text-color);
+    }
+    
+    .hotel-description {
+        color: #666;
+        margin: 0;
+        line-height: 1.5;
+    }
+    
+    .hotel-amenities {
+        display: flex;
+        gap: 15px;
+    }
+    
+    .amenity-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #0056b3;
+    }
+    
+    .hotel-rating {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .rating-text {
+        color: #666;
+    }
+    
+    .rating-score {
+        background-color: #0056b3;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-weight: 700;
+    }
+    
+    .hotel-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        background-color: #f8f9fa;
+        border-top: 1px solid #eee;
+    }
+    
+    .hotel-price {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .price-currency {
+        font-size: 14px;
+        color: #666;
+    }
+    
+    .price-value {
+        font-size: 24px;
+        font-weight: 700;
+        color: #0056b3;
+    }
+    
+    .price-original {
+        font-size: 14px;
+        color: #999;
+        text-decoration: line-through;
+    }
+    
+    .price-note {
+        font-size: 12px;
+        color: #999;
+    }
+    
+    .hotel-buttons {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .hotel-btn {
+        padding: 10px 15px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .hotel-btn-reserve {
+        background-color: #28a745;
+        color: white;
+    }
+    
+    .hotel-btn-reserve:hover {
+        background-color: #218838;
+        transform: translateY(-2px);
+    }
+    
+    /* Bouton de suppression */
+    .wishlist-remove {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        z-index: 10;
+        background-color: rgba(255, 255, 255, 0.8);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: #e74c3c;
+        font-size: 18px;
+        border: none;
+    }
+    
+    .wishlist-remove:hover {
+        background-color: #e74c3c;
+        color: white;
+        transform: scale(1.1);
+    }
+    
+    /* Styles responsifs */
+    @media (min-width: 768px) {
+        .hotel-card {
+            flex-direction: row;
+            height: 220px;
+        }
+        
+        .hotel-card-left {
+            width: 40%;
+            min-width: 280px;
+            height: 100%;
+        }
+        
+        .hotel-card-right {
+            width: 60%;
+            padding: 20px;
+        }
+    }
+    .wishlist-hero-banner {
+    width: 100vw;
+    min-width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    min-height: 422px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #444 !important; /* fallback si image non chargée */
+    margin-bottom: 0;
+    border-radius: 0;
+    overflow: hidden;
+}
+.wishlist-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #fff;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.45);
+}
+.wishlist-subtitle {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: #fff;
+    margin: 0;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.35);
+}
+
+</style>
+
+
+<body>
+
+    <div id="preloader">
+        <div class="sk-spinner sk-spinner-wave">
+            <div class="sk-rect1"></div>
+            <div class="sk-rect2"></div>
+            <div class="sk-rect3"></div>
+            <div class="sk-rect4"></div>
+            <div class="sk-rect5"></div>
+        </div>
+    </div>
+    <!-- End Preload -->
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            var preloader = document.getElementById('preloader');
+            var mainContent = document.getElementById('main-content');
+            if (preloader) preloader.style.display = 'none';
+            if (mainContent) mainContent.style.display = '';
+        });
+    </script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            var preloader = document.getElementById('preloader');
+            var mainContent = document.getElementById('main-content');
+            if (preloader) preloader.style.display = 'none';
+            if (mainContent) mainContent.style.display = '';
+        });
+    </script>
+
+    <div class="layer"></div>
+    <!-- Mobile menu overlay mask -->
+
+    <!-- Header================================================== -->
+    <header>
+        <div id="top_line">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6">
+                        <i class="icon-phone"></i><strong>‪+212 618311344‬</strong>
+                    </div>
+                    <div class="col-6">
+                        <ul id="top_links">
+                            <!-- Avant connexion -->
+                            <li sec:authorize="!isAuthenticated()">
+                                <a id="login-form" href="/login">Se connecter</a>
+                            </li>
+                        
+                            <!-- Après connexion -->
+                            <li sec:authorize="isAuthenticated()">
+                                <span>
+                                    <i class="icon-user"></i>
+                                    <span th:if="${connectedUser != null}" th:text="${connectedUser.username}">Nom</span>
+                                </span>
+                            </li>
+                            <li sec:authorize="isAuthenticated()">
+                                <a href="/logout"><i class="icon-logout"></i> Se déconnecter</a>
+                            </li>
+                        
+                            <!-- Toujours visible -->
+                            <li>
+                                <a th:href="@{/hebergement/wishlist}" sec:authorize="isAuthenticated()" class="my-wishlist-link"><i class="icon-heart"></i> Liste de souhaits</a>
+                                <a th:href="@{/login}" sec:authorize="!isAuthenticated()" class="my-wishlist-link"><i class="icon-heart"></i> Liste de souhaits</a>
+                            </li>
+                        </ul>
+                        
+                    </div>
+                </div><!-- End row -->
+            </div><!-- End container-->
+        </div><!-- End top line -->
+    
+        
+        <div class="container">
+            <div class="row">
+                <div class="col-3">
+                    <div id="logo_home">
+                    	<h1><a href="/index" title="City tours travel template">City Tours travel</a></h1>
+                    </div>
+                </div>
+                <nav class="col-9">
+                    <a class="cmn-toggle-switch cmn-toggle-switch__htx open_close" href="javascript:void(0);"><span>Menu mobile</span></a>
+                    <div class="main-menu">
+                        <div id="header_menu">
+                            <img src="/assets/img/logo_sticky.png" width="160" height="34" alt="City tours">
+                        </div>
+                        <a href="#" class="open_close" id="close_in"><i class="icon_set_1_icon-77"></i></a>
+                        <ul>
+                            <li class="submenu">
+                                <a href="/index" class="show-submenu">Accueil </a>
+                            </li>
+                        <li class="submenu">
+                                <a href="javascript:void(0);" class="show-submenu">Hébergements <i class="icon-down-open-mini"></i></a>
+                                <ul class="hebergement-list">
+                                    <li>
+                                        <a th:href="@{/hebergement}" class="second-level">Tous les types</a>
+                                    </li>
+                                    <li th:each="type : ${hebergementType}">
+                                        <a th:href="@{'/hebergement/' + ${type.name()} + '/list'}"
+                                        th:text="${#strings.capitalize(type.name().toLowerCase().replace('_',' '))}"
+                                        class="second-level"></a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="submenu">
+                                <a href="javascript:void(0);" class="show-submenu">Gastronomie <i class="icon-down-open-mini"></i></a><ul>
+                                    <li><a href="all_hotels_list.html">All hotels list</a></li>
+                                    <li><a href="all_hotels_grid.html">All hotels grid</a></li>
+                                    <li><a href="all_hotels_grid_masonry.html">All hotels Sort Masonry</a></li>
+                                    <li><a href="all_hotels_map_listing.html">All hotels map listing</a></li>
+                                    <li><a href="single_hotel.html">Single hotel page</a></li>
+                                    <li><a href="single_hotel_working_booking.html">Single hotel working booking</a></li>
+                                    <li><a href="single_hotel_contact.html">Single hotel contact working</a></li>
+                                    <li><a href="cart_hotel.html">Cart hotel</a></li>
+                                    <li><a href="payment_hotel.html">Booking hotel</a></li>
+                                    <li><a href="confirmation_hotel.html">Confirmation hotel</a></li>
+                                </ul>
+                            </li>
+                            <li class="submenu">
+                                <a href="javascript:void(0);" class="show-submenu">Transports  <i class="icon-down-open-mini"></i></a>
+                                <ul>
+                                    <li><a href="/public/Transports/infosTransports.html">Informations</a></li>
+                                    <li><a href="/Client/Transports/reservationTransports.html">Réservations</a></li>
+                                 
+                                </ul>
+                            </li>
+
+                                <li class="submenu">
+                                    <a href="javascript:void(0);" class="show-submenu">Événements <i class="icon-down-open-mini"></i></a>
+                                    <ul class="evenement-list">
+                                        <li>
+                                            <a th:href="@{/evenements}" class="second-level">Tous les types</a>
+                                        </li>
+                                        <li th:each="type : ${evenementType}">
+                                            <a th:href="@{'/evenements/' + ${type.name()} + '/list'}"
+                                            th:text="${#strings.capitalize(type.name().toLowerCase().replace('_',' '))}"
+                                            class="second-level"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+
+                             <li class="megamenu submenu">
+                                <a href="javascript:void(0);" class="show-submenu-mega">Bonus<i class="icon-down-open-mini"></i></a>
+                                <div class="menu-wrapper">
+                                	<div class="row">              
+                                        <div class="col-lg-4">
+                                            <ul>
+                                                <li><a href="shop.html">Shop</a></li>
+                                                <li><a href="shop-single.html">Shop single</a></li>
+                                                <li><a href="shopping-cart.html">Shop cart</a></li>
+                                                <li><a href="checkout.html">Shop Checkout</a></li>
+                                            </ul>
+                                        </div>
+                                    </div><!-- End row -->
+                                </div><!-- End menu-wrapper -->
+                            </li>
+                            <li class="megamenu submenu">
+                                <a href="javascript:void(0);" class="show-submenu-mega">Pages<i class="icon-down-open-mini"></i></a>
+                                <div class="menu-wrapper">
+                                	<div class="row">
+									<div class="col-lg-4">
+											<ul>
+												<li><a href="contact_us_1.html">Contact us 1</a></li>
+												 <li><a href="blog_right_sidebar.html">Blog</a></li>
+												<li><a href="blog.html">Blog left sidebar</a></li>
+												<li><a href="login.html">Login</a></li>
+												<li><a href="#">Register</a></li>
+												<li><a href="invoice.html" target="_blank">Invoice</a></li>
+												<li><a href="404.html">404 Error page</a></li>
+											</ul>
+										</div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                <ul id="top_tools">
+                        <li>
+                            <a href="javascript:void(0);" class="search-overlay-menu-btn" style="color: white; display: inline-block; width: 24px; height: 24px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="white" width="24" height="24">
+                                    <path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/>
+                                </svg>
+                            </a>
+                        </li>
+                        <li>
+                            <div class="dropdown dropdown-cart">
+                                <a href="/hebergement/cart_hebergement" class="cart_bt" style="position: relative; display: inline-block;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" fill="white" width="24" height="24">
+                                        <path d="M528.12 301.319l47.273-208C578.806 78.301 567.391 64 551.99 64H159.208l-9.166-44.81C147.758 8.021 137.93 0 126.529 0H24C10.745 0 0 10.745 0 24v16c0 13.255 10.745 24 24 24h69.883l70.248 343.435C147.325 417.1 136 435.222 136 456c0 30.928 25.072 56 56 56s56-25.072 56-56c0-15.674-6.447-29.835-16.824-40h209.647C430.447 426.165 424 440.326 424 456c0 30.928 25.072 56 56 56s56-25.072 56-56c0-22.172-12.888-41.332-31.579-50.405l5.517-24.276c3.413-15.018-8.002-29.319-23.403-29.319H218.117l-6.545-32h293.145c11.206 0 20.92-7.754 23.403-18.681z"/>
+                                    </svg>
+                                    <span style="position: absolute; top: -10px; right: -10px; background-color: #e04f67; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold;" th:text="${session.cartItems != null ? session.cartItems.size() : '0'}">0</span>
+                                </a>
+                                <ul class="dropdown-menu" id="cart_items">
+                                    <li th:if="${session.cartItems == null || session.cartItems.isEmpty()}">
+                                        <div>Votre panier est vide</div>
+                                    </li>
+                                    <li th:each="item : ${session.cartItems}" th:if="${session.cartItems != null && !session.cartItems.isEmpty()}">
+                                        <div class="image">
+                                            <!-- Utiliser la méthode getPhotoUrlWithDefault pour garantir qu'une image est toujours affichée -->
+                                            <img th:src="${item.photoUrl != null && !item.photoUrl.isEmpty() ? item.photoUrl : '/assets/img/hotel_img.jpg'}" alt="image" onerror="this.src='/assets/img/hotel_img.jpg';">
+                                        </div>
+                                        <strong>
+                                            <a th:href="@{'/hebergement/single/' + ${item.id}}" th:text="${item.nom}">Hébergement</a>
+                                            <!-- Afficher le prix par nuit si disponible, sinon le prix normal -->
+                                            <span>
+                                                <span th:text="${item.capacite != null ? item.capacite : 1} + ' pers. '">1 pers.</span>
+                                                <span th:if="${item.prix != null}" th:text="'MAD ' + ${item.prix} + '/nuit'">MAD 0/nuit</span>
+                                                <span th:unless="${item.prix != null}" th:text="'MAD ' + ${item.prix != null ? item.prix : 0}">MAD 0</span>
+                                            </span>
+                                        </strong>
+                                        <a th:href="@{'/hebergement/cart/remove?hebergementId=' + ${item.id}}" class="action"><i class="fas fa-trash"></i></a>
+                                    </li>
+                                    <li th:if="${session.cartItems != null && !session.cartItems.isEmpty()}">
+                                        <div>Total: <span th:text="'MAD ' + ${#aggregates.sum(session.cartItems.![prix != null ? prix * (capacite != null ? capacite : 1) : 0])}">MAD 0</span></div>
+                                        <a href="/hebergement/cart_hebergement" class="button_drop">Voir le panier</a>
+                                        <a href="/hebergement/payment" class="button_drop outline">Paiement</a>
+                                    </li>
+                                </ul>
+                            </div><!-- End dropdown-cart-->
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div><!-- container -->
+    </header>
+	<section class="parallax-window wishlist-hero-banner" data-parallax="scroll" data-image-src="/assets/img/home_bg_1.jpg" data-natural-width="1400" data-natural-height="470" style="background: #444;">
+    <div class="parallax-content-1 opacity-mask" data-opacity-mask="rgba(0,0,0,0.75)">
+        <div class="animated fadeInDown">
+            <h1 class="wishlist-title">WISHLIST</h1>
+            <p class="wishlist-subtitle">Cursus neque cursus curae ante scelerisque vehicula.</p>
+        </div>
+    </div>
+</section>
+<!-- End section -->
+	<!-- End section -->
+
+	<main>
+    <!-- Bloc accès refusé pour utilisateur non connecté -->
+    <div sec:authorize="!isAuthenticated()" class="container mt-5">
+        <div class="alert alert-warning text-center" role="alert" style="font-size:1.2rem;">
+            <i class="fas fa-lock me-2"></i>
+            Vous devez être connecté pour accéder à votre wishlist.
+            <a href="/login" class="btn btn-primary ms-3">Se connecter</a>
+        </div>
+    </div>
+    <!-- Fin bloc accès refusé -->
+    <!-- Le reste du contenu wishlist sera affiché seulement si connecté -->
+    <div sec:authorize="isAuthenticated()">
+		<div id="position">
+			<div class="container">
+				<ul>
+					<li><a href="#">Home</a>
+					</li>
+					<li><a href="#">Category</a>
+					</li>
+					   <li>Page active</li>
+				</ul>
+			</div>
+		</div>
+		<!-- Position -->
+
+		<div class="collapse" id="collapseMap">
+			<div id="map" class="map"></div>
+		</div>
+		<!-- End Map -->
+
+<style>
+/* Wishlist Section Design */
+.container.margin_60 {
+  background: #f8fafc;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.07);
+  padding: 48px 28px 40px 28px;
+  margin-bottom: 40px;
+}
+.mb-4, .mb-3 {
+  margin-bottom: 1.5rem !important;
+}
+.text-center {
+  text-align: center;
+}
+.alert {
+  border-radius: 8px;
+  font-size: 1.07rem;
+  padding: 14px 22px;
+  margin-bottom: 18px;
+}
+.alert-success {
+  background: #e9fbe7;
+  color: #187a1d;
+  border: 1px solid #b0e3b6;
+}
+.alert-info {
+  background: #e7f4fb;
+  color: #126189;
+  border: 1px solid #b6d6e3;
+}
+.sort-tabs {
+  background: #fff;
+  border-radius: 10px;
+  padding: 18px 20px 10px 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+}
+.sort-tabs h4 {
+  font-weight: 600;
+  color: #0056b3;
+  margin-bottom: 12px;
+}
+.sort-tabs .nav-pills .nav-link {
+  border-radius: 6px;
+  color: #0056b3;
+  font-weight: 500;
+  background: #f5f7fa;
+  margin: 0 6px;
+  transition: background 0.2s, color 0.2s;
+}
+.sort-tabs .nav-pills .nav-link.active, .sort-tabs .nav-pills .nav-link:hover {
+  background: #0056b3;
+  color: #fff;
+}
+.hotel-cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  justify-content: center;
+}
+.hotel-cards-container > div {
+  flex: 1 1 340px;
+  max-width: 410px;
+  min-width: 320px;
+  margin-bottom: 28px;
+}
+.hotel-card-left {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+  background: #eaeaea;
+}
+.hotel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+}
+.wishlist-remove {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255,255,255,0.85);
+  border-radius: 50%;
+  padding: 7px 9px;
+  color: #e74c3c;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 8px rgba(231,76,60,0.07);
+  transition: background 0.2s, color 0.2s;
+  z-index: 2;
+}
+.wishlist-remove:hover {
+  background: #e74c3c;
+  color: #fff;
+}
+.hotel-badge {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  background: linear-gradient(90deg, #4a7aff 70%, #0056b3 100%);
+  color: #fff;
+  font-size: 0.93rem;
+  font-weight: 600;
+  padding: 5px 18px;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(74,122,255,0.13);
+  letter-spacing: 1px;
+  z-index: 2;
+}
+.hotel-card-right {
+  background: #fff;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  padding: 20px 18px 14px 18px;
+  min-height: 180px;
+}
+.hotel-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.hotel-stars {
+  color: #f7b731;
+  font-size: 1.12rem;
+  display: flex;
+  align-items: center;
+  gap: 1px;
+}
+.hotel-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  color: #222;
+}
+.hotel-description {
+  color: #5a5a5a;
+  font-size: 1.02rem;
+  margin: 6px 0 0 0;
+}
+.hotel-amenities {
+  display: flex;
+  gap: 12px;
+  margin: 12px 0 10px 0;
+}
+.amenity-icon {
+  background: #f5f7fa;
+  border-radius: 6px;
+  padding: 6px 10px;
+  color: #4a7aff;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(74,122,255,0.04);
+}
+.hotel-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+.rating-text {
+  font-weight: 600;
+  color: #187a1d;
+  font-size: 1.03rem;
+}
+.rating-score {
+  background: #f5f7fa;
+  color: #0056b3;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 2px 12px;
+  margin-left: 4px;
+  font-size: 1.08rem;
+}
+.hotel-card-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 24px;
+  padding: 18px 32px 18px 32px;
+  background: #fff;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  margin-top: 24px;
+  min-height: 72px;
+}
+.hotel-buttons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+}
+.hotel-btn-reserve {
+  background: linear-gradient(90deg, #4a7aff 80%, #0056b3 100%);
+  color: #fff;
+  border-radius: 8px;
+  padding: 14px 38px;
+  font-weight: 700;
+  font-size: 1.13rem;
+  border: none;
+  transition: background 0.18s, box-shadow 0.18s;
+  box-shadow: 0 2px 8px rgba(74,122,255,0.09);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hotel-btn-reserve:hover, .hotel-btn-reserve:focus {
+  background: #0056b3;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(74,122,255,0.18);
+}
+@media (max-width: 900px) {
+  .hotel-card-footer {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px 8px 12px 8px;
+    gap: 12px;
+  }
+  .hotel-buttons {
+    width: 100%;
+    justify-content: stretch;
+  }
+  .hotel-btn-reserve {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 0;
+    font-size: 1.04rem;
+  }
+}
+
+.hotel-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+.price-currency {
+  font-size: 0.92rem;
+  color: #6c757d;
+  margin-bottom: 2px;
+}
+.price-value {
+  font-size: 1.3rem;
+  color: #0056b3;
+  font-weight: 700;
+}
+.price-original {
+  text-decoration: line-through;
+  color: #b0b0b0;
+  font-size: 0.95rem;
+  margin-top: 2px;
+}
+.price-note {
+  font-size: 0.93rem;
+  color: #888;
+  margin-top: 2px;
+}
+.hotel-buttons {
+  display: flex;
+  gap: 10px;
+}
+.hotel-btn {
+  background: #4a7aff;
+  color: #fff;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-weight: 600;
+  font-size: 1.07rem;
+  border: none;
+  transition: background 0.18s;
+  box-shadow: 0 2px 8px rgba(74,122,255,0.09);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.hotel-btn:hover, .hotel-btn:focus {
+  background: #0056b3;
+  color: #fff;
+}
+.hotel-btn-reserve {
+  background: linear-gradient(90deg, #4a7aff 80%, #0056b3 100%);
+}
+@media (max-width: 900px) {
+  .hotel-cards-container {
+    flex-direction: column;
+    gap: 28px;
+  }
+  .hotel-cards-container > div {
+    max-width: 100%;
+    min-width: 0;
+  }
+}
+@media (max-width: 600px) {
+  .container.margin_60 {
+    padding: 18px 4px 18px 4px;
+  }
+  .hotel-card-right, .hotel-card-footer {
+    padding: 12px 7px 8px 7px;
+  }
+}
+</style>
+<div class="container margin_60">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="mb-4">
+                <p class="text-center">Voici les hébergements que vous avez ajoutés à votre liste de souhaits. Vous pouvez les consulter en détail ou procéder directement à une réservation.</p>
+            </div>
+            <div class="alert alert-success" th:if="${successMessage}" role="alert">
+                <span th:text="${successMessage}"></span>
+            </div>
+            <div class="alert alert-info" th:if="${infoMessage}" role="alert">
+                <span th:text="${infoMessage}"></span>
+            </div>
+            <div th:if="${wishlistItems == null or wishlistItems.isEmpty()}" class="alert alert-info">
+                Votre liste de souhaits est vide. Parcourez nos <a href="/hebergement" style="color: #0056b3;">hébergements</a> pour ajouter des éléments à votre liste.
+            </div>
+            <div th:if="${wishlistItems != null and !wishlistItems.isEmpty()}">
+                <div class="sort-tabs mb-4">
+                    <h4 class="mb-3">Trier par :</h4>
+                    <ul class="nav nav-pills nav-fill">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" id="sort-default">
+                                <i class="fas fa-heart me-2"></i> Nos préférés
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="sort-price-asc">
+                                <i class="fas fa-sort-amount-down me-2"></i> Prix croissant
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="sort-price-desc">
+                                <i class="fas fa-sort-amount-up me-2"></i> Prix décroissant
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="sort-stars">
+                                <i class="fas fa-star me-2"></i> Nombre d'étoiles
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="hotel-cards-container" id="wishlist-container" style="display: flex;">
+                    <div th:each="hebergement : ${wishlistItems}" th:if="${hebergement != null}" class="wishlist-card-horizontal" style="display: flex; flex-direction: row; align-items: stretch; min-height: 220px; max-height: 380px; width: 100%; max-width: 1200px; margin: 0 auto 32px auto; background: #fff; border-radius: 18px; box-shadow: 0 4px 32px rgba(0,0,0,0.10); overflow: hidden;">
+                        <div class="wishlist-img-section" style="position: relative; min-width: 320px; max-width: 380px; height: 260px; display: flex; align-items: center; justify-content: center; background: #f6f6f6;">
+                            <img th:src="${hebergement?.photoUrl}" onerror="this.src='/assets/img/hotel_1.jpg';" alt="Hébergement" class="wishlist-img" style="width: 100%; height: 260px; object-fit: cover; border-radius: 18px 0 0 18px;">
+                            <div class="hotel-badge" th:if="${hebergement?.actif}" style="position: absolute; top: 18px; left: 18px; background: #e74c3c; color: #fff; padding: 7px 16px; border-radius: 8px; font-size: 13px; font-weight: 700; letter-spacing: 1px; box-shadow: 0 2px 8px rgba(0,0,0,0.10); z-index: 2;">POPULAIRE</div>
+                            <a th:href="@{/hebergement/wishlist/remove/{id}(id=${hebergement?.id})}" class="wishlist-remove" title="Retirer de la liste de souhaits" style="position: absolute; top: 18px; right: 18px; background: rgba(255,255,255,0.85); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #e74c3c; font-size: 18px; border: none; transition: background 0.2s, transform 0.2s; z-index: 2;"><i class="fas fa-times"></i></a>
+                        </div>
+                        <div class="wishlist-content-section" style="flex: 1; padding: 32px 48px 32px 40px; display: flex; flex-direction: column; justify-content: space-between; min-width: 0;">
+                            <div class="hotel-header">
+                                <div class="hotel-stars">
+                                    <th:block th:if="${hebergement?.nbEtoiles != null}">
+                                        <th:block th:with="fullStars=${T(java.lang.Math).min(5.0, T(java.lang.Math).floor(hebergement?.nbEtoiles))}, hasHalfStar=${hebergement?.nbEtoiles - T(java.lang.Math).floor(hebergement?.nbEtoiles) >= 0.5 && T(java.lang.Math).floor(hebergement?.nbEtoiles) < 5}">
+                                            <th:block th:each="i : ${#numbers.sequence(1, fullStars.intValue())}">
+                                                <i class="fas fa-star"></i>
+                                            </th:block>
+                                            <th:block th:if="${hasHalfStar}">
+                                                <i class="fas fa-star-half-alt"></i>
+                                            </th:block>
+                                        </th:block>
+                                    </th:block>
+                                    <th:block th:unless="${hebergement?.nbEtoiles != null}">
+                                        <th:block th:each="i : ${#numbers.sequence(1, 3)}">
+                                            <i class="fas fa-star"></i>
+                                        </th:block>
+                                    </th:block>
+                                </div>
+                                <h3 class="hotel-name" th:text="${hebergement?.nom}">Hotel Atlas</h3>
+                                <p class="hotel-description" th:text="${#strings.abbreviate(hebergement?.description, 80)}">Un hôtel de charme au cœur de la médina.</p>
+                            </div>
+                            <div class="hotel-amenities">
+                                <div class="amenity-icon"><i class="fas fa-wifi"></i></div>
+                                <div class="amenity-icon"><i class="fas fa-car"></i></div>
+                                <div class="amenity-icon"><i class="fas fa-coffee"></i></div>
+                                <div class="amenity-icon"><i class="fas fa-tv"></i></div>
+                            </div>
+                            <div class="hotel-rating" th:if="${hebergement?.nbEtoiles != null}">
+                                <span class="rating-text" th:text="${hebergement?.nbEtoiles >= 4.5 ? 'Excellent' : (hebergement?.nbEtoiles >= 4.0 ? 'Très bien' : (hebergement?.nbEtoiles >= 3.5 ? 'Bien' : (hebergement?.nbEtoiles >= 3.0 ? 'Correct' : 'Moyen')))}">Excellent</span>
+                                <span class="rating-score" th:text="${#numbers.formatDecimal(hebergement?.nbEtoiles, 1, 1)}">5.0</span>
+                            </div>
+                            <div class="hotel-card-footer" style="display: flex; flex-direction: row; align-items: center; gap: 24px; margin-top: 18px;">
+                                <div class="hotel-buttons">
+                                    <a th:href="@{/hebergement/cart_hebergement(hebergementId=${hebergement?.id})}" class="hotel-btn hotel-btn-reserve">
+                                        <i class="fas fa-credit-card"></i> RÉSERVER
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.addEventListener('DOMContentLoaded', function() {
+        var preloader = document.getElementById('preloader');
+        var mainContent = document.getElementById('main-content');
+        if (preloader) preloader.style.display = 'none';
+        if (mainContent) mainContent.style.display = '';
+    });
+</script>
+                        
+                </div>
+                </div>
+        </div>
+    </div>
+		</div></div>
+		<!-- End container -->
+	</main>
+	<!-- End main -->
+
+    <footer class="revealed" style="background-color: #1c1c1c;">
+        <div class="container">                                     
+            <div class="row">
+                <div class="col-md-4">
+                    <h3 style="color: white; margin-bottom: 15px; font-weight: 600; font-size: 14px;">BESOIN D'AIDE ?</h3>
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <div style="margin-right: 15px;">
+                            <i class="bi bi-telephone-fill" style="color: #e8cc00; font-size: 16px;"></i>
+                        </div>
+                        <span style="color: #e8cc00; font-size: 14px; font-weight: 600;">+212 618 311 344</span>
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <div style="margin-right: 15px;">
+                            <i class="bi bi-envelope-fill" style="color: #e8cc00; font-size: 16px;"></i>
+                        </div>
+                        <span style="color: #e8cc00; font-size: 14px; font-weight: 600;">aide@citytours.com</span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <h3 style="font-size: 14px;">À propos</h3>
+                    <ul>
+                        <li><a href="#">À propos de nous</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="/login.html">Connexion</a></li>
+                        <li><a href="/register.html">Inscription</a></li>
+                        <li><a href="#">Conditions générales</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h3 style="font-size: 14px;">Découvrir</h3>
+                    <ul>
+                        <li><a href="#">Blog communautaire</a></li>
+                        <li><a href="#">Guide touristique</a></li>
+                        <li><a href="#">Liste de souhaits</a></li>
+                        <li><a href="#">Galerie</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h3 style="font-size: 14px;">Paramètres</h3>
+                    <div class="styled-select">
+                        <select name="lang" id="lang">
+                            <option value="Français" selected>Français</option>
+                            <option value="Anglais">Anglais</option>
+                            <option value="Espagnol">Espagnol</option>
+                            <option value="Russe">Russe</option>
+                        </select>
+                    </div>
+                    <div class="styled-select">
+                        <select name="currency" id="currency">
+                            <option value="MAD" selected>MAD</option>
+                        </select>
+                    </div>
+                </div>
+            </div><!-- End row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="social_footer">
+                        <ul>
+                            <li><a href="#0"><i class="bi bi-instagram"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-whatsapp"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-facebook"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-youtube"></i></a></li>
+                        </ul>
+                        <p style="font-size: 12px;"> Citytours 2025</p>
+                    </div>
+                </div>
+            </div><!-- End row -->
+        </div><!-- End container -->
+    </footer><!-- End footer -->
+    
+    <div id="toTop"><i class="bi bi-arrow-up-circle-fill"></i></div><!-- Back to top button -->
+    
+    <!-- Search Menu -->
+    <div class="search-overlay-menu">
+        <span class="search-overlay-close"><i class="icon_set_1_icon-77"></i></span>
+        <form role="search" id="searchform" method="get">
+            <input value="" name="q" type="text" placeholder="Rechercher..." />
+            <button type="submit"><i class="icon_set_1_icon-78"></i>
+            </button>
+        </form>
+    </div><!-- End Search Menu -->
+
+	<!-- Common scripts -->
+	<script src="/assets/js/jquery-3.6.0.min.js"></script>
+	<script src="/assets/js/common_scripts_min.js"></script>
+	<script src="/assets/js/functions.js"></script>
+
+	<!-- Specific scripts -->
+	<script src="/assets/js/jquery.selectbox-0.2.js"></script>
+	<script>
+		$(".selectbox").selectbox();
+		
+		// Script pour masquer le loader une fois la page chargée
+		$(document).ready(function() {
+			$('#preloader').fadeOut('slow');
+			
+			// Script pour le tri de la wishlist
+			// Fonction pour trier les éléments de la wishlist
+			function sortWishlistItems(sortFunction) {
+				const container = document.getElementById('wishlist-container');
+				if (!container) return;
+				
+				const items = Array.from(container.querySelectorAll('.hotel-card'));
+				
+				// Trier les éléments selon la fonction de tri fournie
+				items.sort(sortFunction);
+				
+				// Réinsérer les éléments triés dans le conteneur
+				items.forEach(item => {
+					container.appendChild(item);
+				});
+			}
+			
+			// Tri par défaut (préférés - éléments populaires en premier)
+			$('#sort-default').click(function(e) {
+				e.preventDefault();
+				sortWishlistItems((a, b) => {
+					const aPopular = a.querySelector('.hotel-badge') !== null;
+					const bPopular = b.querySelector('.hotel-badge') !== null;
+					return (bPopular ? 1 : 0) - (aPopular ? 1 : 0);
+				});
+				$('.sort-tabs .nav-link').removeClass('active');
+				$(this).addClass('active');
+			});
+			
+			// Tri par prix croissant
+			$('#sort-price-asc').click(function(e) {
+				e.preventDefault();
+				sortWishlistItems((a, b) => {
+					const aPrice = parseFloat(a.querySelector('.price-value').textContent) || 0;
+					const bPrice = parseFloat(b.querySelector('.price-value').textContent) || 0;
+					return aPrice - bPrice;
+				});
+				$('.sort-tabs .nav-link').removeClass('active');
+				$(this).addClass('active');
+			});
+			
+			// Tri par prix décroissant
+			$('#sort-price-desc').click(function(e) {
+				e.preventDefault();
+				sortWishlistItems((a, b) => {
+					const aPrice = parseFloat(a.querySelector('.price-value').textContent) || 0;
+					const bPrice = parseFloat(b.querySelector('.price-value').textContent) || 0;
+					return bPrice - aPrice;
+				});
+				$('.sort-tabs .nav-link').removeClass('active');
+				$(this).addClass('active');
+			});
+			
+			// Tri par nombre d'étoiles
+			$('#sort-stars').click(function(e) {
+				e.preventDefault();
+				sortWishlistItems((a, b) => {
+					const aStars = a.querySelectorAll('.hotel-stars .fas.fa-star').length + (a.querySelector('.hotel-stars .fas.fa-star-half-alt') ? 0.5 : 0);
+					const bStars = b.querySelectorAll('.hotel-stars .fas.fa-star').length + (b.querySelector('.hotel-stars .fas.fa-star-half-alt') ? 0.5 : 0);
+					return bStars - aStars;
+				});
+				$('.sort-tabs .nav-link').removeClass('active');
+				$(this).addClass('active');
+			});
+		});
+	</script>
+	<!-- Map -->
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBXp1EtixNDI7rdzmX5nn0TkHbT94QOPnc"></script>
+	<script src="/assets/js/map.js"></script>
+	<script src="/assets/js/infobox.js"></script>
+	<script>
+		$('.wishlist_close').on('click', function (c) {
+			$(this).parent().parent().fadeOut('slow', function (c) {});
+		});
+	</script>
+
+	
+<!-- SWITCHER  -->
+    <script src="/assets/js/switcher.js"></script>
+<style>
+.hotel-header-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.hotel-header-row > div {
+    /* Optionnel : pour éviter que les éléments ne se rétrécissent trop */
+    min-width: 0;
+}
+</style>
+</body>
+
+
+<!-- Mirrored from www.ansonika.com/citytours/wishlist.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Mar 2025 15:40:21 GMT -->
+</html>
+
+	
+<!-- SWITCHER  -->
+    <script src="/assets/js/switcher.js"></script>
+<style>
+.hotel-header-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.hotel-header-row > div {
+    /* Optionnel : pour éviter que les éléments ne se rétrécissent trop */
+    min-width: 0;
+}
+</style>
+<style>
+.hebergement-card {
+    display: flex;
+    flex-direction: row;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    overflow: hidden;
+    margin: 24px 0;
+    transition: box-shadow 0.2s;
+    max-width: 650px;
+    min-height: 180px;
+}
+.hebergement-card:hover {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+}
+.hebergement-photo {
+    min-width: 180px;
+    max-width: 220px;
+    height: 180px;
+    overflow: hidden;
+    background: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.hebergement-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 18px 0 0 18px;
+}
+.hebergement-info {
+    flex: 1;
+    padding: 20px 24px 16px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.hebergement-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+.hebergement-stars {
+    color: #FFD700;
+    font-size: 1.1rem;
+}
+.hebergement-name {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #222;
+}
+.hebergement-description {
+    color: #555;
+    font-size: 1rem;
+    margin-bottom: 12px;
+}
+.hebergement-services {
+    margin-bottom: 12px;
+}
+.hebergement-services i {
+    color: #3a86ff;
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+.hebergement-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+.hebergement-price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #3a86ff;
+}
+.hebergement-note {
+    background: #f1f3f4;
+    border-radius: 8px;
+    padding: 4px 12px;
+    font-size: 1rem;
+    color: #222;
+    margin-left: 10px;
+}
+@media (max-width: 700px) {
+    .hebergement-card {
+        flex-direction: column;
+        max-width: 100%;
+        min-height: unset;
+    }
+    .hebergement-photo img {
+        border-radius: 18px 18px 0 0;
+    }
+    .hebergement-photo {
+        max-width: 100%;
+        min-width: 100%;
+        height: 160px;
+    }
+    .hebergement-info {
+        padding: 16px 12px;
+    }
+}
+</style>
+</body>
+
+
+<!-- Mirrored from www.ansonika.com/citytours/wishlist.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Mar 2025 15:40:21 GMT -->
+</html>
+
+<!-- Mirrored from www.ansonika.com/citytours/wishlist.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Mar 2025 15:40:21 GMT -->
+</html>
+    transform: translateY(-4px) scale(1.01);
+}
+.wishlist-img-section {
+    position: relative;
+    min-width: 260px;
+    max-width: 320px;
+    height: 220px;
+    background: #f6f6f6;
+    overflow: hidden;
+}
+.wishlist-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 18px 0 0 18px;
+    transition: transform 0.5s;
+}
+.wishlist-card:hover .wishlist-img {
+    transform: scale(1.04);
+}
+.wishlist-badge {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    background: #e74c3c;
+    color: #fff;
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    z-index: 2;
+}
+.wishlist-remove-btn {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    background: rgba(255,255,255,0.85);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e74c3c;
+    font-size: 18px;
+    border: none;
+    transition: background 0.2s, transform 0.2s;
+    z-index: 2;
+}
+.wishlist-remove-btn:hover {
+    background: #fff;
+    transform: scale(1.09);
+}
+.wishlist-content-section {
+    flex: 1;
+    padding: 24px 32px 20px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.wishlist-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 8px;
+}
+.wishlist-header h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #222;
+    margin: 0;
+}
+.wishlist-stars {
+    color: #FFD700;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+.wishlist-desc {
+    color: #555;
+    font-size: 1rem;
+    margin-bottom: 16px;
+    margin-top: 2px;
+}
+.wishlist-amenities {
+    margin-bottom: 18px;
+    display: flex;
+    gap: 16px;
+}
+.wishlist-amenities i {
+    color: #3a86ff;
+    font-size: 1.3rem;
+    background: #f1f3f4;
+    border-radius: 50%;
+    padding: 8px;
+}
+.wishlist-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: auto;
+    gap: 20px;
+}
+.wishlist-pricing {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+}
+.wishlist-price {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #3a86ff;
+}
+.wishlist-oldprice {
+    font-size: 1rem;
+    color: #e74c3c;
+    text-decoration: line-through;
+    margin-left: 3px;
+}
+.wishlist-pernight {
+    font-size: 0.95rem;
+    color: #888;
+    margin-left: 2px;
+}
+.wishlist-actions {
+    display: flex;
+    gap: 12px;
+}
+.wishlist-btn-details {
+    background: #f1f3f4;
+    color: #222;
+    border-radius: 6px;
+    padding: 9px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.wishlist-btn-details:hover {
+    background: #3a86ff;
+    color: #fff;
+}
+.wishlist-btn-reserve {
+    background: #3a86ff;
+    color: #fff;
+    border-radius: 6px;
+    padding: 9px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.wishlist-btn-reserve:hover {
+    background: #265ea8;
+    color: #fff;
+}
+@media (max-width: 900px) {
+    .wishlist-card {
+        flex-direction: column;
+        max-width: 100%;
+        min-height: unset;
+    }
+    .wishlist-img-section {
+        max-width: 100%;
+        min-width: 100%;
+        height: 180px;
+        border-radius: 18px 18px 0 0;
+    }
+    .wishlist-img {
+        border-radius: 18px 18px 0 0;
+    }
+    .wishlist-content-section {
+        padding: 18px 14px 14px 14px;
+    }
+}
+</style>
+</body>
+
+
+<!-- Mirrored from www.ansonika.com/citytours/wishlist.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Mar 2025 15:40:21 GMT -->
+</html>
+    transition: background 0.2s, color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.wishlist-btn-reserve:hover {
+    background: #265ea8;
+    color: #fff;
+}
+@media (max-width: 900px) {
+    .wishlist-card {
+        flex-direction: column;
+        max-width: 100%;
+        min-height: unset;
+    }
+    .wishlist-img-section {
+        max-width: 100%;
+        min-width: 100%;
+        height: 180px;
+        border-radius: 18px 18px 0 0;
+    }
+    .wishlist-img {
+        border-radius: 18px 18px 0 0;
+    }
+    .wishlist-content-section {
+        padding: 18px 14px 14px 14px;
+    }
+}
+</style>
+</body>
+
+
+<!-- Mirrored from www.ansonika.com/citytours/wishlist.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Mar 2025 15:40:21 GMT -->
+</html>
+<!-- Mirrored from www.ansonika.com/citytours/wishlist.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Mar 2025 15:40:21 GMT -->
+</html>
+</html>

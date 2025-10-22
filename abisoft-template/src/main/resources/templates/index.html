@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
+<!-- Mirrored from www.ansonika.com/citytours/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Mar 2025 15:39:30 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Citytours - Premium site template for city tours agencies, transfers and tickets.">
+    <meta name="author" content="Ansonika">
+    <title>CITY TOURS - Voyage au Cœur du Maroc</title>
+
+    <!-- Favicons-->
+    <link rel="shortcut icon" href="/assets/img/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" type="image/x-icon" href="/assets/img/apple-touch-icon-57x57-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="/assets/img/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="/assets/img/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="/assets/img/apple-touch-icon-144x144-precomposed.png">
+
+    <!-- Google Web Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- COMMON CSS -->
+	<link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/vendors.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <!-- ALTERNATIVE COLORS CSS -->
+    <link href="#" id="colors" rel="stylesheet">
+    <link href="/assets/css/owl.carousel.min.css" rel="stylesheet">
+    <link href="/assets/css/owl.theme.default.min.css" rel="stylesheet">
+</head>
+
+
+<style>
+    /* Styles pour le lien de liste de souhaits list faysal;  */
+    .my-wishlist-link {
+        color: white;
+        text-decoration: none;
+        position: relative;
+    }
+    .my-wishlist-link:hover {
+        color: #f9c56a;
+    }
+    .my-wishlist-link i {
+        margin-right: 5px;
+    }
+    /* Styles pour le lien de liste de souhaits list faysal;  */
+    /* ===== SUPPRESSION DES LIGNES DANS LE HEADER (menu du haut) ===== */
+    header,
+    .top_line,
+    .main_menu,
+    nav,
+    .menu,
+    #top_line,
+    #header {
+        border-top: none !important;
+        border-bottom: none !important;
+        box-shadow: none !important;
+    }
+    
+    /* Supprimer lignes décoratives éventuelles */
+    header::before,
+    header::after,
+    .top_line::before,
+    .top_line::after,
+    nav::before,
+    nav::after {
+        display: none !important;
+    }
+    
+    /* ===== SUPPRESSION DES LIGNES DANS LE FOOTER (liens en bas) ===== */
+    footer,
+    .footer,
+    #footer,
+    .footer_links {
+        border-top: none !important;
+        border-bottom: none !important;
+        box-shadow: none !important;
+    }
+    
+    /* Supprimer lignes décoratives du footer */
+    footer::before,
+    footer::after,
+    .footer::before,
+    .footer::after {
+        display: none !important;
+    }
+    
+    /* ===== STYLE DES LIENS POUR RESTER PROPRES ===== */
+    a {
+        text-decoration: none;
+        border: none;
+        color: #fff; /* ou la couleur de ton thème */
+    }
+    
+    /* Ajustement si lignes étaient créées par hr */
+    hr {
+        display: none !important;
+    }
+    
+    
+    </style>
+
+
+<body>
+
+    <div id="preloader">
+        <div class="sk-spinner sk-spinner-wave">
+            <div class="sk-rect1"></div>
+            <div class="sk-rect2"></div>
+            <div class="sk-rect3"></div>
+            <div class="sk-rect4"></div>
+            <div class="sk-rect5"></div>
+        </div>
+    </div>
+    <!-- End Preload -->
+
+    <div class="layer"></div>
+    <!-- Mobile menu overlay mask -->
+
+    <!-- Header================================================== -->
+    <header>
+        <div id="top_line">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6">
+                        <i class="icon-phone"></i><strong>‪+212 618311344‬</strong>
+                    </div>
+                    <div class="col-6">
+                        <ul id="top_links">
+                            <!-- Avant connexion -->
+                            <li sec:authorize="!isAuthenticated()">
+                                <a id="login-form" href="/login">Se connecter</a>
+                                </li>
+                            <!-- Après connexion -->
+                            <li sec:authorize="isAuthenticated()">
+                                <span>
+                                    <i class="icon-user"></i>
+                                    <span th:if="${connectedUser != null}" th:text="${connectedUser.username}">Nom</span>
+                                </span>
+                            </li>
+                            <li sec:authorize="isAuthenticated()">
+                                <a href="/logout"><i class="icon-logout"></i> Se déconnecter</a>
+                            </li>
+                            <!-- Toujours visible -->
+                             <li>
+                                <a th:href="@{/hebergement/wishlist}" sec:authorize="isAuthenticated()" class="my-wishlist-link"><i class="icon-heart"></i> Liste de souhaits</a>
+                                <a th:href="@{/login}" sec:authorize="!isAuthenticated()" class="my-wishlist-link"><i class="icon-heart"></i> Liste de souhaits</a>
+                             </li>
+                        </ul>                        
+                    </div>
+                 </div><!-- End row -->
+             </div><!-- End container-->
+         </div><!-- End top line -->
+    
+        
+        <div class="container">
+            <div class="row">
+                <div class="col-3">
+                    <div id="logo_home">
+                    	<h1><a href="/index" title="City tours travel template">City Tours travel</a></h1>
+                    </div>
+                </div>
+                <nav class="col-9">
+                    <a class="cmn-toggle-switch cmn-toggle-switch__htx open_close" href="javascript:void(0);"><span>Menu mobile</span></a>
+                    <div class="main-menu">
+                        <div id="header_menu">
+                            <img src="/assets/img/logo_sticky.png" width="160" height="34" alt="City tours">
+                        </div>
+                        <a href="#" class="open_close" id="close_in"><i class="icon_set_1_icon-77"></i></a>
+                        <ul>
+                            <li class="submenu">
+                                <a href="/index" class="show-submenu">Accueil </a>
+                            </li>
+                        <li class="submenu">
+                                <a href="javascript:void(0);" class="show-submenu">Hébergements <i class="icon-down-open-mini"></i></a>
+                                <ul class="hebergement-list">
+                                    <li>
+                                        <a th:href="@{/hebergement}" class="second-level">Tous les types</a>
+                                    </li>
+                                    <li th:each="type : ${hebergementType}">
+                                        <a th:href="@{'/hebergement/' + ${type.name()} + '/list'}"
+                                        th:text="${#strings.capitalize(type.name().toLowerCase().replace('_',' '))}"
+                                        class="second-level"></a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="submenu">
+                                <a href="javascript:void(0);" class="show-submenu">Gastronomie <i class="icon-down-open-mini"></i></a><ul>
+                                    <li><a href="all_hotels_list.html">All hotels list</a></li>
+                                    <li><a href="all_hotels_grid.html">All hotels grid</a></li>
+                                </ul>
+                            </li>
+                            <li class="submenu">
+                                <a href="javascript:void(0);" class="show-submenu">Transports  <i class="icon-down-open-mini"></i></a>
+                                <ul>
+                                    <li><a href="/public/Transports/infosTransports.html">Informations</a></li>
+                                    <li><a href="/Client/Transports/reservationTransports.html">Réservations</a></li>
+                                 
+                                </ul>
+                            </li>
+
+                                <li class="submenu">
+                                    <a href="javascript:void(0);" class="show-submenu">Événements <i class="icon-down-open-mini"></i></a>
+                                    <ul class="evenement-list">
+                                        <li>
+                                            <a th:href="@{/evenements}" class="second-level">Tous les types</a>
+                                        </li>
+                                        <li th:each="type : ${evenementType}">
+                                            <a th:href="@{'/evenements/' + ${type.name()} + '/list'}"
+                                            th:text="${#strings.capitalize(type.name().toLowerCase().replace('_',' '))}"
+                                            class="second-level"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+
+                             <li class="megamenu submenu">
+                                <a href="javascript:void(0);" class="show-submenu-mega">Bonus<i class="icon-down-open-mini"></i></a>
+                                <div class="menu-wrapper">
+                                	<div class="row">
+                                        <div class="col-lg-4">
+                                            <h3>Header styles</h3>
+                                            <ul>
+                                                <li><a href="index.html">Default transparent</a></li>
+                                                <li><a href="header_2.html">Plain color</a></li>
+                                                <li><a href="header_3.html">Plain color on scroll</a></li>
+                                                <li><a href="header_4.html">With socials on top</a></li>
+                                                <li><a href="header_5.html">With language selection</a></li>
+                                                <li><a href="header_6.html">With lang and conversion</a></li>
+                                                <li><a href="header_7.html">With full horizontal menu</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <h3>Footer styles</h3>
+                                            <ul>
+                                                <li><a href="index.html">Footer default</a></li>
+                                                <li><a href="footer_2.html">Footer style 2</a></li>
+                                                <li><a href="footer_3.html">Footer style 3</a></li>
+                                                <li><a href="footer_4.html">Footer style 4</a></li>
+                                                <li><a href="footer_6.html">Footer style 6</a></li>
+                                                <li><a href="footer_7.html">Footer style 7</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <h3>Shop section</h3>
+                                            <ul>
+                                                <li><a href="shop.html">Shop</a></li>
+                                                <li><a href="shop-single.html">Shop single</a></li>
+                                                <li><a href="shopping-cart.html">Shop cart</a></li>
+                                                <li><a href="checkout.html">Shop Checkout</a></li>
+                                            </ul>
+                                        </div>
+                                    </div><!-- End row -->
+                                </div><!-- End menu-wrapper -->
+                            </li>
+                            <li class="megamenu submenu">
+                                <a href="javascript:void(0);" class="show-submenu-mega">Pages<i class="icon-down-open-mini"></i></a>
+                                <div class="menu-wrapper">
+                                	<div class="row">
+										<div class="col-lg-4">
+											<h3>Pages</h3>
+											<ul>
+												<li><a href="about.html">About us</a></li>
+											   <li><a href="general_page.html">General page</a></li>
+												<li><a href="tourist_guide.html">Tourist guide</a></li>
+												 <li><a href="wishlist.html">Wishlist page</a></li>
+												 <li><a href="faq.html">Faq</a></li>
+												 <li><a href="faq_2.html">Faq smooth scroll</a></li>
+												 <li><a href="pricing_tables.html">Pricing tables</a></li>
+												 <li><a href="gallery_3_columns.html">Gallery 3 columns</a></li>
+												<li><a href="gallery_4_columns.html">Gallery 4 columns</a></li>
+												<li><a href="grid_gallery_1.html">Grid gallery</a></li>
+												<li><a href="grid_gallery_2.html">Grid gallery with filters</a></li>
+											</ul>
+										</div>
+										<div class="col-lg-4">
+											<h3>Pages</h3>
+											<ul>
+												<li><a href="contact_us_1.html">Contact us 1</a></li>
+												<li><a href="contact_us_2.html">Contact us 2</a></li>
+												 <li><a href="blog_right_sidebar.html">Blog</a></li>
+												<li><a href="blog.html">Blog left sidebar</a></li>
+												<li><a href="login.html">Login</a></li>
+												<li><a href="#">Register</a></li>
+												<li><a href="invoice.html" target="_blank">Invoice</a></li>
+												<li><a href="404.html">404 Error page</a></li>
+												<li><a href="site_launch/index.html">Site launch / Coming soon</a></li>
+												<li><a href="timeline.html">Tour timeline</a></li>
+												<li><a href="page_with_map.html"><i class="icon-map"></i>  Full screen map</a></li>
+											</ul>
+										</div>
+										<div class="col-lg-4">
+											<h3>Elements</h3>
+											<ul>
+												<li><a href="footer_2.html"><i class="icon-columns"></i> Footer with working newsletter</a></li>
+												<li><a href="icon_pack_1.html"><i class="icon-inbox-alt"></i> Icon pack 1 (1900)</a></li>
+												<li><a href="icon_pack_2.html"><i class="icon-inbox-alt"></i> Icon pack 2 (100)</a></li>
+												<li><a href="icon_pack_3.html"><i class="icon-inbox-alt"></i> Icon pack 3 (30)</a></li>
+												<li><a href="icon_pack_4.html"><i class="icon-inbox-alt"></i> Icon pack 4 (200)</a></li>
+												<li><a href="icon_pack_5.html"><i class="icon-inbox-alt"></i> Icon pack 5 (360)</a></li>
+												<li><a href="shortcodes.html"><i class="icon-tools"></i> Shortcodes</a></li>
+												<li><a href="newsletter_template/newsletter.html" target="blank"><i class=" icon-mail"></i> Responsive email template</a></li>
+												<li><a href="admin.html"><i class="icon-cog-1"></i> Admin area</a></li>
+                                                <li><a href="html_rtl/index.html"><i class="icon-align-right"></i>  RTL Version</a></li>
+											</ul>
+										</div>
+                                    </div><!-- End row -->
+                                </div><!-- End menu-wrapper -->
+                            </li>
+                        </ul>
+                    </div><!-- End main-menu -->
+                    <ul id="top_tools">
+                        <li>
+                            <a href="javascript:void(0);" class="search-overlay-menu-btn" style="color: white; display: inline-block; width: 24px; height: 24px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="white" width="24" height="24">
+                                    <path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/>
+                                </svg>
+                            </a>
+                        </li>
+                        <li>
+                            <div class="dropdown dropdown-cart">
+                                <a href="/hebergement/cart_hebergement" class="cart_bt" style="position: relative; display: inline-block;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" fill="white" width="24" height="24">
+                                        <path d="M528.12 301.319l47.273-208C578.806 78.301 567.391 64 551.99 64H159.208l-9.166-44.81C147.758 8.021 137.93 0 126.529 0H24C10.745 0 0 10.745 0 24v16c0 13.255 10.745 24 24 24h69.883l70.248 343.435C147.325 417.1 136 435.222 136 456c0 30.928 25.072 56 56 56s56-25.072 56-56c0-15.674-6.447-29.835-16.824-40h209.647C430.447 426.165 424 440.326 424 456c0 30.928 25.072 56 56 56s56-25.072 56-56c0-22.172-12.888-41.332-31.579-50.405l5.517-24.276c3.413-15.018-8.002-29.319-23.403-29.319H218.117l-6.545-32h293.145c11.206 0 20.92-7.754 23.403-18.681z"/>
+                                    </svg>
+                                    <span style="position: absolute; top: -10px; right: -10px; background-color: #e04f67; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold;" th:text="${session.cartItems != null ? session.cartItems.size() : '0'}">0</span>
+                                </a>
+                                <ul class="dropdown-menu" id="cart_items">
+                                    <li th:if="${session.cartItems == null || session.cartItems.isEmpty()}">
+                                        <div>Votre panier est vide</div>
+                                    </li>
+                                    <li th:each="item : ${session.cartItems}" th:if="${session.cartItems != null && !session.cartItems.isEmpty()}">
+                                        <div class="image">
+                                            <!-- Utiliser la méthode getPhotoUrlWithDefault pour garantir qu'une image est toujours affichée -->
+                                            <img th:src="${item.photoUrl != null && !item.photoUrl.isEmpty() ? item.photoUrl : '/assets/img/hotel_img.jpg'}" alt="image" onerror="this.src='/assets/img/hotel_img.jpg';">
+                                        </div>
+                                        <strong>
+                                            <a th:href="@{'/hebergement/single/' + ${item.id}}" th:text="${item.nom}">Hébergement</a>
+                                            <!-- Afficher le prix par nuit si disponible, sinon le prix normal -->
+                                            <span>
+                                                <span th:text="${item.capacite != null ? item.capacite : 1} + ' pers. '">1 pers.</span>
+                                                <span th:if="${item.prix != null}" th:text="'MAD ' + ${item.prix} + '/nuit'">MAD 0/nuit</span>
+                                                <span th:unless="${item.prix != null}" th:text="'MAD ' + ${item.prix != null ? item.prix : 0}">MAD 0</span>
+                                            </span>
+                                        </strong>
+                                        <a th:href="@{'/hebergement/cart/remove?hebergementId=' + ${item.id}}" class="action"><i class="fas fa-trash"></i></a>
+                                    </li>
+                                    <li th:if="${session.cartItems != null && !session.cartItems.isEmpty()}">
+                                        <div>Total: <span th:text="'MAD ' + ${#aggregates.sum(session.cartItems.![prix != null ? prix * (capacite != null ? capacite : 1) : 0])}">MAD 0</span></div>
+                                        <a href="/hebergement/cart_hebergement" class="button_drop">Voir le panier</a>
+                                        <a href="/hebergement/payment" class="button_drop outline">Paiement</a>
+                                    </li>
+                                </ul>
+                            </div><!-- End dropdown-cart-->
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div><!-- container -->
+    </header>
+    <!-- End Header -->
+	
+	<main>
+		<div id="carousel-home">
+            <div class="owl-carousel owl-theme">
+                 <div class="owl-slide cover" style="background-image: url('/assets/img/slides/slide_home_1.webp');">
+                    <div class="opacity-mask d-flex align-items-center" data-opacity-mask="rgba(0, 0, 0, 0.5)">
+                        <div class="container">
+                            <div class="row justify-content-center justify-content-md-start">
+                                <div class="col-lg-12 static">
+                                    <div class="slide-text text-center white">
+                                        <h2 class="owl-slide-animated owl-slide-title">Maroc, là où l’aventure commence entre mer, sable et sommets.</h2>
+                                        <p class="owl-slide-animated owl-slide-subtitle">
+                                            Plongez dans l’âme du Maroc à travers des escapades authentiques et inoubliables
+                                        </p>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--/owl-slide-->
+                <div class="owl-slide cover" style="background-image: url('/assets/img/slides/slide_home_2.jpeg');">
+                    <div class="opacity-mask d-flex align-items-center" data-opacity-mask="rgba(0, 0, 0, 0.6)">
+                        <div class="container">
+                            <div class="row justify-content-center justify-content-md-end">
+                                <div class="col-lg-6 static">
+                                    <div class="slide-text text-end white">
+                                        <h2 class="owl-slide-animated owl-slide-title">Explorez l’infini doré du Sahara, là où le silence devient poésie.</h2>
+                                        <p class="owl-slide-animated owl-slide-subtitle">
+                                            Plongez dans l’âme du Maroc à travers des escapades authentiques et inoubliables
+                                        </p>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--/owl-slide-->
+                <div class="owl-slide cover" style="background-image: url('/assets/img/slides/slide_home_3.jpg');">
+                    <div class="opacity-mask d-flex align-items-center" data-opacity-mask="rgba(0, 0, 0, 0.5)">
+                        <div class="container">
+                            <div class="row justify-content-center justify-content-md-start">
+                                <div class="col-lg-6 static">
+                                    <div class="slide-text white">
+                                        <h2 class="owl-slide-animated owl-slide-title">Savourez les couleurs et les saveurs d’un Maroc généreux et gourmand</h2>
+                                        <p class="owl-slide-animated owl-slide-subtitle">
+                                            Plongez dans l’âme du Maroc à travers des escapades authentiques et inoubliables
+                                        </p>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--/owl-slide-->
+            </div>
+            <div id="icon_drag_mobile"></div>
+        </div>
+        <!--/carousel-->
+
+        <div class="white_bg">
+        <div class="container margin_60">
+            <div class="row small-gutters categories_grid">
+                <div class="col-sm-12 col-md-6">
+                    <a th:href="@{hebergement/all_hebergement_list}">
+                        <img src="/assets/img/imgcathome1.jpg" alt="" class="img-fluid">
+                        <div class="wrapper">
+                            <h2>Hébergements</h2>
+                            <!-- <p>1150 Locations</p> -->
+                        </div>
+                    </a>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <div class="row small-gutters mt-md-0 mt-sm-2">
+                        <div class="col-sm-6">
+                            <a href="all_tours_list.html">
+                                <img src="/assets/img/imgcathome2.jpg" alt="" class="img-fluid">
+                                <div class="wrapper">
+                                    <h2>Gastronomie</h2>
+                                   <!-- <p>800 Locations</p>-->
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-sm-6">
+                            <a href="all_hotels_list.html">
+                                <img src="/assets/img/imgcathome3.jpg" alt="" class="img-fluid">
+                                <div class="wrapper">
+                                    <h2>Transports</h2>
+                                   <!-- <p>650 Locations</p> -->
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-sm-12 mt-sm-2">
+                            <a th:href="@{hebergement/all_evenments_list}">
+                                <img src="/assets/img/imgcathome4.jpg" alt="" class="img-fluid">
+                                <div class="wrapper">
+                                    <h2>Evénements</h2>
+                                    <!--<p>1132 Locations</p>-->
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/categories_grid-->
+        </div>
+        <!-- /container -->
+        </div>
+        <!-- /white_bg -->
+
+
+
+
+
+
+
+
+
+
+
+        <!-- test-->
+
+        <div class="carte-maroc">
+
+            <div class="titre">
+                <h2>Trouvez <span class="para-carte-span">votre</span> destination
+                </h2>
+            </div>
+
+
+<div class="app-maroc">
+   
+
+    <div class="carte-container">
+      <img src="/assets/img/maroc.png" alt="Carte du Maroc">
+    </div>
+    <div class="paragraphe-carte">
+        <p><span class="para-carte-span">Le Maroc </span>est un pays d'Afrique du Nord riche en histoire, en culture et en diversité géographique. Bordé par l’océan Atlantique et la mer Méditerranée, il offre une grande variété de paysages allant des plages dorées aux sommets enneigés de l’Atlas, sans oublier le charme du désert du Sahara. Ses villes emblématiques comme <span class="para-carte-span">Casablanca, Marrakech, Fès ou encore Rabat </span> reflètent un patrimoine architectural fascinant, alliant tradition et modernité. Véritable carrefour entre l’Europe et l’Afrique, le Maroc séduit chaque année des millions de visiteurs par son hospitalité, sa gastronomie et sa richesse culturelle.</p>
+    </div>
+
+
+  </div>
+
+</div>
+
+
+  <script>
+    function goToVille(page) {
+      window.location.href = page;
+    }
+  </script>
+
+		<div class="white_bg">
+			<div class="container margin_60">
+				<div class="main_title">
+					<h2>Planifiez <span>votre visite</span> facilement</h2>
+
+                    <p>
+                        Profitez d’un séjour sur mesure et vivez une expérience inoubliable au cœur du Maroc authentique.
+                    </p>
+                    
+				</div>
+				<div class="row feature_home_2">
+                    <div class="col-md-4 text-center">
+                        <img src="/assets/img/adventure_icon_1.svg" alt="" width="75" height="75">
+                        <h3>Itinéraires étudiés dans les moindres détails</h3>
+                        <p>Chaque circuit est soigneusement conçu pour vous offrir une découverte complète et enrichissante du Maroc.</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <img src="/assets/img/adventure_icon_2.svg" alt="" width="75" height="75">
+                        <h3>Hébergement et repas inclus</h3>
+                        <p>Profitez d’un séjour tout compris avec des hébergements confortables et une gastronomie locale savoureuse.</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <img src="/assets/img/adventure_icon_3.svg" alt="" width="75" height="75">
+                        <h3>Tout est organisé pour vous</h3>
+                        <p>De votre arrivée jusqu’au dernier jour, nous nous occupons de chaque détail pour que vous voyagiez l’esprit tranquille.</p>
+                    </div>
+                </div>
+                
+
+                <div class="banner_2">
+                    <div class="wrapper d-flex align-items-center opacity-mask" data-opacity-mask="rgba(0, 0, 0, 0.3)" style="background-color: rgba(0, 0, 0, 0.3);">
+                        <div>
+                            <h3>Votre Expérience de <br>Voyage Parfaite</h3>
+                            <p>Activités et hébergements</p>
+                            <a href="all_tours_list.html" class="btn_1">En savoir plus</a>
+                        </div>
+                    </div>
+                    <!-- /wrapper -->
+                </div>
+                <!-- /banner_2 -->
+                
+
+			</div>
+			<!-- End container -->
+		</div>
+		<!-- End white_bg -->
+
+        <div class="container margin_60">
+            <div class="main_title">
+                <h2>Dernières <span>Actualités</span> du Blog</h2>
+                <p>Découvrez nos articles et conseils pour un séjour inoubliable. Inspirez-vous pour votre prochaine aventure au Maroc.</p>
+            </div>
+        
+
+            <div class="row">
+                    <div class="col-lg-6">
+                        <a class="box_news" href="blog.html">
+                            <figure><img src="/assets/img/news_home_1.jpg" alt="">
+                                <figcaption><strong>28</strong>Dec</figcaption>
+                            </figure>
+                            <ul>
+                                <li>Mark Twain</li>
+                                <li>20.11.2017</li>
+                            </ul>
+                            <h4>Pri oportere scribentur eu</h4>
+                            <p>Cu eum alia elit, usu in eius appareat, deleniti sapientem honestatis eos ex. In ius esse ullum vidisse....</p>
+                        </a>
+                    </div>
+                    <!-- /box_news -->
+                    <div class="col-lg-6">
+                        <a class="box_news" href="blog.html">
+                            <figure><img src="/assets/img/news_home_2.jpg" alt="">
+                                <figcaption><strong>28</strong>Dec</figcaption>
+                            </figure>
+                            <ul>
+                                <li>Jhon Doe</li>
+                                <li>20.11.2017</li>
+                            </ul>
+                            <h4>Duo eius postea suscipit ad</h4>
+                            <p>Cu eum alia elit, usu in eius appareat, deleniti sapientem honestatis eos ex. In ius esse ullum vidisse....</p>
+                        </a>
+                    </div>
+                    <!-- /box_news -->
+                    <div class="col-lg-6">
+                        <a class="box_news" href="blog.html">
+                            <figure><img src="/assets/img/news_home_3.jpg" alt="">
+                                <figcaption><strong>28</strong>Dec</figcaption>
+                            </figure>
+                            <ul>
+                                <li>Luca Robinson</li>
+                                <li>20.11.2017</li>
+                            </ul>
+                            <h4>Elitr mandamus cu has</h4>
+                            <p>Cu eum alia elit, usu in eius appareat, deleniti sapientem honestatis eos ex. In ius esse ullum vidisse....</p>
+                        </a>
+                    </div>
+                    <!-- /box_news -->
+                    <div class="col-lg-6">
+                        <a class="box_news" href="blog.html">
+                            <figure><img src="/assets/img/news_home_4.jpg" alt="">
+                                <figcaption><strong>28</strong>Dec</figcaption>
+                            </figure>
+                            <ul>
+                                <li>Paula Rodrigez</li>
+                                <li>20.11.2017</li>
+                            </ul>
+                            <h4>Id est adhuc ignota delenit</h4>
+                            <p>Cu eum alia elit, usu in eius appareat, deleniti sapientem honestatis eos ex. In ius esse ullum vidisse....</p>
+                        </a>
+                    </div>
+                    <!-- /box_news -->
+                </div>
+                <!-- /row -->
+                <p class="btn_home_align"><a href="blog.html" class="btn_1 rounded">Voir toutes les actualités</a></p>
+
+        </div>
+        <!-- End container -->
+	</main>
+	<!-- End main -->
+    
+    <footer class="revealed" style="background-color: #1c1c1c;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h3 style="color: white; margin-bottom: 15px; font-weight: 600; font-size: 14px;">BESOIN D'AIDE ?</h3>
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <div style="margin-right: 15px;">
+                            <i class="bi bi-telephone-fill" style="color: #e8cc00; font-size: 16px;"></i>
+                        </div>
+                        <span style="color: #e8cc00; font-size: 14px; font-weight: 600;">+212 618 311 344</span>
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <div style="margin-right: 15px;">
+                            <i class="bi bi-envelope-fill" style="color: #e8cc00; font-size: 16px;"></i>
+                        </div>
+                        <span style="color: #e8cc00; font-size: 14px; font-weight: 600;">help@citytours.com</span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <h3 style="font-size: 14px;">À propos</h3>
+                    <ul>
+                        <li><a href="#">À propos de nous</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="/login.html">Connexion</a></li>
+                        <li><a href="/register.html">Inscription</a></li>
+                        <li><a href="#">Conditions générales</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h3 style="font-size: 14px;">Découvrir</h3>
+                    <ul>
+                        <li><a href="#">Blog communautaire</a></li>
+                        <li><a href="#">Guide touristique</a></li>
+                        <li><a href="#">Liste de souhaits</a></li>
+                        <li><a href="#">Galerie</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h3 style="font-size: 14px;">Paramètres</h3>
+                    <div class="styled-select">
+                        <select name="lang" id="lang">
+                            <option value="English" selected>Français</option>
+                            <option value="French">Anglais</option>
+                            <option value="Spanish">Espagnol</option>
+                            <option value="Russian">Russe</option>
+                        </select>
+                    </div>
+                    <div class="styled-select">
+                        <select name="currency" id="currency">
+                            <option value="USD" selected>USD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="GBP">GBP</option>
+                            <option value="RUB">RUB</option>
+                        </select>
+                    </div>
+                </div>
+            </div><!-- End row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="social_footer">
+                        <ul>
+                            <li><a href="#0"><i class="bi bi-instagram"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-whatsapp"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-facebook"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-youtube"></i></a></li>
+                        </ul>
+                        <p style="font-size: 12px;"> Citytours 2025</p>
+                    </div>
+                </div>
+            </div><!-- End row -->
+        </div><!-- End container -->
+    </footer><!-- End footer -->
+	<!-- Search Menu -->
+	<div class="search-overlay-menu">
+			<span class="search-overlay-close"><i class="icon_set_1_icon-77"></i></span>
+		     <form role="search" id="searchform" method="get">
+			<input value="" name="q" type="text" placeholder="Search..." />
+			<button type="submit"><i class="icon_set_1_icon-78"></i>
+			</button>
+		</form>
+	</div><!-- End Search Menu -->
+    <!-- Common scripts -->
+    <script src="/assets/js/jquery-3.7.1.min.js"></script>
+    <script src="/assets/js/common_scripts_min.js"></script>
+    <script src="/assets/js/functions.js"></script>
+	<script src="/assets/js/owl.carousel.min.js"></script>
+    
+    <!-- Script pour forcer la disparition du préchargeur -->
+    <script>
+    $(document).ready(function() {
+        // Forcer la disparition du préchargeur après un court délai
+        setTimeout(function() {
+            $('#status').fadeOut();
+            $('#preloader').fadeOut('slow');
+            $('body').css({overflow: 'visible'});
+        }, 500);
+    });
+    </script>
+	<!-- NOTIFY BUBBLES  -->
+<!-- SWITCHER  
+    <script src="/assets/js/switcher.js"></script>
+    <div id="style-switcher">
+        <h2>Color Switcher <a href="#"><i class="icon_set_1_icon-65"></i></a></h2>
+        <div>
+            <ul class="colors" id="color1">
+                <li><a href="#" class="default" title="Defaul"></a></li>
+                <li><a href="#" class="aqua" title="Aqua"></a></li>
+                <li><a href="#" class="green_switcher" title="Green"></a></li>
+                <li><a href="#" class="orange" title="Orange"></a></li>
+                <li><a href="#" class="blue" title="Blue"></a></li>
+            </ul>
+        </div>
+    </div>
+-->
+</body>
+
+<!-- Mirrored from www.ansonika.com/citytours/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Mar 2025 15:40:04 GMT -->
+</html>

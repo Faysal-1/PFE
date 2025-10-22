@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
+<!-- Mirrored from www.ansonika.com/citytours/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Mar 2025 15:39:30 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Citytours - Premium site template for city tours agencies, transfers and tickets.">
+    <meta name="author" content="Ansonika">
+    <title>CITY TOURS - Voyage au Cœur du Maroc</title>
+
+    <!-- Favicons-->
+    <link rel="shortcut icon" href="/assets/img/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" type="image/x-icon" href="/assets/img/apple-touch-icon-57x57-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="/assets/img/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="/assets/img/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="/assets/img/apple-touch-icon-144x144-precomposed.png">
+
+    <!-- GOOGLE WEB FONT -->
+    <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&amp;family=Montserrat:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+
+    <!-- COMMON CSS -->
+	<link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
+	<link href="/assets/css/vendors.css" rel="stylesheet">
+
+	<!-- ALTERNATIVE COLORS CSS -->
+    <link href="#" id="colors" rel="stylesheet">
+
+</head>
+<style>
+        /* Styles pour le lien de liste de souhaits list faysal; */
+        .my-wishlist-link {
+            color: white;
+            text-decoration: none;
+            position: relative;
+        }
+        .my-wishlist-link:hover {
+            color: #f9c56a;
+        }
+        .my-wishlist-link i {
+            margin-right: 5px;
+        }
+        /* Styles pour le lien de liste de souhaits list faysal; */
+/* ===== SUPPRESSION DES LIGNES DANS LE HEADER (menu du haut) ===== */
+header,
+.top_line,
+.main_menu,
+nav,
+.menu,
+#top_line,
+#header {
+    border-top: none !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+}
+
+/* Supprimer lignes décoratives éventuelles */
+header::before,
+header::after,
+.top_line::before,
+.top_line::after,
+nav::before,
+nav::after {
+    display: none !important;
+}
+
+/* ===== SUPPRESSION DES LIGNES DANS LE FOOTER (liens en bas) ===== */
+footer,
+.footer,
+#footer,
+.footer_links {
+    border-top: none !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+}
+
+/* Supprimer lignes décoratives du footer */
+footer::before,
+footer::after,
+.footer::before,
+.footer::after {
+    display: none !important;
+}
+
+/* ===== STYLE DES LIENS POUR RESTER PROPRES ===== */
+a {
+    text-decoration: none;
+    border: none;
+    color: #fff; /* ou la couleur de ton thème */
+}
+
+/* Ajustement si lignes étaient créées par hr */
+hr {
+    display: none !important;
+}
+
+header, header * {
+    color: #111 !important;
+}
+</style>
+
+
+<body>
+    
+
+
+    <div id="preloader">
+        <div class="sk-spinner sk-spinner-wave">
+            <div class="sk-rect1"></div>
+            <div class="sk-rect2"></div>
+            <div class="sk-rect3"></div>
+            <div class="sk-rect4"></div>
+            <div class="sk-rect5"></div>
+        </div>
+    </div>
+    <!-- End Preload -->
+
+    <div class="layer"></div>
+    <!-- Mobile menu overlay mask -->
+
+    <!-- Header================================================== -->
+	<header  style="position: fixed; top: 0; width: 100%; z-index: 1100; background: #fff;" id="main-header">
+        <div id="top_line">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6">
+                        <i class="icon-phone"></i><strong>‪+212 618311344‬</strong>
+                    </div>
+                    <div class="col-6">
+                        <ul id="top_links">
+                            <!-- Avant connexion -->
+                            <li sec:authorize="!isAuthenticated()">
+                                <a id="login-form" href="/login">Se connecter</a>
+                            </li>
+                        
+                            <!-- Après connexion -->
+                            <li sec:authorize="isAuthenticated()">
+                                <span>
+                                    <i class="icon-user"></i>
+                                    <span th:if="${connectedUser != null}" th:text="${connectedUser.fullName}">Nom</span>
+                                </span>
+                            </li>
+                            <li sec:authorize="isAuthenticated()">
+                                <a href="/logout"><i class="icon-logout"></i> Se déconnecter</a>
+                            </li>
+                        
+                            <!-- Bouton pour la liste de souhaits -->
+                            <li>
+                                <a th:href="@{/hebergement/wishlist}" sec:authorize="isAuthenticated()" class="my-wishlist-link"><i class="icon-heart"></i> Liste de souhaits</a>
+                                <a th:href="@{/login}" sec:authorize="!isAuthenticated()" class="my-wishlist-link"><i class="icon-heart"></i> Liste de souhaits</a>
+                            </li>
+                        </ul>
+                        
+                    </div>
+                </div><!-- End row -->
+            </div><!-- End container-->
+        </div><!-- End top line -->
+    
+        
+        <div class="container">
+            <div class="row" style="align-items: center;">
+    <div class="col-3">
+        <div id="logo_home">
+            <h1><a href="/index" title="City tours travel template">City Tours travel</a></h1>
+        </div>
+    </div>
+    <nav class="col-9">
+                    <a class="cmn-toggle-switch cmn-toggle-switch__htx open_close" href="javascript:void(0);"><span>Menu mobile</span></a>
+                    <div class="main-menu">
+                        <div id="header_menu">
+                            <img src="/assets/img/logo_sticky.png" width="160" height="34" alt="City tours">
+                        </div>
+                        <a href="#" class="open_close" id="close_in"><i class="icon_set_1_icon-77"></i></a>
+                        <ul>
+                            <li class="submenu">
+                                <a href="/index" class="show-submenu">Accueil </a>
+                            </li>
+                            <li class="submenu">
+                                <a href="javascript:void(0);" class="show-submenu">Hébergements <i class="icon-down-open-mini"></i></a>
+                                <ul class="hebergement-list">
+                                    <li>
+                                        <a th:href="@{/hebergement}" class="second-level">Tous les types</a>
+                                    </li>
+                                    <li th:each="type : ${hebergementType}">
+                                        <a th:href="@{'/hebergement/' + ${type.name()} + '/list'}"
+                                        th:text="${#strings.capitalize(type.name().toLowerCase().replace('_',' '))}"
+                                        class="second-level"></a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="submenu">
+                                <a href="javascript:void(0);" class="show-submenu">Gastronomie <i class="icon-down-open-mini"></i></a><ul>
+                                    <li><a href="all_hotels_list.html">All hotels list</a></li>
+                                    <li><a href="all_hotels_grid.html">All hotels grid</a></li>
+                                    <li><a href="all_hotels_grid_masonry.html">All hotels Sort Masonry</a></li>
+                                    <li><a href="all_hotels_map_listing.html">All hotels map listing</a></li>
+                                </ul>
+                            </li>
+                            <li class="submenu">
+                                <a href="javascript:void(0);" class="show-submenu">Transports  <i class="icon-down-open-mini"></i></a>
+                                <ul>
+                                    <li><a href="/public/Transports/infosTransports.html">Informations</a></li>
+                                    <li><a href="/Client/Transports/reservationTransports.html">Réservations</a></li>
+                                 
+                                </ul>
+                            </li>
+                            
+                             <li class="submenu">
+                                    <a href="javascript:void(0);" class="show-submenu">Événements <i class="icon-down-open-mini"></i></a>
+                                    <ul class="evenement-list">
+                                        <li>
+                                            <a th:href="@{/evenements}" class="second-level">Tous les types</a>
+                                        </li>
+                                        <li th:each="type : ${evenementType}">
+                                            <a th:href="@{'/evenements/' + ${type.name()} + '/list'}"
+                                            th:text="${#strings.capitalize(type.name().toLowerCase().replace('_',' '))}"
+                                            class="second-level"></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+
+                             <li class="megamenu submenu">
+                                <a href="javascript:void(0);" class="show-submenu-mega">Bonus<i class="icon-down-open-mini"></i></a>
+                                <div class="menu-wrapper">
+                                	<div class="row">
+                            
+                            </li>
+                            <li class="megamenu submenu">
+                                <a href="javascript:void(0);" class="show-submenu-mega">Pages<i class="icon-down-open-mini"></i></a>
+                                <div class="menu-wrapper">
+                                </div><!-- End menu-wrapper -->
+                            </li>
+                        </ul>
+                    </div><!-- End main-menu -->
+                    <ul id="top_tools">
+                        <li>
+                            <a href="javascript:void(0);" class="search-overlay-menu-btn"><i class="icon_search"></i></a>
+                        </li>
+
+                    </ul>
+                </nav>
+            </div>
+        </div>
+  </header>
+	<!-- End Header -->
+	<main>
+		<div id="position">
+			<div class="container">
+				<ul>
+					<li><a href="/index">Accueil</a></li>
+					<li><a href="/hebergement">Hébergements</a></li>
+					<li>Panier</li>
+				</ul>
+			</div>
+		</div>
+		<!-- End position -->
+
+		<div class="container margin_60">
+			<div class="bs-wizard row" style="background-color: gainsboro; border-radius: 10px; margin: 50px;">
+				<div class="col-4 bs-wizard-step active">
+					<div class="text-center bs-wizard-stepnum">Votre panier</div>
+					<div class="progress">
+						<div class="progress-bar"></div>
+					</div>
+					<a href="#" class="bs-wizard-dot"></a>
+				</div>
+
+				<div class="col-4 bs-wizard-step disabled">
+					<div class="text-center bs-wizard-stepnum">Vos détails</div>
+					<div class="progress">
+						<div class="progress-bar"></div>
+					</div>
+					<a th:href="@{/hebergement/payment}" class="bs-wizard-dot"></a>
+				</div>
+
+				<div class="col-4 bs-wizard-step disabled">
+					<div class="text-center bs-wizard-stepnum">Terminé !</div>
+					<div class="progress">
+						<div class="progress-bar"></div>
+					</div>
+					<a th:href="@{/hebergement/confirmation_appartement}" class="bs-wizard-dot"></a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-8">
+					<!-- Message de succès -->
+					<div class="alert alert-success" role="alert" th:if="${successMessage != null}" th:text="${successMessage}"></div>
+					
+					<!-- Message d'erreur -->
+					<div class="alert alert-danger" role="alert" th:if="${errorMessage != null}" th:text="${errorMessage}"></div>
+				<!-- Formulaire de paiement principal -->
+					<!-- Version mobile-friendly du panier -->
+			<div class="mobile-cart-container">
+				<!-- Message si le panier est vide -->
+				<div th:if="${#lists.isEmpty(cartItems)}" class="empty-cart-message">
+					<div class="text-center p-4">
+						<i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+						<p class="mb-3">Votre panier est vide.</p>
+						<a th:href="@{/hebergement/list}" class="mobile-btn mobile-btn-primary">
+							<i class="fas fa-search me-2"></i>Parcourir les hébergements
+						</a>
+					</div>
+				</div>
+
+	<!-- Affichage des hébergements dans le panier -->
+	<div th:if="${!#lists.isEmpty(cartItems)}" class="mobile-cart-items">
+		<div th:each="hebergement : ${cartItems}" class="mobile-cart-item">
+			<div class="mobile-cart-item-header d-flex flex-row align-items-start justify-content-between" style="gap:18px; flex-wrap:wrap;">
+    <!-- Image hébergement -->
+    <!-- header classique, sans bloc période ici -->
+				<div class="mobile-cart-item-image" style="flex:1; min-width:100px; max-width:120px;">
+					<img th:src="${hebergement.photoUrl}" 
+						onerror="this.src='/assets/img/hotel_1.jpg';" alt="Image">
+				</div>
+				<div class="mobile-cart-item-details" style="flex:2; min-width:220px;">
+
+					<h4 th:text="${hebergement.nom}">Nom de l'hébergement</h4>
+					<span class="mobile-cart-item-type" th:text="${hebergement.type != null ? hebergement.type : 'Hébergement'}">Type</span>
+                    <div class="mobile-cart-item-price"
+                         th:with="displayPrice=${hebergement.prix != null ? hebergement.prix : (!hebergement.chambres.isEmpty() ? hebergement.chambres[0].prix : 0)}"
+                         th:attr="data-price=${displayPrice}">
+                        <strong th:text="${displayPrice > 0 ? 'MAD ' + #numbers.formatDecimal(displayPrice, 0, 'COMMA', 2, 'POINT') : 'N/A'}">MAD 250</strong>
+                        <span class="price-note">par nuit</span>
+                    </div>
+    </div>
+    <!-- Formulaire dates à droite des infos principales -->
+    <div class="cart-dates-form" style="flex:1; min-width:220px; max-width:320px;">
+        <div class="row g-2 align-items-end justify-content-end" style="margin-bottom:0;">
+            <div class="col-12" style="padding-bottom:4px;">
+                <label for="date_debut" class="form-label mb-1" style="font-weight:600; font-size:14px;">Date d'arrivée</label>
+                <input type="date" class="form-control form-control-sm date-debut-input" name="date_debut" th:value="${dateDebut != null ? #temporals.format(dateDebut, 'yyyy-MM-dd') : ''}" required>
+            </div>
+            <div class="col-12" style="padding-bottom:4px;">
+                <label for="date_fin" class="form-label mb-1" style="font-weight:600; font-size:14px;">Date de départ</label>
+                <input type="date" class="form-control form-control-sm date-fin-input" name="date_fin" th:value="${dateFin != null ? #temporals.format(dateFin, 'yyyy-MM-dd') : ''}" required>
+            </div>
+        </div>
+    </div>
+			</div>
+			<div class="mobile-cart-item-actions">
+				<a th:href="@{/hebergement/cart/remove(hebergementId=${hebergement.id})}" class="mobile-btn mobile-btn-danger">
+					<i class="fas fa-trash-alt me-2"></i>Supprimer
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Styles pour le panier mobile -->
+<style>
+	.mobile-cart-container {
+		width: 100%;
+	}
+	
+	.mobile-cart-items {
+		display: flex;
+		flex-direction: column;
+		gap: 15px;
+	}
+	
+	.mobile-cart-item {
+		background-color: white;
+		border-radius: 10px;
+		box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+		overflow: hidden;
+		padding: 15px;
+	}
+	
+	.mobile-cart-item-header {
+		display: flex;
+		gap: 15px;
+		margin-bottom: 15px;
+	}
+	
+	.mobile-cart-item-image {
+		width: 100px;
+		height: 100px;
+		border-radius: 8px;
+		overflow: hidden;
+		flex-shrink: 0;
+	}
+	
+	.mobile-cart-item-image img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	
+	.mobile-cart-item-details {
+		flex-grow: 1;
+	}
+	
+	.mobile-cart-item-details h4 {
+		margin: 0 0 5px 0;
+		font-size: 18px;
+		font-weight: 600;
+	}
+	
+	.mobile-cart-item-type {
+		display: inline-block;
+		background-color: #0056b3;
+		color: white;
+		padding: 4px 8px;
+		border-radius: 4px;
+		font-size: 12px;
+		margin-bottom: 8px;
+	}
+	
+	.mobile-cart-item-price {
+		font-size: 18px;
+		color: #28a745;
+		display: flex;
+		align-items: baseline;
+		gap: 5px;
+	}
+	
+	.price-note {
+		font-size: 12px;
+		color: #6c757d;
+	}
+	
+	.mobile-cart-item-actions {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+	
+	.mobile-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 10px 15px;
+		border-radius: 6px;
+		font-size: 14px;
+		font-weight: 600;
+		text-decoration: none;
+		transition: all 0.3s ease;
+	}
+	
+	.mobile-btn-primary {
+		background-color: #0056b3;
+		color: white;
+	}
+	
+	.mobile-btn-danger {
+		background-color: #dc3545;
+		color: white;
+	}
+	
+	.empty-cart-message {
+		background-color: white;
+		border-radius: 10px;
+		box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+		padding: 30px;
+	}
+	
+	@media (max-width: 576px) {
+		.mobile-cart-item-header {
+			flex-direction: column;
+		}
+		
+		.mobile-cart-item-image {
+			width: 100%;
+			height: 150px;
+		}
+		
+		.mobile-cart-item-actions {
+			flex-direction: column;
+			gap: 15px;
+		}
+		
+		.mobile-btn {
+			width: 100%;
+		}
+	}
+</style>
+
+<!-- Script principal pour la mise à jour dynamique du panier -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- SELECTEURS ---
+        const optionCheckboxes = document.querySelectorAll('input.option-checkbox');
+        const allDebutInputs = document.querySelectorAll('.date-debut-input');
+        const allFinInputs = document.querySelectorAll('.date-fin-input');
+        const cartItems = document.querySelectorAll('.cart_item, .mobile-cart-item');
+
+        // --- ÉLÉMENTS DU RÉSUMÉ ---
+        const arriveeCell = document.querySelector('[id^="summary-date-arrivee"]');
+        const departCell = document.querySelector('[id^="summary-date-depart"]');
+        const nightsCell = document.querySelector('[id^="nights-count"]');
+        const selectedOptionsContainer = document.querySelector('[id^="selected-options"]');
+        const totalPriceElement = document.querySelector('[id^="summary-total-price"]');
+        
+        // Mettre à jour les valeurs initiales des champs de date si vides
+        if (allDebutInputs.length > 0 && allFinInputs.length > 0) {
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            // Format YYYY-MM-DD
+            const todayString = today.toISOString().split('T')[0];
+            const tomorrowString = tomorrow.toISOString().split('T')[0];
+            
+            allDebutInputs.forEach(input => {
+                if (!input.value) input.value = todayString;
+            });
+            
+            allFinInputs.forEach(input => {
+                if (!input.value) input.value = tomorrowString;
+            });
+        }
+
+        // --- FONCTIONS UTILITAIRES ---
+        
+        /**
+         * Parses a date string that could be in YYYY-MM-DD or DD/MM/YYYY format.
+         * Returns a Date object in UTC.
+         */
+        function parseFlexibleDate(dateString) {
+            if (!dateString) return null;
+
+            // Try parsing YYYY-MM-DD
+            let parts = dateString.split('-');
+            if (parts.length === 3 && parts[0].length === 4) {
+                return new Date(Date.UTC(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2])));
+            }
+
+            // Try parsing DD/MM/YYYY
+            parts = dateString.split('/');
+            if (parts.length === 3 && parts[2].length === 4) {
+                return new Date(Date.UTC(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0])));
+            }
+            
+            console.error("Could not parse date:", dateString);
+            return null; // Could not parse
+        }
+
+        function formatParsedDate(date) {
+            if (date) {
+                return date.toLocaleDateString('fr-FR', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric',
+                    timeZone: 'UTC'
+                });
+            }
+            return '—';
+        }
+
+        // --- FONCTION PRINCIPALE DE MISE À JOUR ---
+        function updateCartSummary() {
+            console.log('Mise à jour du résumé du panier...');
+            
+            // Récupération des dates
+            const startDateString = allDebutInputs.length > 0 ? allDebutInputs[0].value : null;
+            const endDateString = allFinInputs.length > 0 ? allFinInputs[0].value : null;
+
+            console.log('Date début:', startDateString, 'Date fin:', endDateString);
+
+            // Conversion des dates
+            const startDate = parseFlexibleDate(startDateString);
+            const endDate = parseFlexibleDate(endDateString);
+
+            console.log('Dates converties:', {startDate, endDate});
+
+            // Mise à jour de l'affichage des dates
+            if (arriveeCell) {
+                const arriveeText = startDate ? formatParsedDate(startDate) : '—';
+                console.log('Mise à jour date arrivée:', arriveeText);
+                arriveeCell.textContent = arriveeText;
+            }
+            
+            if (departCell) {
+                const departText = endDate ? formatParsedDate(endDate) : '—';
+                console.log('Mise à jour date départ:', departText);
+                departCell.textContent = departText;
+            }
+
+            // Calcul du nombre de nuits
+            let nights = 0;
+            if (startDate && endDate) {
+                const diffTime = endDate.getTime() - startDate.getTime();
+                if (diffTime > 0) {
+                    nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    console.log('Nuits calculées:', nights);
+                } else if (diffTime < 0) {
+                    console.error('La date de fin est antérieure à la date de début');
+                }
+            }
+            
+            // Mise à jour de l'affichage du nombre de nuits
+            if (nightsCell) {
+                nightsCell.textContent = nights > 0 ? nights + (nights > 1 ? ' nuits' : ' nuit') : '—';
+                console.log('Affichage nuits:', nightsCell.textContent);
+            }
+
+            // Calcul du prix des hébergements
+            let totalHebergementPrice = 0;
+            if (nights > 0) {
+                cartItems.forEach((item, index) => {
+                    const priceElement = item.querySelector('[data-price]');
+                    if (priceElement) {
+                        const pricePerNight = parseFloat(priceElement.getAttribute('data-price'));
+                        if (!isNaN(pricePerNight)) {
+                            const itemTotal = pricePerNight * nights;
+                            totalHebergementPrice += itemTotal;
+                            
+                            // Mise à jour de l'affichage du prix pour cet hébergement
+                            const displayElement = document.getElementById('display_price_' + (index + 1));
+                            if (displayElement) {
+                                displayElement.textContent = `MAD ${pricePerNight.toFixed(2)} x ${nights} = MAD ${itemTotal.toFixed(2)}`;
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Mettre à jour l'affichage du prix par nuit
+            document.querySelectorAll('[id^="display_price_"]').forEach(priceDisplay => {
+                const basePrice = parseFloat(priceDisplay.getAttribute('data-base-price'));
+                if (!isNaN(basePrice)) {
+                    priceDisplay.textContent = (nights > 0) ? `MAD ${basePrice.toFixed(2)} x ${nights}` : `MAD ${basePrice.toFixed(2)}`;
+                }
+            });
+
+            // Calcul du prix des options et affichage
+            let totalOptionsPrice = 0;
+            if (selectedOptionsContainer) {
+                selectedOptionsContainer.innerHTML = '';
+                optionCheckboxes.forEach((option, index) => {
+                    if (option.checked) {
+                        const optionPrice = parseFloat(option.getAttribute('data-price') || '0');
+                        const optionName = option.getAttribute('data-name') || 'Option';
+                        totalOptionsPrice += optionPrice;
+                        
+                        // Création de la ligne d'option
+                        const optionRow = document.createElement('tr');
+                        optionRow.innerHTML = `
+                            <td>${optionName}</td>
+                            <td class="text-end">MAD ${optionPrice.toFixed(2)}</td>
+                        `;
+                        selectedOptionsContainer.appendChild(optionRow);
+                        
+                        console.log(`Option ajoutée: ${optionName} - ${optionPrice} MAD`);
+                    }
+                });
+                
+                // Afficher un message si aucune option n'est sélectionnée
+                if (selectedOptionsContainer.children.length === 0) {
+                    const emptyRow = document.createElement('tr');
+                    emptyRow.innerHTML = '<td colspan="2" class="text-muted">Aucune option sélectionnée</td>';
+                    selectedOptionsContainer.appendChild(emptyRow);
+                }
+            }
+
+            // Mise à jour du PRIX TOTAL final
+            const finalTotalPrice = totalHebergementPrice + totalOptionsPrice;
+            if (totalPriceElement) {
+                // Mise à jour du sous-total des hébergements
+                const subtotalElement = document.getElementById('subtotal-hebergement');
+                if (subtotalElement) {
+                    subtotalElement.textContent = `MAD ${totalHebergementPrice.toFixed(2)}`;
+                }
+                
+                // Mise à jour du sous-total des options
+                const optionsSubtotalElement = document.getElementById('subtotal-options');
+                if (optionsSubtotalElement) {
+                    optionsSubtotalElement.textContent = `MAD ${totalOptionsPrice.toFixed(2)}`;
+                }
+                
+                // Mise à jour du total général
+                totalPriceElement.textContent = `MAD ${finalTotalPrice.toFixed(2)}`;
+                console.log('Total mis à jour:', totalPriceElement.textContent);
+            }
+        }
+
+        // --- Synchronisation et Écouteurs ---
+        function syncDates(sourceInput) {
+            const isDebut = sourceInput.classList.contains('date-debut-input');
+            const newValue = sourceInput.value;
+            const inputsToUpdate = isDebut ? allDebutInputs : allFinInputs;
+            inputsToUpdate.forEach(input => {
+                if (input !== sourceInput) input.value = newValue;
+            });
+            updateCartSummary();
+        }
+
+        allDebutInputs.forEach(input => input.addEventListener('change', () => syncDates(input)));
+        allFinInputs.forEach(input => input.addEventListener('change', () => syncDates(input)));
+        optionCheckboxes.forEach(el => el.addEventListener('change', updateCartSummary));
+
+        // --- APPEL INITIAL ---
+        // Mise à jour initiale du résumé
+        updateCartSummary();
+        
+        // Mise à jour du résumé lors de la modification des dates
+        allDebutInputs.forEach(input => {
+            input.addEventListener('change', updateCartSummary);
+        });
+        
+        allFinInputs.forEach(input => {
+            input.addEventListener('change', updateCartSummary);
+        });
+        
+        // Initialisation des écouteurs d'événements pour les options
+        optionCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateCartSummary);
+        });
+        updateCartSummary();
+    });
+</script>
+				<!-- Table des options -->
+				<table class="table options_cart">
+					<thead>
+						<tr>
+							<th colspan="2" class="text-center">
+								AJOUTER DES OPTIONS / SERVICES
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<i class="fas fa-shuttle-van" style="font-size: 28px; color: #2c3e50; margin-right: 15px;"></i>
+								Service de transfert <strong>+MAD 34</strong>
+							</td>
+							<td class="text-end">
+								<label class="switch">
+									<input type="checkbox" id="option_1" name="option_1" class="option-checkbox" data-price="34" data-name="Service de transfert">
+									<span class="slider round"></span>
+								</label>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<i class="fas fa-concierge-bell" style="font-size: 28px; color: #2c3e50; margin-right: 15px;"></i>
+								Service de conciergerie <strong>+MAD 22</strong>
+							</td>
+							<td class="text-end">
+								<label class="switch">
+									<input type="checkbox" id="option_2" name="option_2" class="option-checkbox" data-price="22" data-name="Service de conciergerie">
+									<span class="slider round"></span>
+								</label>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<i class="fas fa-utensils" style="font-size: 28px; color: #2c3e50; margin-right: 15px;"></i>
+								Service de restauration <strong>+MAD 18</strong>
+							</td>
+							<td class="text-end">
+								<label class="switch">
+									<input type="checkbox" id="option_3" name="option_3" class="option-checkbox" data-price="18" data-name="Service de restauration">
+									<span class="slider round"></span>
+								</label>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<i class="fas fa-wifi" style="font-size: 28px; color: #2c3e50; margin-right: 15px;"></i>
+								Wi-Fi premium <strong>+MAD 15</strong>
+							</td>
+							<td class="text-end">
+								<label class="switch">
+									<input type="checkbox" id="option_4" name="option_4" class="option-checkbox" data-price="15" data-name="Wi-Fi premium">
+									<span class="slider round"></span>
+								</label>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<i class="fas fa-broom" style="font-size: 28px; color: #2c3e50; margin-right: 15px;"></i>								Service de ménage <strong>+MAD 25</strong>
+							</td>
+							<td class="text-end">
+								<label class="switch">
+									<input type="checkbox" id="option_5" name="option_5" class="option-checkbox" data-price="25" data-name="Service de ménage">
+									<span class="slider round"></span>
+								</label>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+					<div class="add_bottom_15"><small>* Prix par personne.</small></div>
+
+				<style>
+					/* Style pour les options */
+					.options_cart {
+						width: 100%;
+						border-collapse: collapse;
+					}
+
+					.options_cart th {
+						padding: 12px;
+						border-bottom: 1px solid #ddd;
+						font-weight: bold;
+					}
+
+					/* Style pour les options */
+					.options_cart tr td {
+						padding: 12px 15px;
+						vertical-align: middle;
+						border-bottom: 1px solid #eee;
+					}
+
+					/* Style pour les interrupteurs à bascule */
+					.switch {
+						position: relative;
+						display: inline-block;
+						width: 50px;
+						height: 24px;
+					}
+
+					.switch input {
+						opacity: 0;
+						width: 0;
+						height: 0;
+					}
+
+					.slider {
+						position: absolute;
+						cursor: pointer;
+						top: 0;
+						left: 0;
+						right: 0;
+						bottom: 0;
+						background-color: #ccc;
+						transition: .4s;
+					}
+
+					.slider:before {
+						position: absolute;
+						content: "";
+						height: 16px;
+						width: 16px;
+						left: 4px;
+						bottom: 4px;
+						background-color: white;
+						transition: .4s;
+					}
+
+					.slider.round {
+						border-radius: 34px;
+					}
+
+					.slider.round:before {
+						border-radius: 50%;
+					}
+
+					input:checked + .slider {
+						background-color: #2196F3;
+					}
+
+					input:checked + .slider:before {
+						transform: translateX(26px);
+					}
+				</style>
+				</div>
+				<!-- End col-lg-8 -->
+
+				<aside class="col-lg-4">
+					<div class="box_style_1">
+						<h3 class="inner">- Résumé de votre réservation -</h3>
+						
+						<!-- Message si le panier est vide -->
+						<div th:if="${#lists.isEmpty(cartItems)}" class="text-center p-3">
+							<p>Aucun hébergement sélectionné.</p>
+						</div>
+						
+						<!-- Affichage du résumé si le panier n'est pas vide -->
+						<div th:if="${!#lists.isEmpty(cartItems)}">
+							<!-- Détails de la réservation -->
+							<table class="table table_summary">
+								<tbody>
+									<!-- Dates de séjour (utilisation de la date actuelle + 1 jour pour l'arrivée et + 3 jours pour le départ) -->
+									<tr>
+										<td>
+											<i class="fas fa-calendar-check me-2"></i> Arrivée
+										</td>
+										<td class="text-end">
+											<span id="summary-date-arrivee" th:text="${dateDebut != null ? #temporals.format(dateDebut, 'dd MMMM yyyy') : '—'}">Date d'arrivée</span>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<i class="fas fa-calendar-times me-2"></i> Départ
+										</td>
+										<td class="text-end">
+											<span id="summary-date-depart" th:text="${dateFin != null ? #temporals.format(dateFin, 'dd MMMM yyyy') : '—'}">Date de départ</span>
+										</td>
+									</tr>
+									
+									<!-- Nombre de nuits -->
+									<tr>
+										<td>
+											<i class="fas fa-moon me-2"></i> Nuits
+										</td>
+										<td class="text-end">
+											<span id="nights-count" th:if="${nbNuits > 0}" th:text="${nbNuits} + (${nbNuits > 1 ? ' nuits' : ' nuit'})">1 nuit</span>
+											<span id="nights-count" th:unless="${nbNuits > 0}">—</span>
+										</td>
+									</tr>
+									
+									<!-- Liste des hébergements -->
+									<tr th:each="hebergement, itemStat : ${cartItems}">
+										<td>
+											<div class="d-flex align-items-center">
+												<img th:src="${hebergement.photoUrl != null ? hebergement.photoUrl : '/assets/img/hotel_1.jpg'}" 
+												   style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; margin-right: 10px;"
+												   onerror="this.src='/assets/img/hotel_1.jpg'"
+												   alt="Image de l'hébergement">
+												<div>
+													<div class="fw-bold" th:text="${hebergement.nom}">Nom de l'hébergement</div>
+													<small class="text-muted" th:text="${hebergement.type != null ? hebergement.type : 'Hébergement'}">Type</small>
+												</div>
+											</div>
+										</td>
+										<td class="text-end">
+											                                            <span th:id="'display_price_' + ${hebergement.id}"
+      th:with="displayPrice=${hebergement.prix != null ? hebergement.prix : (hebergement.chambres != null && !hebergement.chambres.isEmpty() && hebergement.chambres[0].prix != null ? hebergement.chambres[0].prix : 0)}"
+      th:attr="data-base-price=${displayPrice}">
+    <span th:if="${displayPrice > 0}" th:text="'MAD ' + ${#numbers.formatDecimal(displayPrice, 0, 'COMMA', 2, 'POINT')}">MAD 0.00</span>
+    <span th:unless="${displayPrice > 0}">N/A</span>
+</span>
+										</td>
+									</tr>
+								
+									<!-- Options sélectionnées - générées dynamiquement par JavaScript -->
+									<tbody id="selected-options">
+										<!-- Les options sélectionnées seront ajoutées ici par JavaScript -->
+									</tbody>
+									
+									<!-- Coût total -->
+									<tr class="total">
+										<td>
+											<i class="fas fa-money-bill-wave me-2"></i> Coût total
+										</td>
+										<td class="text-end">
+											<strong id="summary-total-price">MAD 0.00</strong>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							
+							<script>
+								// Fonction pour mettre à jour les champs cachés
+						function updateHiddenFields() {
+							const checkboxes = document.querySelectorAll('input[type="checkbox"][id^="option_"]');
+							checkboxes.forEach(checkbox => {
+								const hiddenInput = document.getElementById(checkbox.id + '_hidden');
+								if (hiddenInput) {
+									hiddenInput.value = checkbox.checked;
+								}
+							});
+							return true;
+						}
+
+						// Initialisation des écouteurs d'événements
+						document.addEventListener('DOMContentLoaded', function() {
+							const checkboxes = document.querySelectorAll('input[type="checkbox"][id^="option_"]');
+							
+							// Mettre à jour les champs cachés quand les cases sont cochées/décochées
+							checkboxes.forEach(checkbox => {
+								checkbox.addEventListener('change', function() {
+									const hiddenInput = document.getElementById(this.id + '_hidden');
+									if (hiddenInput) {
+										hiddenInput.value = this.checked;
+									}
+								});
+							});
+						});
+							</script>
+							
+							<!-- Bouton de paiement -->
+							<div class="text-center">
+									<form id="cart-form" th:action="@{/hebergement/payment}" method="get" onsubmit="return prepareAndSubmitForm(this);">
+									<!-- Champs cachés pour les services -->
+									<input type="hidden" id="option_1_hidden" name="option_1" value="false">
+									<input type="hidden" id="option_2_hidden" name="option_2" value="false">
+									<input type="hidden" id="option_3_hidden" name="option_3" value="false">
+									<input type="hidden" id="option_4_hidden" name="option_4" value="false">
+									<input type="hidden" id="option_5_hidden" name="option_5" value="false">
+									<!-- Champs cachés pour les dates -->
+									<input type="hidden" id="date_arrivee_input" name="dateArrivee" value="">
+									<input type="hidden" id="date_depart_input" name="dateDepart" value="">
+									<button type="submit" class="btn_full">Réserver maintenant</button>
+								</form>
+							</div>
+							<a class="btn_full_outline" th:href="@{/hebergement/list}"><i class="fas fa-search"></i> Ajouter d'autres hébergements</a>
+						</div>
+					</div>
+				</aside>
+				<!-- End aside -->
+
+			</div>
+			<!--End row -->
+		</div>
+		<!--End container -->
+	</main>
+	<!-- End main -->
+
+	<footer class="revealed" style="background-color: #1c1c1c;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h3 style="color: white; margin-bottom: 15px; font-weight: 600; font-size: 14px;">BESOIN D'AIDE ?</h3>
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <div style="margin-right: 15px;">
+                            <i class="bi bi-telephone-fill" style="color: #e8cc00; font-size: 16px;"></i>
+                        </div>
+                        <span style="color: #e8cc00; font-size: 14px; font-weight: 600;">+212 618 311 344</span>
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <div style="margin-right: 15px;">
+                            <i class="bi bi-envelope-fill" style="color: #e8cc00; font-size: 16px;"></i>
+                        </div>
+                        <span style="color: #e8cc00; font-size: 14px; font-weight: 600;">help@citytours.com</span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <h3 style="font-size: 14px;">À propos</h3>
+                    <ul>
+                        <li><a href="#">À propos de nous</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="/login.html">Connexion</a></li>
+                        <li><a href="/register.html">Inscription</a></li>
+                        <li><a href="#">Conditions générales</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h3 style="font-size: 14px;">Découvrir</h3>
+                    <ul>
+                        <li><a href="#">Blog communautaire</a></li>
+                        <li><a href="#">Guide touristique</a></li>
+                        <li><a href="#">Liste de souhaits</a></li>
+                        <li><a href="#">Galerie</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h3 style="font-size: 14px;">Paramètres</h3>
+                    <div class="styled-select">
+                        <select name="lang" id="lang">
+                            <option value="English" selected>Français</option>
+                            <option value="French">Anglais</option>
+                            <option value="Spanish">Espagnol</option>
+                            <option value="Russian">Russe</option>
+                        </select>
+                    </div>
+                    <div class="styled-select">
+                        <select name="currency" id="currency">
+                            <option value="USD" selected>USD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="GBP">GBP</option>
+                            <option value="RUB">RUB</option>
+                        </select>
+                    </div>
+                </div>
+            </div><!-- End row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="social_footer">
+                        <ul>
+                            <li><a href="#0"><i class="bi bi-instagram"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-whatsapp"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-facebook"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-youtube"></i></a></li>
+                        </ul>
+                        <p style="font-size: 12px;">© Citytours 2025</p>
+                    </div>
+                </div>
+            </div><!-- End row -->
+        </div><!-- End container -->
+    </footer><!-- End footer -->
+
+	<div id="toTop"><i class="bi bi-arrow-up-circle-fill"></i></div><!-- Back to top button -->
+	
+	<!-- Search Menu -->
+	<div class="search-overlay-menu">
+			<span class="search-overlay-close"><i class="icon_set_1_icon-77"></i></span>
+		<form role="search" id="searchform" method="get">
+			<input value="" name="q" type="text" placeholder="Search..." />
+			<button type="submit"><i class="icon_set_1_icon-78"></i>
+			</button>
+		</form>
+	</div><!-- End Search Menu -->
+
+	<!-- Modal Single room-->
+	<div class="modal fade" id="modal_single_room" tabindex="-1" role="dialog" aria-labelledby="modal_single_room" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="modal_single_room">Chambre Simple</h4>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>
+						Lorem ipsum dolor sit amet, at omnes deseruisse pri. Quo aeterno legimus insolens ad. Sit cu detraxit constituam, an mel iudico constituto efficiendi. Mea liber ridens inermis ei, mei legendos vulputate an, labitur tibique te qui.
+					</p>
+					<div class="row">
+						<div class="col-md-6">
+							<ul class="list_icons">
+								<li><i class="icon_set_1_icon-86"></i> Free wifi</li>
+								<li><i class="icon_set_2_icon-116"></i> Plasma Tv</li>
+								<li><i class="icon_set_2_icon-106"></i> Safety box</li>
+							</ul>
+						</div>
+						<div class="col-md-6">
+							<ul class="list_ok">
+								<li>Lorem ipsum dolor sit amet</li>
+								<li>No scripta electram necessitatibus sit</li>
+								<li>Quidam percipitur instructior an eum</li>
+							</ul>
+						</div>
+					</div>
+					<!-- End row  -->
+					<div class="owl-carousel owl-theme carousel-thumbs magnific-gallery">
+						<div class="item">
+							<a href="img/carousel/1.jpg" data-effect="mfp-zoom-in"><img src="img/carousel/1.jpg" alt="Image">
+							</a>
+						</div>
+						<div class="item">
+							<a href="img/carousel/2.jpg" data-effect="mfp-zoom-in"><img src="img/carousel/2.jpg" alt="Image">
+							</a>
+						</div>
+						<div class="item">
+							<a href="img/carousel/3.jpg" data-effect="mfp-zoom-in"><img src="img/carousel/3.jpg" alt="Image">
+							</a>
+						</div>
+						<div class="item">
+							<a href="img/carousel/4.jpg" data-effect="mfp-zoom-in"><img src="img/carousel/4.jpg" alt="Image">
+							</a>
+						</div>
+						<div class="item">
+							<a href="img/carousel/4.jpg" data-effect="mfp-zoom-in"><img src="img/carousel/4.jpg" alt="Image">
+							</a>
+						</div>
+						<div class="item">
+							<a href="img/carousel/4.jpg" data-effect="mfp-zoom-in"><img src="img/carousel/4.jpg" alt="Image">
+							</a>
+						</div>
+					</div>
+					<!-- End photo carousel  -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal Double room-->
+	<div class="modal fade" id="modal_double_room" tabindex="-1" role="dialog" aria-labelledby="modal_double_room" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="modal_double_room">Double Room</h4>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>
+						Lorem ipsum dolor sit amet, at omnes deseruisse pri. Quo aeterno legimus insolens ad. Sit cu detraxit constituam, an mel iudico constituto efficiendi. Mea liber ridens inermis ei, mei legendos vulputate an, labitur tibique te qui.
+					</p>
+					<div class="row">
+						<div class="col-md-6">
+							<ul class="list_icons">
+								<li><i class="icon_set_1_icon-86"></i> Free wifi</li>
+								<li><i class="icon_set_2_icon-116"></i> Plasma Tv</li>
+								<li><i class="icon_set_2_icon-106"></i> Safety box</li>
+							</ul>
+						</div>
+						<div class="col-md-6">
+							<ul class="list_ok">
+								<li>Lorem ipsum dolor sit amet</li>
+								<li>No scripta electram necessitatibus sit</li>
+								<li>Quidam percipitur instructior an eum</li>
+							</ul>
+						</div>
+					</div>
+					<!-- End row  -->
+					<div class="owl-carousel owl-theme carousel-thumbs magnific-gallery">
+						<div class="item">
+							<a href="img/carousel/1.jpg" data-effect="mfp-zoom-in"><img src="img/carousel/1.jpg" alt="Image">
+							</a>
+						</div>
+						<div class="item">
+							<a href="img/carousel/2.jpg" data-effect="mfp-zoom-in"><img src="img/carousel/2.jpg" alt="Image">
+							</a>
+						</div>
+						<div class="item">
+							<a href="img/carousel/3.jpg" data-effect="mfp-zoom-in"><img src="img/carousel/3.jpg" alt="Image">
+							</a>
+						</div>
+						<div class="item">
+							<a href="img/carousel/4.jpg" data-effect="mfp-zoom-in"><img src="img/carousel/4.jpg" alt="Image">
+							</a>
+						</div>
+						<div class="item">
+							<a href="img/carousel/4.jpg" data-effect="mfp-zoom-in"><img src="img/carousel/4.jpg" alt="Image">
+							</a>
+						</div>
+						<div class="item">
+							<a href="img/carousel/4.jpg" data-effect="mfp-zoom-in"><img src="img/carousel/4.jpg" alt="Image">
+							</a>
+						</div>
+					</div>
+					<!-- End photo carousel  -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Jquery -->
+	<script src="/assets/js/jquery-3.7.1.min.js"></script>
+	<script src="/assets/js/common_scripts_min.js"></script>
+	<script src="/assets/js/functions.js"></script>
+
+
+
+
+
+	<script>
+		$('.carousel-thumbs').owlCarousel({
+		loop:true,
+		margin:5,
+		responsiveClass:true,
+		nav:false,
+		responsive:{
+			0:{
+				items:1
+			},
+			600:{
+				items:3
+			},
+			1000:{
+				items:4,
+				nav:false,
+				loop:false
+			}
+		}
+	});
+	</script>
+	
+<!-- SWITCHER  -->
+    <script src="/assets/js/switcher.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // --- Element Selectors ---
+    const allDebutInputs = document.querySelectorAll('.date-debut-input');
+    const allFinInputs = document.querySelectorAll('.date-fin-input');
+    const optionCheckboxes = document.querySelectorAll('.option-checkbox');
+    const cartItems = document.querySelectorAll('.cart-item, .mobile-cart-item');
+
+    // Summary sidebar selectors
+    const arriveeCell = document.getElementById('summary-arrivee');
+    const departCell = document.getElementById('summary-depart');
+    const nightsCell = document.getElementById('summary-nuits');
+    const optionsList = document.getElementById('summary-options-list');
+    const totalPriceCell = document.getElementById('summary-total-price');
+    const baseHebergementPriceCell = document.getElementById('summary-hebergement-price');
+
+    // --- Utility Functions ---
+    function formatDateISOToLong(isoDate) {
+        if (!isoDate) return '—';
+        const date = new Date(isoDate);
+        const day = date.getDate();
+        const month = date.toLocaleString('fr-FR', { month: 'long' });
+        const year = date.getFullYear();
+        return `${day} ${month} ${year}`;
+    }
+
+    // --- Main Update Function ---
+    function updateCartSummary() {
+        let hebergementBaseTotal = 0;
+        let optionsTotal = 0;
+        let nights = 0;
+
+        // 1. Calculate nights
+        const startDate = allDebutInputs.length > 0 ? allDebutInputs[0].value : null;
+        const endDate = allFinInputs.length > 0 ? allFinInputs[0].value : null;
+
+        if (startDate && endDate) {
+            const diffTime = new Date(endDate) - new Date(startDate);
+            if (diffTime >= 0) {
+                nights = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+            } else {
+                nights = 0; // Invalid date range
+            }
+        }
+
+        // 2. Calculate base price for all hebergements
+        cartItems.forEach(item => {
+            const priceElement = item.querySelector('.price, .mobile-cart-item-price');
+            if (priceElement) {
+                const price = parseFloat(priceElement.getAttribute('data-price'));
+                if (!isNaN(price)) {
+                    hebergementBaseTotal += price;
+                }
+            }
+        });
+
+        // 3. Calculate total options price
+        optionsList.innerHTML = ''; // Clear previous options
+        let hasOptions = false;
+        optionCheckboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                hasOptions = true;
+                const price = parseFloat(checkbox.getAttribute('data-price'));
+                const name = checkbox.getAttribute('data-name');
+                if (!isNaN(price)) {
+                    optionsTotal += price;
+                    const li = document.createElement('li');
+                    li.innerHTML = `${name} <span>+${price.toFixed(2)} MAD</span>`;
+                    optionsList.appendChild(li);
+                }
+            }
+        });
+        if (!hasOptions) {
+            const li = document.createElement('li');
+            li.textContent = 'Aucune option sélectionnée';
+            optionsList.appendChild(li);
+        }
+
+        // 4. Calculate final total price
+        const hebergementTotalCost = hebergementBaseTotal * (nights > 0 ? nights : 1);
+        const finalTotal = hebergementTotalCost + optionsTotal;
+
+        // 5. Update summary display
+        arriveeCell.textContent = formatDateISOToLong(startDate);
+        departCell.textContent = formatDateISOToLong(endDate);
+        nightsCell.textContent = nights > 0 ? nights : '—';
+        
+        const hebergementPriceText = (nights > 0) 
+            ? `${hebergementBaseTotal.toFixed(2)} MAD x ${nights} nuits` 
+            : `${hebergementBaseTotal.toFixed(2)} MAD`;
+        baseHebergementPriceCell.textContent = hebergementPriceText;
+        totalPriceCell.textContent = `${finalTotal.toFixed(2)} MAD`;
+    }
+
+    // --- Event Listeners ---
+    function setupEventListeners() {
+        allDebutInputs.forEach(input => input.addEventListener('change', (e) => syncAndUpdate(e.target)));
+        allFinInputs.forEach(input => input.addEventListener('change', (e) => syncAndUpdate(e.target)));
+        optionCheckboxes.forEach(checkbox => checkbox.addEventListener('change', updateCartSummary));
+    }
+    
+    function syncAndUpdate(sourceInput) {
+        const isDebut = sourceInput.classList.contains('date-debut-input');
+        const newValue = sourceInput.value;
+        const inputsToUpdate = isDebut ? allDebutInputs : allFinInputs;
+        
+        inputsToUpdate.forEach(input => {
+            if (input !== sourceInput) {
+                input.value = newValue;
+            }
+        });
+        
+        updateCartSummary();
+    }
+
+    // --- Initial Load ---
+    setupEventListeners();
+    updateCartSummary(); // Initial calculation on page load
+});
+</script>
+<script>
+// Fonction pour préparer et soumettre le formulaire
+function prepareAndSubmitForm(form) {
+    // 1. Mettre à jour les champs cachés des options
+    updateHiddenFields();
+    
+    // 2. Récupérer les dates du formulaire
+    const dateDebutInputs = document.querySelectorAll('input.date-debut-input');
+    const dateFinInputs = document.querySelectorAll('input.date-fin-input');
+    
+    if (dateDebutInputs.length > 0 && dateFinInputs.length > 0) {
+        const dateDebut = dateDebutInputs[0].value;
+        const dateFin = dateFinInputs[0].value;
+        
+        // 3. Mettre à jour les champs cachés du formulaire
+        document.getElementById('date_arrivee_input').value = dateDebut;
+        document.getElementById('date_depart_input').value = dateFin;
+        
+        // 4. Sauvegarder dans le localStorage pour une utilisation ultérieure
+        if (dateDebut && dateFin) {
+            localStorage.setItem('dateArrivee', dateDebut);
+            localStorage.setItem('dateDepart', dateFin);
+            
+            // Calculer le nombre de nuits
+            const date1 = new Date(dateDebut);
+            const date2 = new Date(dateFin);
+            const diffTime = Math.abs(date2 - date1);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            localStorage.setItem('nbNuits', diffDays);
+            
+            console.log('Soumission avec les dates :', { dateDebut, dateFin, nbNuits: diffDays });
+        }
+    }
+    
+    // 5. Soumettre le formulaire
+    return true;
+}
+</script>
+
+</body>
+
+
+<!-- Mirrored from www.ansonika.com/citytours/cart_appartements.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Mar 2025 15:41:10 GMT -->
+</html>

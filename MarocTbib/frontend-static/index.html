@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MarocTbib - Votre médecin à portée de clic</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-brand">
+        <i class="fas fa-heartbeat"></i>
+        <span>MarocTbib</span>
+      </div>
+      <div class="nav-menu">
+        <a href="#" class="nav-link active" data-page="home">Accueil</a>
+        <a href="#" class="nav-link" data-page="doctors">Médecins</a>
+        <a href="#" class="nav-link" data-page="about">À propos</a>
+        <a href="#" class="nav-link" data-page="contact">Contact</a>
+      </div>
+      <div class="nav-actions">
+        <button class="btn-outline" id="loginBtn">Connexion</button>
+        <button class="btn-primary" id="registerBtn">Inscription</button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1 class="hero-title">Trouvez un médecin et réservez en quelques clics</h1>
+        <p class="hero-subtitle">Recherchez parmi des milliers de médecins qualifiés au Maroc</p>
+        <div class="hero-stats">
+          <div class="stat">
+            <i class="fas fa-user-md"></i>
+            <div>
+              <strong>500+</strong>
+              <span>Médecins</span>
+            </div>
+          </div>
+          <div class="stat">
+            <i class="fas fa-calendar-check"></i>
+            <div>
+              <strong>10K+</strong>
+              <span>Rendez-vous</span>
+            </div>
+          </div>
+          <div class="stat">
+            <i class="fas fa-star"></i>
+            <div>
+              <strong>4.8/5</strong>
+              <span>Satisfaction</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recherche médecins -->
+    <section class="card" id="search">
+      <h3>Rechercher un médecin</h3>
+      <form id="searchForm" class="grid">
+        <label>
+          <i class="fas fa-stethoscope"></i> Spécialité
+          <select id="specialty">
+            <option value="">Toutes</option>
+            <option>Médecin généraliste</option>
+            <option>Cardiologue</option>
+            <option>Dermatologue</option>
+            <option>Dentiste</option>
+            <option>Pédiatre</option>
+            <option>Ophtalmologue</option>
+          </select>
+        </label>
+        <label>
+          <i class="fas fa-map-marker-alt"></i> Ville
+          <select id="city">
+            <option value="">Toutes</option>
+            <option>Casablanca</option>
+            <option>Rabat</option>
+            <option>Marrakech</option>
+            <option>Fès</option>
+            <option>Tanger</option>
+            <option>Agadir</option>
+          </select>
+        </label>
+        <label>
+          <i class="fas fa-calendar"></i> Date souhaitée
+          <input type="date" id="date" />
+        </label>
+        <div class="actions">
+          <button type="submit" class="btn-primary"><i class="fas fa-search"></i> Chercher</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Résultats -->
+    <section class="card" id="results">
+      <h3>Résultats</h3>
+      <div id="doctorList" class="list"></div>
+    </section>
+
+    <!-- Réservation (modal) -->
+    <dialog id="bookingDialog" class="modal">
+      <form method="dialog" id="bookingForm" class="modal-content">
+        <div class="modal-header">
+          <h3><i class="fas fa-calendar-check"></i> Confirmer le rendez-vous</h3>
+          <button class="close-btn" value="cancel"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+          <div class="summary" id="bookingSummary"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-outline" value="cancel">Annuler</button>
+          <button class="btn-primary" id="confirmBooking" value="ok">Confirmer</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Modal Connexion -->
+    <dialog id="loginDialog" class="modal">
+      <form method="dialog" class="modal-content">
+        <div class="modal-header">
+          <h3><i class="fas fa-sign-in-alt"></i> Connexion</h3>
+          <button class="close-btn" value="cancel"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label><i class="fas fa-envelope"></i> Email</label>
+            <input type="email" placeholder="votre@email.com" required />
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-lock"></i> Mot de passe</label>
+            <input type="password" placeholder="••••••••" required />
+          </div>
+          <a href="#" class="link-small">Mot de passe oublié ?</a>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-outline" value="cancel">Annuler</button>
+          <button class="btn-primary" type="submit">Se connecter</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Modal Inscription -->
+    <dialog id="registerDialog" class="modal">
+      <form method="dialog" class="modal-content">
+        <div class="modal-header">
+          <h3><i class="fas fa-user-plus"></i> Inscription</h3>
+          <button class="close-btn" value="cancel"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label><i class="fas fa-user"></i> Nom complet</label>
+            <input type="text" placeholder="Votre nom" required />
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-envelope"></i> Email</label>
+            <input type="email" placeholder="votre@email.com" required />
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-phone"></i> Téléphone</label>
+            <input type="tel" placeholder="06 12 34 56 78" required />
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-lock"></i> Mot de passe</label>
+            <input type="password" placeholder="••••••••" required />
+          </div>
+          <div class="form-group">
+            <label>
+              <input type="checkbox" required />
+              J'accepte les <a href="#" class="link-small">conditions d'utilisation</a>
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-outline" value="cancel">Annuler</button>
+          <button class="btn-primary" type="submit">S'inscrire</button>
+        </div>
+      </form>
+    </dialog>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4><i class="fas fa-heartbeat"></i> MarocTbib</h4>
+        <p>Votre plateforme de rendez-vous médicaux en ligne</p>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h4>Liens rapides</h4>
+        <a href="#">Accueil</a>
+        <a href="#">Médecins</a>
+        <a href="#">À propos</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="footer-section">
+        <h4>Aide</h4>
+        <a href="#">FAQ</a>
+        <a href="#">Conditions d'utilisation</a>
+        <a href="#">Politique de confidentialité</a>
+        <a href="#">Support</a>
+      </div>
+      <div class="footer-section">
+        <h4>Contact</h4>
+        <p><i class="fas fa-envelope"></i> contact@maroctbib.ma</p>
+        <p><i class="fas fa-phone"></i> +212 5 22 00 00 00</p>
+        <p><i class="fas fa-map-marker-alt"></i> Casablanca, Maroc</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 MarocTbib. Tous droits réservés.</p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

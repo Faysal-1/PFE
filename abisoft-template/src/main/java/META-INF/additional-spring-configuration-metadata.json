@@ -1,0 +1,37 @@
+{"properties": [
+  {
+    "name": "file.encoding",
+    "type": "java.lang.String",
+    "description": "A description for 'file.encoding'"
+  },
+  {
+    "name": "client.encoding.overrid",
+    "type": "java.lang.String",
+    "description": "A description for 'client.encoding.overrid'"
+  },
+  {
+    "name": "google.recaptcha.key.site",
+    "type": "java.lang.String",
+    "description": "A description for 'google.recaptcha.key.site'"
+  },
+  {
+    "name": "google.recaptcha.key.secret",
+    "type": "java.lang.String",
+    "description": "A description for 'google.recaptcha.key.secret'"
+  },
+  {
+    "name": "support.email",
+    "type": "java.lang.String",
+    "description": "A description for 'support.email'"
+  },
+  {
+    "name": "purge.cron.expression",
+    "type": "java.lang.String",
+    "description": "A description for 'purge.cron.expression'"
+  },
+  {
+    "name": "Dfile.encoding",
+    "type": "java.lang.String",
+    "description": "A description for 'Dfile.encoding'"
+  }
+]}

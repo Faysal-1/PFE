@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Détails de l'hébergement</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/SuperAdmin/css/vendors.css">
+  <link rel="stylesheet" href="/SuperAdmin/css/main.css">
+  <style>
+    /* Variables CSS pour la cohérence des couleurs */
+    :root {
+      --sidebar-width: 250px;
+      --primary-color: #0056b3;
+      --secondary-color: #4f8cff;
+      --accent-color: #ffb347;
+      --text-color: #2c3e50;
+      --light-text: #6c7a89;
+      --border-color: #e0e6ed;
+      --background-color: #f5f7fa;
+      --card-bg: #ffffff;
+      --success-color: #2ecc71;
+      --warning-color: #f39c12;
+      --error-color: #e74c3c;
+      --shadow: 0 4px 12px rgba(0,0,0,0.08);
+      --transition: all 0.3s ease;
+    }
+    
+    .status-badge {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .status-en-attente {
+      background-color: var(--warning-color);
+      color: white;
+    }
+    
+    .status-accepte {
+      background-color: var(--success-color);
+      color: white;
+    }
+    
+    .status-refuse {
+      background-color: var(--error-color);
+      color: white;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .btn-validate {
+      background-color: var(--success-color);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .btn-validate:hover {
+      background-color: #27ae60;
+    }
+    
+    .btn-reject {
+      background-color: var(--error-color);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .btn-reject:hover {
+      background-color: #c0392b;
+    }
+    
+    .btn-back {
+      background-color: var(--secondary-color);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .btn-back:hover {
+      background-color: #3a7bd5;
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+    
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 50%;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .modal-header h2 {
+      margin: 0;
+      font-size: 20px;
+      color: var(--text-color);
+    }
+    
+    .close {
+      color: #aaa;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    .close:hover {
+      color: black;
+    }
+    
+    .modal-body {
+      margin-bottom: 20px;
+    }
+    
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      resize: vertical;
+      min-height: 100px;
+    }
+    
+    .alert {
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+    }
+    
+    .alert-success {
+      background-color: rgba(46, 204, 113, 0.1);
+      border: 1px solid var(--success-color);
+      color: var(--success-color);
+    }
+    
+    .alert-danger {
+      background-color: rgba(231, 76, 60, 0.1);
+      border: 1px solid var(--error-color);
+      color: var(--error-color);
+    }
+    
+    .detail-card {
+      background-color: var(--card-bg);
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+      margin-bottom: 30px;
+    }
+    
+    .detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .detail-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-color);
+      margin: 0;
+    }
+    
+    .detail-row {
+      display: flex;
+      margin-bottom: 15px;
+    }
+    
+    .detail-label {
+      width: 200px;
+      font-weight: 500;
+      color: var(--light-text);
+    }
+    
+    .detail-value {
+      flex: 1;
+      color: var(--text-color);
+    }
+    
+    .detail-image {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    
+    .refus-message {
+      background-color: rgba(231, 76, 60, 0.1);
+      border-left: 4px solid var(--error-color);
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 0 4px 4px 0;
+    }
+    
+    .refus-message h4 {
+      color: var(--error-color);
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard__sidebar bg-white scroll-bar-1" style="z-index: 5;">
+    <div class="sidebar -dashboard">
+      <div class="sidebar-header">
+        <div class="logo-container">
+          <img src="/SuperAdmin/img/general/logo.png" alt="Logo" class="sidebar-logo">
+          <h3 class="sidebar-title">Administration</h3>
+        </div>
+        <div class="user-profile">
+          <img th:src="${userProfileImage}" alt="User Avatar" class="user-avatar" onerror="this.src='/assets/img/tourist_guide_pic.jpg';">
+          <span class="user-name" th:text="${user != null ? user.firstName + ' ' + user.lastName : 'Utilisateur'}">Utilisateur</span>
+          <span class="user-role" sec:authorize="hasAuthority('SUPERADMIN_PRIVILEGE')">SuperAdmin</span>
+          <span class="user-role" sec:authorize="hasAuthority('PROPRIETAIRE_PRIVILEGE')">Propriétaire</span>
+          <span class="user-role" sec:authorize="hasAuthority('HEBERGEMENT_ADMIN_PRIVILEGE')">Admin Hébergement</span>
+          <span class="user-role" sec:authorize="hasAuthority('EVENEMENT_ADMIN_PRIVILEGE')">Admin Événement</span>
+        </div>
+        <button id="toggleSidebar" class="toggle-sidebar-btn" style="display: none;">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-content">
+        <!-- Tableau de bord - visible pour tous -->
+        <div class="sidebar__item">
+          <div class="sidebar__button">
+            <a th:href="@{/admin/index}" class="d-flex items-center text-15 lh-1 fw-500">
+              <i class="fas fa-tachometer-alt mr-15"></i>
+              <span>Tableau de bord</span>
+            </a>
+          </div>
+        </div>
+        
+        <!-- Gestion des hébergements - visible pour SuperAdmin, Admin Hébergement et Propriétaire -->
+        <div class="sidebar__item" th:if="${isHebergementAdmin != null && isHebergementAdmin} or ${isProprietaire != null && isProprietaire} or ${isSuperAdmin != null && isSuperAdmin}" sec:authorize="hasAnyAuthority('SUPERADMIN_PRIVILEGE', 'HEBERGEMENT_ADMIN_PRIVILEGE', 'PROPRIETAIRE_PRIVILEGE')">
+          <div class="accordion -db-sidebar js-accordion">
+            <div class="accordion__item">
+              <div class="accordion__button">
+                <div class="sidebar__button col-12 d-flex items-center justify-between">
+                  <div class="d-flex items-center text-15 lh-1 fw-500">
+                    <i class="fas fa-hotel mr-15"></i>
+                    <span>Gérer les hébergements</span>
+                  </div>
+                  <div class="icon-chevron-sm-down text-7"></div>
+                </div>
+              </div>
+              <div class="accordion__content">
+                <ul class="sidebar-submenu">
+                  <li class="submenu-item">
+                    <a th:href="@{/admin/hebergements}" class="submenu-link">
+                      <i class="fas fa-list-ul submenu-icon"></i>
+                      <span>Tous les hébergements</span>
+                    </a>
+                  </li>
+                  <li class="submenu-item" th:if="${isHebergementAdmin != null && isHebergementAdmin} or ${isSuperAdmin != null && isSuperAdmin}" sec:authorize="hasAnyAuthority('SUPERADMIN_PRIVILEGE', 'HEBERGEMENT_ADMIN_PRIVILEGE')">
+                    <a th:href="@{/admin/hebergements-en-attente}" class="submenu-link">
+                      <i class="fas fa-clock submenu-icon"></i>
+                      <span>Hébergements en attente</span>
+                      <span class="badge bg-warning text-white ml-5" th:if="${enAttente > 0}" th:text="${enAttente}">0</span>
+                    </a>
+                  </li>
+                  <li class="submenu-item">
+                    <a th:href="@{/admin/hebergements/add}" class="submenu-link">
+                     <i class="fas fa-plus-circle submenu-icon"></i>
+                      <span>Ajouter un hébergement</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Gestion des utilisateurs - visible uniquement pour SuperAdmin -->
+        <div class="sidebar__item" th:if="${isSuperAdmin != null && isSuperAdmin}" sec:authorize="hasAuthority('SUPERADMIN_PRIVILEGE')">
+          <div class="accordion -db-sidebar js-accordion">
+            <div class="accordion__item">
+              <div class="accordion__button">
+                <div class="sidebar__button col-12 d-flex items-center justify-between">
+                  <div class="d-flex items-center text-15 lh-1 fw-500">
+                    <i class="fas fa-users mr-15"></i>
+                    <span>Gérer les utilisateurs</span>
+                  </div>
+                  <div class="icon-chevron-sm-down text-7"></div>
+                </div>
+              </div>
+              <div class="accordion__content">
+                <ul class="sidebar-submenu">
+                  <li class="submenu-item">
+                    <a th:href="@{/SuperAdmin/db-vendor-user}" class="submenu-link">
+                      <i class="fas fa-list-ul submenu-icon"></i>
+                      <span>Tous les utilisateurs</span>
+                    </a>
+                  </li>
+                  <li class="submenu-item">
+                    <a th:href="@{/SuperAdmin/db-vendor-add-user}" class="submenu-link">
+                      <i class="fas fa-user-plus submenu-icon"></i>
+                      <span>Ajouter un utilisateur</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Menu de déconnexion - visible pour tous -->
+        <div class="sidebar__item">
+          <div class="sidebar__button logout-button">
+            <a th:href="@{/logout}" class="d-flex items-center text-15 lh-1 fw-500">
+              <i class="fas fa-sign-out-alt mr-15"></i>
+              <span>Déconnexion</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard__main">
+    <div class="dashboard__content">
+      <div class="row y-gap-20 justify-between items-end pb-20 lg:pb-40 md:pb-32">
+        <div class="col-auto">
+          <h1 class="text-30 lh-14 fw-500">Détails de l'hébergement</h1>
+          <div class="text-15 text-light-1">Consultez les informations détaillées de l'hébergement</div>
+        </div>
+        <div class="col-auto">
+          <a th:href="@{/admin/hebergements}" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Retour à la liste
+          </a>
+        </div>
+      </div>
+      
+      <!-- Affichage des messages de succès ou d'erreur -->
+      <div class="alert alert-success" th:if="${successMessage != null}" th:text="${successMessage}">
+        L'hébergement a été validé avec succès.
+      </div>
+      <div class="alert alert-danger" th:if="${errorMessage != null}" th:text="${errorMessage}">
+        Une erreur s'est produite.
+      </div>
+      
+      <!-- Détails de l'hébergement -->
+      <div class="detail-card">
+        <div class="detail-header">
+          <h2 class="detail-title" th:text="${hebergement.nom}">Nom de l'hébergement</h2>
+          <span class="status-badge" 
+                th:classappend="${hebergement.validationStatus.name() == 'EN_ATTENTE' ? 'status-en-attente' : (hebergement.validationStatus.name() == 'ACCEPTE' ? 'status-accepte' : 'status-refuse')}"
+                th:text="${hebergement.validationStatus.displayName}">Statut</span>
+        </div>
+        
+        <!-- Image de l'hébergement -->
+        <img th:src="${hebergement.getPhotoUrlWithDefault()}" alt="Photo de l'hébergement" class="detail-image" onerror="this.src='/assets/img/hotel_img.jpg';">
+        
+        <!-- Informations générales -->
+        <h3>Informations générales</h3>
+        <div class="detail-row">
+          <div class="detail-label">Type d'hébergement</div>
+          <div class="detail-value" th:text="${hebergement.type}">Type</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Propriétaire</div>
+          <div class="detail-value" th:text="${hebergement.proprietaire != null ? hebergement.proprietaire.firstName + ' ' + hebergement.proprietaire.lastName : 'N/A'}">Propriétaire</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Adresse</div>
+          <div class="detail-value" th:text="${hebergement.adresse}">Adresse</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Ville</div>
+          <div class="detail-value" th:text="${hebergement.ville != null ? hebergement.ville.nom : 'N/A'}">Ville</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Code postal</div>
+          <div class="detail-value" th:text="${hebergement.codePostal}">Code postal</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Pays</div>
+          <div class="detail-value" th:text="${hebergement.pays != null ? hebergement.pays.nom : 'N/A'}">Pays</div>
+        </div>
+        
+        <!-- Caractéristiques -->
+        <h3>Caractéristiques</h3>
+        <div class="detail-row">
+          <div class="detail-label">Capacité</div>
+          <div class="detail-value" th:text="${hebergement.capacite} + ' personnes'">Capacité</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Nombre d'étoiles</div>
+          <div class="detail-value">
+            <span th:if="${hebergement.nbEtoiles != null}">
+              <i class="fas fa-star text-warning" th:each="i : ${#numbers.sequence(1, hebergement.nbEtoiles)}"></i>
+            </span>
+            <span th:if="${hebergement.nbEtoiles == null}">N/A</span>
+          </div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Prix</div>
+          <div class="detail-value" th:text="${hebergement.prix} + ' MAD'">Prix</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Type de tarif</div>
+          <div class="detail-value" th:text="${hebergement.tarifType}">Type de tarif</div>
+        </div>
+        
+        <!-- Description -->
+        <h3>Description</h3>
+        <p th:text="${hebergement.description}">Description de l'hébergement</p>
+        
+        <!-- Afficher le message de refus si l'hébergement a été refusé -->
+        <div class="refus-message" th:if="${hebergement.validationStatus.name() == 'REFUSE'}">
+          <h4>Motif du refus :</h4>
+          <p th:text="${hebergement.commentaireRefus}">Motif du refus</p>
+        </div>
+        
+        <!-- Boutons d'action pour les administrateurs -->
+        <div class="action-buttons" th:if="${((isHebergementAdmin != null && isHebergementAdmin) or (isSuperAdmin != null && isSuperAdmin)) && hebergement.validationStatus.name() == 'EN_ATTENTE'}" sec:authorize="hasAnyAuthority('SUPERADMIN_PRIVILEGE', 'HEBERGEMENT_ADMIN_PRIVILEGE')" style="margin-top: 20px; display: flex; gap: 10px;">
+          <form th:action="@{'/admin/valider-hebergement/' + ${hebergement.id}}" method="post" style="display: inline;">
+            <button type="submit" class="btn-validate" style="background-color: var(--success-color); color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; transition: var(--transition); font-weight: 500;">
+              <i class="fas fa-check"></i> Accepter cet hébergement
+            </button>
+          </form>
+          <button class="btn-reject" th:onclick="'openRejectModal(' + ${hebergement.id} + ')'" style="background-color: var(--error-color); color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; transition: var(--transition); font-weight: 500;">
+            <i class="fas fa-times"></i> Refuser cet hébergement
+          </button>
+        </div>
+      </div>
+      
+      <!-- Modal de refus -->
+      <div id="rejectModal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Motif de refus</h2>
+            <span class="close" onclick="closeRejectModal()">&times;</span>
+          </div>
+          <form id="rejectForm" method="post">
+            <div class="modal-body">
+              <p>Veuillez indiquer le motif du refus de cet hébergement :</p>
+              <textarea name="commentaire" required placeholder="Expliquez pourquoi cet hébergement est refusé..."></textarea>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn-back" onclick="closeRejectModal()">Annuler</button>
+              <button type="submit" class="btn-reject">Confirmer le refus</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      <footer class="footer -dashboard mt-60">
+        <div class="footer__row row y-gap-10 items-center justify-between">
+          <div class="col-auto">
+            <div class="row y-gap-20 items-center">
+              <div class="col-auto">
+                <div class="text-14 lh-14 mr-30">Copyright © 2025 Tous droits réservés</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+  <!-- JavaScript -->
+  <script src="/SuperAdmin/js/vendors.js"></script>
+  <script src="/SuperAdmin/js/main.js"></script>
+  
+  <script>
+    // Fonction pour ouvrir la modal de refus
+    function openRejectModal(hebergementId) {
+      const modal = document.getElementById('rejectModal');
+      const form = document.getElementById('rejectForm');
+      
+      // Définir l'action du formulaire
+      form.action = '/admin/refuser-hebergement/' + hebergementId;
+      
+      // Afficher la modal
+      modal.style.display = 'block';
+    }
+    
+    // Fonction pour fermer la modal de refus
+    function closeRejectModal() {
+      const modal = document.getElementById('rejectModal');
+      modal.style.display = 'none';
+    }
+    
+    // Fermer la modal si l'utilisateur clique en dehors
+    window.onclick = function(event) {
+      const modal = document.getElementById('rejectModal');
+      if (event.target == modal) {
+        closeRejectModal();
+      }
+    }
+    
+    // Fonction pour adapter l'interface en fonction de la taille de l'écran
+    function adjustLayout() {
+      const windowWidth = window.innerWidth;
+      const toggleButton = document.getElementById('toggleSidebar');
+      const sidebar = document.querySelector('.dashboard__sidebar');
+      
+      if (windowWidth <= 992) {
+        toggleButton.style.display = 'block';
+      } else {
+        toggleButton.style.display = 'none';
+        sidebar.style.display = 'block';
+      }
+    }
+    
+    // Exécuter la fonction au chargement et au redimensionnement de la fenêtre
+    window.addEventListener('load', adjustLayout);
+    window.addEventListener('resize', adjustLayout);
+    
+    // Gérer le clic sur le bouton de basculement de la barre latérale
+    document.getElementById('toggleSidebar').addEventListener('click', function() {
+      const sidebar = document.querySelector('.dashboard__sidebar');
+      if (sidebar.style.display === 'none' || sidebar.style.display === '') {
+        sidebar.style.display = 'block';
+      } else {
+        sidebar.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

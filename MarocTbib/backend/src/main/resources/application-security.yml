@@ -1,0 +1,26 @@
+app:
+  security:
+    jwt:
+      secret: ${JWT_SECRET:your-256-bit-secret-key-must-be-at-least-32-characters}
+      expiration-ms: 900000  # 15 minutes
+      refresh-expiration-ms: 2592000000  # 30 days
+    password-encoder:
+      strength: 12  # BCrypt strength
+    cors:
+      allowed-origins: "http://localhost:3000,https://maroctbib.com"
+      allowed-methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS"
+      allowed-headers: "*"
+      exposed-headers: "Authorization"
+    rate-limit:
+      enabled: true
+      capacity: 100  # requests
+      time-window: 60  # seconds
+    audit-log:
+      enabled: true
+      retention-days: 90
+    backup:
+      enabled: true
+      schedule: "0 0 2 * * *"  # Daily at 2 AM
+      encryption:
+        algorithm: "AES-256"
+        key: ${BACKUP_ENCRYPTION_KEY}

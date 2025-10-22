@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
+<!-- Mirrored from www.ansonika.com/citytours/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Mar 2025 15:39:30 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Citytours - Premium site template for city tours agencies, transfers and tickets.">
+    <meta name="author" content="Ansonika">
+    <title>CITY TOURS - Voyage au Cœur du Maroc</title>
+
+    <!-- Favicons-->
+    <link rel="shortcut icon" href="/assets/img/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" type="image/x-icon" href="/assets/img/apple-touch-icon-57x57-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="/assets/img/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="/assets/img/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="/assets/img/apple-touch-icon-144x144-precomposed.png">
+
+    <!-- GOOGLE WEB FONT -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- COMMON CSS -->
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/vendors.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
+
+    <!-- ALTERNATIVE COLORS CSS -->
+    <link href="#" id="colors" rel="stylesheet">
+    
+   
+</head>
+<body>
+
+    <div id="preloader">
+        <div class="sk-spinner sk-spinner-wave">
+            <div class="sk-rect1"></div>
+            <div class="sk-rect2"></div>
+            <div class="sk-rect3"></div>
+            <div class="sk-rect4"></div>
+            <div class="sk-rect5"></div>
+        </div>
+    </div>
+            </div>
+        </div>
+        <!-- End Preload -->
+
+        <div class="layer"></div>
+        <!-- Mobile menu overlay mask -->
+
+<!-- Header================================================== -->
+<header  style="position: fixed; top: 0; width: 100%; z-index: 1100; background: #fff;" id="main-header">
+    <div id="top_line">
+        <div class="container">
+            <div class="row">
+                <div class="col-6">
+                    <i class="icon-phone"></i><strong>‪+212 618311344‬</strong>
+                </div>
+                <div class="col-6">
+                    <ul id="top_links">
+                        <!-- Avant connexion -->
+                        <li sec:authorize="!isAuthenticated()">
+                            <a id="login-form" href="/login">Se connecter</a>
+                        </li>
+                    
+                        <!-- Après connexion -->
+                        <li sec:authorize="isAuthenticated()">
+                            <span>
+                                <i class="icon-user"></i>
+                                <span th:if="${connectedUser != null}" th:text="${connectedUser.username}">Nom</span>
+                            </span>
+                        </li>
+                        <li sec:authorize="isAuthenticated()">
+                            <a href="/logout"><i class="icon-logout"></i> Se déconnecter</a>
+                        </li>
+                    
+                        <!-- Bouton pour la liste de souhaits -->
+                        <li>
+                            <a th:href="@{/hebergement/wishlist}" sec:authorize="isAuthenticated()" class="my-wishlist-link"><i class="icon-heart"></i> Liste de souhaits</a>
+                            <a th:href="@{/login}" sec:authorize="!isAuthenticated()" class="my-wishlist-link"><i class="icon-heart"></i> Liste de souhaits</a>
+                        </li>
+                    </ul>
+                    
+                </div>
+            </div><!-- End row -->
+        </div><!-- End container-->
+    </div><!-- End top line -->
+
+    
+    <div class="container">
+        <div class="row" style="align-items: center;">
+<div class="col-3">
+    <div id="logo_home">
+        <h1><a href="/index" title="City tours travel template">City Tours travel</a></h1>
+    </div>
+</div>
+<nav class="col-9">
+                <a class="cmn-toggle-switch cmn-toggle-switch__htx open_close" href="javascript:void(0);"><span>Menu mobile</span></a>
+                <div class="main-menu">
+                    <div id="header_menu">
+                        <img src="/assets/img/logo_sticky.png" width="160" height="34" alt="City tours">
+                    </div>
+                    <a href="#" class="open_close" id="close_in"><i class="icon_set_1_icon-77"></i></a>
+                    <ul>
+                        <li class="submenu">
+                            <a href="/index" class="show-submenu">Accueil </a>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);" class="show-submenu">Hébergements <i class="icon-down-open-mini"></i></a>
+                            <ul class="hebergement-list">
+                                <li>
+                                    <a th:href="@{/hebergement}" class="second-level">Tous les types</a>
+                                </li>
+                                <li th:each="type : ${hebergementType}">
+                                    <a th:href="@{'/hebergement/' + ${type.name()} + '/list'}"
+                                    th:text="${#strings.capitalize(type.name().toLowerCase().replace('_',' '))}"
+                                    class="second-level"></a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);" class="show-submenu">Gastronomie <i class="icon-down-open-mini"></i></a><ul>
+                                <li><a href="all_hotels_list.html">All hotels list</a></li>
+                                <li><a href="all_hotels_grid.html">All hotels grid</a></li>
+                                <li><a href="all_hotels_grid_masonry.html">All hotels Sort Masonry</a></li>
+                                <li><a href="all_hotels_map_listing.html">All hotels map listing</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);" class="show-submenu">Transports  <i class="icon-down-open-mini"></i></a>
+                            <ul>
+                                <li><a href="/public/Transports/infosTransports.html">Informations</a></li>
+                                <li><a href="/Client/Transports/reservationTransports.html">Réservations</a></li>
+                             
+                            </ul>
+                        </li>
+                        
+                         <li class="submenu">
+                                <a href="javascript:void(0);" class="show-submenu">Événements <i class="icon-down-open-mini"></i></a>
+                                <ul class="evenement-list">
+                                    <li>
+                                        <a th:href="@{/evenements}" class="second-level">Tous les types</a>
+                                    </li>
+                                    <li th:each="type : ${evenementType}">
+                                        <a th:href="@{'/evenements/' + ${type.name()} + '/list'}"
+                                        th:text="${#strings.capitalize(type.name().toLowerCase().replace('_',' '))}"
+                                        class="second-level"></a>
+                                    </li>
+                                </ul>
+                            </li>
+
+
+                         <li class="megamenu submenu">
+                            <a href="javascript:void(0);" class="show-submenu-mega">Bonus<i class="icon-down-open-mini"></i></a>
+                            <div class="menu-wrapper">
+                                <div class="row">
+                        
+                        </li>
+                        <li class="megamenu submenu">
+                            <a href="javascript:void(0);" class="show-submenu-mega">Pages<i class="icon-down-open-mini"></i></a>
+                            <div class="menu-wrapper">
+                            </div><!-- End menu-wrapper -->
+                        </li>
+                    </ul>
+                </div><!-- End main-menu -->
+                <ul id="top_tools">
+                    <li>
+                        <a href="javascript:void(0);" class="search-overlay-menu-btn"><i class="icon_search"></i></a>
+                    </li>
+
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>
+<style>
+    .parallax-window {
+        min-height: 422px !important;
+    }
+    header, header * {
+    color: #111 !important;
+    }
+    </style>
+        <main>
+            <div id="position">
+                <div class="container" style="margin-top: 45px !important;">
+                        <ul>
+                            <li><a th:href="@{/}">Accueil</a></li>
+                            <li><a th:href="@{/hebergements}">Hébergements</a></li>
+                            <li th:text="${hebergement != null && hebergement.nom != null ? #strings.toUpperCase(hebergement.nom) : 'DÉTAILS'}">Détails</li>
+                        </ul>
+                    </div>
+                </div>      
+    <div class="container mt-5">
+    <div class="row">
+        <!-- Colonne gauche : image principale -->
+        <div class="col-lg-6 col-md-12 mb-4">
+            <img th:src="${hebergement.photoUrl}" alt="Image de l'hébergement" class="img-fluid w-100" style="object-fit:cover; border-radius:8px; min-height:300px; max-height:400px;" onerror="this.src='/assets/img/hotel_img.jpg'">
+        </div>
+        <!-- Colonne droite : description et commodités -->
+        <div class="col-lg-6 col-md-12">
+            <div class="card p-3 h-100">
+                <h5><span class="badge bg-primary text-white">Description</span></h5>
+                <p th:text="${hebergement.description}">Description détaillée de l'hébergement...</p>
+                <h6>Commodités</h6>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check text-success me-2"></i> Wi-Fi gratuit</li>
+                    <li><i class="fas fa-check text-success me-2"></i> Petit déjeuner inclus</li>
+                    <li><i class="fas fa-check text-success me-2"></i> Piscine</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Détails d'hébergement -->
+<!-- Bloc HOTEL -->
+<div class="d-flex justify-content-center align-items-center" style="width:100%;margin-right: 20px !important;">
+    <div class="card mb-4" style="width:98%; max-width:1300px;" th:if="${hebergement.chambres != null and #lists.size(hebergement.chambres) > 0}">
+        <div class="card-body">
+                <h4 class="mb-3">Liste des chambres</h4>
+                <style>
+    .chambre-table {
+        font-size: 0.97rem;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+    .chambre-table thead th {
+        background: #f8fafd;
+        color: #2b2d42;
+        font-weight: 600;
+        text-align: center;
+        border-bottom: 2px solid #e9ecef;
+    }
+    .chambre-table td, .chambre-table th {
+        vertical-align: middle;
+        text-align: center;
+        padding: 0.45rem 0.5rem;
+    }
+    .chambre-table .badge {
+        font-size: 0.92em;
+        padding: 0.45em 0.7em;
+    }
+    .chambre-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        align-items: center;
+        justify-content: center;
+    }
+    .chambre-actions label {
+        font-size: 0.93em;
+        margin-bottom: 0.12rem;
+    }
+    .chambre-actions select {
+        min-width: 45px;
+        font-size: 0.97em;
+        padding: 2px 8px;
+        border-radius: 7px;
+        border: 1px solid #dbeafe;
+        background: #f8fafd;
+        margin-bottom: 0.15rem;
+    }
+    .chambre-reserver-btn {
+        font-size: 0.99em;
+        padding: 5px 0.7rem;
+        border-radius: 7px;
+        font-weight: 600;
+        background: #3a86ff;
+        color: #fff;
+        border: none;
+        transition: background 0.18s;
+        margin-top: 2px;
+        width: 100%;
+    }
+    .chambre-reserver-btn:hover {
+        background: #265ea8;
+        color: #fff;
+    }
+    @media (max-width: 700px) {
+        .chambre-table td, .chambre-table th {
+            font-size: 0.91em;
+            padding: 0.3rem 0.2rem;
+        }
+        .chambre-actions {
+            flex-direction: column;
+            gap: 0.20rem;
+        }
+        .img-fluid {
+            width: 110% !important;
+            height: auto;
+        }
+    }
+                </style>
+                <table class="table table-bordered align-middle chambre-table">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Type</th>
+                            <th>Capacité</th>
+                            <th>Prix</th>
+                            <th>Disponibilité</th>
+                            <th>Actions</th>
+                            <th>Réserver</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="ch : ${hebergement.chambres}">
+                            <td>
+                                <span th:if="${ch.type != null and ch.type != ''}" th:text="${ch.type}">Type</span>
+                                <span th:if="${ch.type == null or ch.type == ''}">-</span>
+                            </td>
+                            <td>
+                                <span th:if="${ch.capacite != null}" th:text="${ch.capacite}">2</span>
+                                <span th:if="${ch.capacite == null}" class="text-muted">-</span>
+                            </td>
+                            <td>
+                                <span th:if="${ch.prix != null}" th:text="${ch.prix}">prix</span>
+                                <span th:if="${ch.prix == null}" class="text-muted">-</span>
+                            </td>
+                            <td>
+                                <span th:if="${ch.disponible == true}" class="badge bg-success">Oui</span>
+                                <span th:if="${ch.disponible == false}" class="badge bg-danger">Non</span>
+                                <span th:if="${ch.disponible == null}" class="text-muted">-</span>
+                            </td>
+                            <td>
+                                <div class="chambre-actions">
+                                    <label>Adultes
+                                        <select class="form-select">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                        </select>
+                                    </label>
+                                    <label>Enfants
+                                        <select class="form-select">
+                                            <option value="0">0</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                        </select>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <a th:href="@{/hebergement/cart_hebergement(hebergementId=${hebergement.id})}" class="hotel-btn hotel-btn-reserve">
+                                    <i class="fas fa-credit-card"></i> RÉSERVER
+                                </a> </td>
+                        </tr>
+                    </tbody>
+                </table>        
+         </div>
+        </div>                         
+        <!-- Colonne droite : bloc réservation -->
+        <div class="col-lg-4">
+            <div class="card mb-4">
+      
+            </div>
+        </div>
+    </div>
+     </div>
+     </main>
+    
+    <div id="overlay"></div>
+	<!-- Mask on input focus -->
+	<!-- End main -->
+    
+    
+    <!-- Scripts -->
+    <script src="/assets/js/jquery-3.7.1.min.js"></script>
+    <script src="/assets/js/common_scripts_min.js"></script>
+    <script src="/assets/js/functions.js"></script>
+    
+    <script>
+    // Gestion du menu mobile
+    $(document).ready(function() {
+        // Menu mobile
+        $('.open_close').on('click', function() {
+            $('.main-menu').toggleClass('show');
+            $('.layer').toggleClass('layer-is-visible');
+        });
+        
+        // Fermer le menu en cliquant sur la couche de fond
+        $('.layer').on('click', function() {
+            $('.main-menu').removeClass('show');
+            $(this).removeClass('layer-is-visible');
+        });
+        
+        // Gestion du header fixe
+        $(window).on('scroll', function() {
+            if ($(this).scrollTop() > 100) {
+                $('header').addClass('sticky');
+            } else {
+                $('header').removeClass('sticky');
+            }
+        });
+        
+        // Fermer le menu après un clic sur un lien
+        $('.main-menu ul li a').on('click', function() {
+            $('.main-menu').removeClass('show');
+            $('.layer').removeClass('layer-is-visible');
+        });
+    });
+    </script>
+
+	<!-- Gallery -->
+	<script src="/assets/js/jquery.sliderPro.min.js"></script>
+
+    <!-- DATEPICKER  -->
+    <script>
+    $(function() {
+      'use strict';
+      $('input.date-pick').daterangepicker({
+          autoUpdateInput: false,
+          opens: 'left',
+          minDate:new Date(),
+          locale: {
+              cancelLabel: 'Clear'
+          }
+      });
+      $('input.date-pick').on('apply.daterangepicker', function(ev, picker) {
+          $(this).val(picker.startDate.format('MM-DD-YY') + ' > ' + picker.endDate.format('MM-DD-YY'));
+      });
+      $('input.date-pick').on('cancel.daterangepicker', function(ev, picker) {
+          $(this).val('');
+      });
+    });
+    </script>
+	
+	<!-- Map -->
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBXp1EtixNDI7rdzmX5nn0TkHbT94QOPnc"></script>                      
+	<script src="/assets/js/map.js"></script>
+	<script src="/assets/js/infobox.js"></script>
+	
+	<!-- Carousel -->
+	<script>
+		$('.carousel-thumbs-2').owlCarousel({
+		loop:false,
+		margin:5,
+		responsiveClass:true,
+		nav:false,
+		responsive:{
+			0:{
+				items:1
+			},
+			600:{
+				items:3
+			},
+			1000:{
+				items:4,
+				nav:false
+			}
+		}
+	});
+	</script>
+	
+	<!--Review modal validation -->
+	<script src="assets/validate.js"></script>
+	
+<!-- SWITCHER  -->
+    <script src="/assets/js/switcher.js"></script>
+    
+    <!-- SPECIFIC SCRIPTS -->
+    <script>
+        // Script pour masquer le préchargeur immédiatement
+        document.addEventListener('DOMContentLoaded', function() {
+            var preloader = document.getElementById('preloader');
+            if (preloader) {
+                preloader.style.display = 'none';
+            }
+        });
+        
+        // Masquer le préchargeur également au chargement de la page
+        window.onload = function() {
+            var preloader = document.getElementById('preloader');
+            if (preloader) {
+                preloader.style.display = 'none';
+            }
+        };
+        
+        // Initialisation du carousel si présent
+        $(document).ready(function() {
+            if ($('#Img_carousel').length) {
+                try {
+                    $('#Img_carousel').sliderPro({
+                        width: '100%',
+                        height: 500,
+                        fade: true,
+                        arrows: true,
+                        buttons: false,
+                        fullScreen: false,
+                        smallSize: 500,
+                        startSlide: 0,
+                        mediumSize: 1000,
+                        largeSize: 3000,
+                        thumbnailArrows: true,
+                        autoplay: false,
+                        responsive: true
+                    });
+                } catch (e) {
+                    console.log('Erreur d\'initialisation du carousel:', e);
+                }
+            }
+        });
+    </script>
+<style>
+.main-banner {
+  position: relative;
+  width: 100vw;
+  min-width: 100vw;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  height: auto;
+  background: #757575;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  margin-bottom: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+.main-banner-overlay {
+  width: 100%;
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 70px 0 48px 0;
+  min-height: 210px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  background: rgba(0,0,0,0.12);
+  box-sizing: border-box;
+}
+
+
+
+
+.main-banner h1 {
+  color: #fff;
+  font-size: 2.8rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin: 0 auto 22px auto;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.18;
+  padding-top: 22px;
+  padding-bottom: 18px;
+  max-width: 1100px;
+  word-break: break-word;
+}
+
+
+
+.main-banner p {
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 400;
+  margin: 0 0 24px 0;
+  text-align: center;
+}
+.hebergement-details-banner-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 60px;
+  box-sizing: border-box;
+  min-height: 72px;
+  background: none;
+}
+
+
+
+.hebergement-details-banner-col-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  justify-content: center;
+  flex: 1 1 0;
+  min-width: 0;
+  padding-left: 0;
+}
+
+
+
+.hebergement-details-banner-col-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 0 0 auto;
+  min-width: 180px;
+  padding-right: 0;
+}
+
+
+@media (max-width: 1100px) {
+  .main-banner-overlay {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+  .hebergement-details-banner-row {
+    padding: 0 18px;
+  }
+}
+
+
+@media (max-width: 800px) {
+  .main-banner {
+    min-width: 100vw;
+    padding: 0;
+  }
+  .main-banner-overlay {
+    padding: 8px 0 8px 0;
+  }
+  .hebergement-details-banner-row {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0 2px;
+    min-height: unset;
+  }
+  .hebergement-details-banner-col-left,
+  .hebergement-details-banner-col-right {
+    align-items: flex-start;
+    justify-content: flex-start;
+    min-width: 0;
+  }
+  .hebergement-details-banner-col-left {
+    margin-bottom: 10px;
+  }
+  .banner-price {
+    justify-content: flex-start;
+  }
+  .main-banner h1 {
+    font-size: 1.1rem;
+    padding-top: 4px;
+    margin-bottom: 10px;
+  }
+}
+
+
+
+
+.banner-stars {
+  margin-bottom: 4px;
+}
+.banner-stars .icon-star,
+.banner-stars .icon-star-empty {
+  color: #ffc107;
+  font-size: 1.1rem;
+  margin-right: 2px;
+}
+.banner-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 2px;
+  text-align: center;
+}
+.banner-address {
+  color: #e0e0e0;
+  font-size: 1rem;
+  margin-bottom: 2px;
+  text-align: center;
+}
+.banner-price {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 2px;
+  margin-top: 6px;
+}
+.banner-price-currency {
+  color: #8ad4ff;
+  font-size: 1.1rem;
+  margin-right: 2px;
+}
+.banner-price-value {
+  color: #36b7ff;
+  font-size: 2.1rem;
+  font-weight: bold;
+  margin-right: 2px;
+}
+.banner-price-night {
+  color: #fff;
+  font-size: 0.95rem;
+  margin-left: 4px;
+}
+@media (max-width: 600px) {
+  .main-banner { height: 160px; }
+  .main-banner h1 { font-size: 1.1rem; }
+  .main-banner p { font-size: 0.85rem; }
+  .banner-title { font-size: 1.1rem; }
+  .banner-price-value { font-size: 1.2rem; }
+}
+
+@media (max-width: 600px) {
+  .main-banner { height: 120px; }
+  .main-banner h1 { font-size: 1.1rem; }
+  .main-banner p { font-size: 0.85rem; }
+}
+</style>
+
+<footer class="revealed" style="background-color: #1c1c1c;">
+    <div class="container">                                     
+        <div class="row">
+            <div class="col-md-4">
+                <h3 style="color: white; margin-bottom: 15px; font-weight: 600; font-size: 14px;">BESOIN D'AIDE ?</h3>
+                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <div style="margin-right: 15px;">
+                        <i class="bi bi-telephone-fill" style="color: #e8cc00; font-size: 16px;"></i>
+                    </div>
+                    <span style="color: #e8cc00; font-size: 14px; font-weight: 600;">+212 618 311 344</span>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <div style="margin-right: 15px;">
+                        <i class="bi bi-envelope-fill" style="color: #e8cc00; font-size: 16px;"></i>
+                    </div>
+                    <span style="color: #e8cc00; font-size: 14px; font-weight: 600;">aide@citytours.com</span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <h3 style="font-size: 14px;">À propos</h3>
+                <ul>
+                    <li><a href="#">À propos de nous</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="/login.html">Connexion</a></li>
+                    <li><a href="/register.html">Inscription</a></li>
+                    <li><a href="#">Conditions générales</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <h3 style="font-size: 14px;">Découvrir</h3>
+                <ul>
+                    <li><a href="#">Blog communautaire</a></li>
+                    <li><a href="#">Guide touristique</a></li>
+                    <li><a href="#">Liste de souhaits</a></li>
+                    <li><a href="#">Galerie</a></li>
+                </ul>
+            </div>
+            <div class="col-md-2">
+                <h3 style="font-size: 14px;">Paramètres</h3>
+                <div class="styled-select">
+                    <select name="lang" id="lang">
+                        <option value="Français" selected>Français</option>
+                        <option value="Anglais">Anglais</option>
+                        <option value="Espagnol">Espagnol</option>
+                        <option value="Russe">Russe</option>
+                    </select>
+                </div>
+                <div class="styled-select">
+                    <select name="currency" id="currency">
+                        <option value="MAD" selected>MAD</option>
+                    </select>
+                </div>
+            </div>
+        </div><!-- End row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div id="social_footer">
+                    <ul>
+                        <li><a href="#0"><i class="bi bi-instagram"></i></a></li>
+                        <li><a href="#0"><i class="bi bi-whatsapp"></i></a></li>
+                        <li><a href="#0"><i class="bi bi-facebook"></i></a></li>
+                        <li><a href="#0"><i class="bi bi-youtube"></i></a></li>
+                    </ul>
+                    <p style="font-size: 12px;"> Citytours 2025</p>
+                </div>
+            </div>
+        </div><!-- End row -->
+    </div><!-- End container -->
+</footer><!-- End footer -->
+
+<div id="toTop"><i class="bi bi-arrow-up-circle-fill"></i></div><!-- Back to top button -->
+
+<!-- Search Menu -->
+<div class="search-overlay-menu">
+    <span class="search-overlay-close"><i class="icon_set_1_icon-77"></i></span>
+    <form role="search" id="searchform" method="get">
+        <input value="" name="q" type="text" placeholder="Rechercher..." />
+        <button type="submit"><i class="icon_set_1_icon-78"></i>
+        </button>
+    </form>
+</div><!-- End Search Menu -->
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    $(document).ready(function() {
+        $('#add-to-wishlist-btn').click(function() {
+            var hebergementId = /*[[${hebergement.id}]]*/ '';
+            var $btn = $(this);
+            $.ajax({
+                url: '/hebergement/wishlist/add/' + hebergementId,
+                type: 'POST',
+                success: function(response) {
+                    $('#wishlist-success-msg').fadeIn();
+                    $btn.find('i').removeClass('far').addClass('fas text-danger');
+                    $btn.prop('disabled', true);
+                },
+                error: function() {
+                    alert('Erreur lors de l\'ajout aux favoris.');
+                }
+            });
+        });
+    });
+    /*]]>*/
+</script>
+
+</body>
+
+
+<!-- Mirrored from www.ansonika.com/citytours/single_hotel.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Mar 2025 15:41:10 GMT -->
+</html>
